@@ -72,7 +72,7 @@ const Model3DViewer = ({ models, showDetails = true }) => {
                   </div>
                 }
               >
-                <Canvas camera={{ position: [0, 2, 5], fov: 45 }} shadows gl={{ preserveDrawingBuffer: true, antialias: true }}>
+                <Canvas camera={{ position: [0, 2, 5], fov: 45 }} shadows gl={{ antialias: true, powerPreference: 'high-performance' }}>
                   <color attach="background" args={['#050505']} />
                   <ambientLight intensity={1.5} />
                   <hemisphereLight skyColor="#ffffff" groundColor="#000000" intensity={1} />
@@ -88,6 +88,7 @@ const Model3DViewer = ({ models, showDetails = true }) => {
                     minDistance={1}
                     maxDistance={15}
                     target={[0, 1, 0]}
+                    makeDefault
                   />
                 </Canvas>
               </Suspense>

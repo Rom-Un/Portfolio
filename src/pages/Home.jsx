@@ -1,6 +1,5 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useRef, useState } from "react";
-import DebugGLB from "../debugGLB";
 
 import sakura from "../assets/sakura.mp3";
 import { HomeInfo, Loader } from "../components";
@@ -71,8 +70,6 @@ const Home = () => {
           camera={{ near: 0.1, far: 1000 }}
         >
           <Suspense fallback={<Loader />}>
-            <DebugGLB />   {/* ← ADD THIS LINE */}
-
             <directionalLight position={[1, 1, 1]} intensity={2} />
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 5, 10]} intensity={2} />
