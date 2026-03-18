@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathematics — Episode 02 · The Geometry of Everything</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;600&family=Libre+Baskerville:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;700&family=Crimson+Pro:ital,wght@0,400;1,400&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06080f;--bg2:#0d1120;--bg3:#121a30;
+  --gold:#d4a843;--gold2:#f0c96e;--blue:#4a90d9;--cyan:#5bc8db;
+  --red:#e05252;--green:#7be28b;--white:#f0ece0;--dim:#8a8070;
+  --purple:#b87de8;--teal:#4ecdc4;--orange:#e8925a;--pink:#e07890;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Libre Baskerville',serif;overflow-x:hidden}
+.scene{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:5rem 2rem}
+.scene-label{position:absolute;top:2rem;left:2rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.timestamp{position:absolute;top:2rem;right:2rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--dim)}
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-number{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:.8rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--white)}
+.ep-number{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;display:block}
+.ep-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.05;color:var(--white);margin-bottom:.5rem}
+.ep-subtitle{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-style:italic;color:var(--gold);margin-bottom:2.5rem}
+.narrator-quote{font-size:1rem;line-height:1.9;color:#c8c0a8;border-left:2px solid var(--gold);padding-left:1.5rem;text-align:left;margin-bottom:2rem}
+.graph-box{background:var(--bg2);border:1px solid rgba(74,144,217,.2);border-radius:4px;padding:1.5rem}
+.graph-title{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
+.eq-card{background:var(--bg2);border:1px solid rgba(212,168,67,.25);border-radius:4px;padding:1.5rem;text-align:center;position:relative}
+.eq-card::before{content:'';position:absolute;top:-1px;left:25%;right:25%;height:2px;background:var(--gold)}
+.eq-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:.6rem;display:block}
+.eq{color:var(--gold2);margin:.3rem 0 .6rem;font-size:1.05rem;overflow-x:auto}
+.eq-meaning{font-style:italic;font-size:.87rem;color:var(--dim);line-height:1.8}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1100px;width:100%;align-items:start}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;max-width:1100px;width:100%}
+.four-col{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.2rem;max-width:1100px;width:100%}
+.controls{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:1rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--dim)}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:.5rem 1.2rem;border-radius:2px;cursor:pointer;transition:all .2s;letter-spacing:.1em;text-transform:uppercase}
+.btn-gold{background:rgba(212,168,67,.1);border:1px solid var(--gold);color:var(--gold)}.btn-gold:hover{background:rgba(212,168,67,.25)}
+.btn-blue{background:rgba(74,144,217,.1);border:1px solid var(--blue);color:var(--blue)}.btn-blue:hover{background:rgba(74,144,217,.25)}
+.btn-red{background:rgba(224,82,82,.08);border:1px solid var(--red);color:var(--red)}.btn-red:hover{background:rgba(224,82,82,.2)}
+.btn-teal{background:rgba(78,205,196,.08);border:1px solid var(--teal);color:var(--teal)}.btn-teal:hover{background:rgba(78,205,196,.2)}
+.btn-dim{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.15);color:var(--dim)}.btn-dim:hover{border-color:var(--gold);color:var(--gold)}.btn-dim.active{background:rgba(212,168,67,.12);border-color:var(--gold);color:var(--gold)}
+.slider-row{display:flex;align-items:center;gap:1.5rem;margin:.7rem 0;flex-wrap:wrap}
+.slider-row label{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gold);min-width:120px}
+.slider-row input[type=range]{flex:1;min-width:120px;accent-color:var(--gold)}
+.slider-val{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--cyan);min-width:60px}
+.deep-dive{background:linear-gradient(135deg,#0a0f1e,#0d1120);border:1px solid rgba(91,200,219,.2);border-radius:4px;padding:2rem;max-width:900px;width:100%;margin:2rem auto}
+.deep-dive-title{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.2rem}
+.table-wrap{width:100%;max-width:1000px;margin:0 auto;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);padding:.8rem 1rem;border-bottom:1px solid rgba(212,168,67,.3);text-align:left}
+td{padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;vertical-align:middle}
+td:first-child{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan)}
+tr:hover td{background:rgba(212,168,67,.04)}
+.bottom-stripe{background:var(--bg2);border-top:1px solid rgba(212,168,67,.15);padding:3rem 2rem;display:flex;justify-content:center;align-items:center;gap:3rem;flex-wrap:wrap}
+.stripe-item{text-align:center}
+.stripe-item-value{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;color:var(--gold);display:block}
+.stripe-item-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.info-bubble{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:rgba(255,255,200,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:10px;font-family:serif;cursor:pointer;vertical-align:middle;margin-left:6px;transition:all .2s;user-select:none;font-style:italic;font-weight:bold}
+.info-bubble:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5);color:#fff}
+.info-panel{position:fixed;z-index:9999;max-width:340px;min-width:260px;background:#0d1020;border:1px solid rgba(212,168,67,.4);border-radius:6px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.7);opacity:0;transform:scale(.92) translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.info-panel.visible{opacity:1;transform:scale(1) translateY(0);pointer-events:all}
+.info-panel-header{background:linear-gradient(135deg,rgba(212,168,67,.15),rgba(212,168,67,.05));padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(212,168,67,.2)}
+.info-panel-tag{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#d4a843}
+.info-panel-close{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.info-panel-close:hover{background:rgba(255,255,255,.15);color:#fff}
+.info-panel-body{padding:1rem 1.1rem}
+.info-panel-title{font-family:'Playfair Display',serif;font-size:.95rem;color:#f0ece0;margin-bottom:.6rem}
+.info-panel-text{font-size:.8rem;line-height:1.75;color:#9a9080;margin-bottom:.8rem}
+.info-panel-example{background:rgba(212,168,67,.08);border-left:2px solid rgba(212,168,67,.5);padding:.5rem .8rem;border-radius:0 3px 3px 0;margin-bottom:.6rem}
+.info-panel-example-label{font-family:'IBM Plex Mono',monospace;font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:#d4a843;margin-bottom:.3rem;display:block}
+.info-panel-example-text{font-size:.78rem;color:#c0b090;line-height:1.6;font-style:italic}
+.info-panel-formula{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#5bc8db;background:rgba(91,200,219,.08);padding:.4rem .7rem;border-radius:3px;margin-top:.4rem;display:block;text-align:center}
+.prose{max-width:720px;margin:0 auto;line-height:1.9;color:#c0b8a8;font-size:1rem}
+@media(max-width:900px){.two-col,.three-col,.four-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══ COLD OPEN ══ -->
+<section class="scene" id="cold-open" style="background:radial-gradient(ellipse at 30% 40%,#0d1a2e 0%,var(--bg) 60%)">
+  <canvas id="gridBg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.25"></canvas>
+  <div style="position:relative;z-index:2;max-width:800px;text-align:center">
+    <span class="ep-number">Episode 02 · Mathematics</span>
+    <h1 class="ep-title">The Geometry<br>of Everything</h1>
+    <p class="ep-subtitle">Linear Algebra · Matrices · ODEs · Fourier · ~130 minutes</p>
+    <blockquote class="narrator-quote">
+      Numbers live on a line. But the world has more dimensions than one.
+      Vectors, matrices, transformations — these are the language of physics, computer graphics,
+      machine learning, and signal processing. Linear algebra is not about solving equations.
+      It is about understanding <em>space itself</em>.
+    </blockquote>
+    <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1rem">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.35rem .9rem;border-radius:2px;color:var(--gold);border:1px solid rgba(212,168,67,.3)">Vectors</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.35rem .9rem;border-radius:2px;color:var(--blue);border:1px solid rgba(74,144,217,.3)">Matrices</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.35rem .9rem;border-radius:2px;color:var(--teal);border:1px solid rgba(78,205,196,.3)">Eigenvalues</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.35rem .9rem;border-radius:2px;color:var(--red);border:1px solid rgba(224,82,82,.3)">ODEs</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.35rem .9rem;border-radius:2px;color:var(--purple);border:1px solid rgba(184,125,232,.3)">Fourier</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 1 — VECTORS ══ -->
+<section class="scene" id="sec-vectors" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 30% 50%,#0d1a2e 0%,var(--bg) 65%)">
+  <div class="scene-label">Section 1 · Vectors</div>
+  <div class="timestamp">0:00 – 18:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section One</span>
+    <h2 class="section-title">Vectors — Direction in Space</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box">
+        <div class="graph-title">Vector Playground — sliders control endpoints</div>
+        <canvas id="vectorCanvas" width="460" height="340" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.8rem">
+          <div class="slider-row"><label>Vector a: x</label><input type="range" id="vax" min="-4" max="4" step=".1" value="3"><span class="slider-val" id="vaxV">3.0</span></div>
+          <div class="slider-row"><label>Vector a: y</label><input type="range" id="vay" min="-4" max="4" step=".1" value="1"><span class="slider-val" id="vayV">1.0</span></div>
+          <div class="slider-row"><label>Vector b: x</label><input type="range" id="vbx" min="-4" max="4" step=".1" value="1"><span class="slider-val" id="vbxV">1.0</span></div>
+          <div class="slider-row"><label>Vector b: y</label><input type="range" id="vby" min="-4" max="4" step=".1" value="2"><span class="slider-val" id="vbyV">2.0</span></div>
+        </div>
+        <div id="vectorReadout" style="background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.15);border-radius:2px;padding:.8rem;margin-top:.8rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:2;color:#c8b888"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="eq-card">
+          <span class="eq-label">Dot Product (Scalar) <span class="info-bubble" onclick='showInfo(this,{tag:"Vectors",title:"The Dot Product",text:"The dot product measures alignment. If a·b = 0, the vectors are perpendicular. If a·b > 0, they point in similar directions. If a·b < 0, they oppose.",example:"Light shading: I = light_dir · surface_normal. Perpendicular surface → full brightness. Grazing angle → near zero.",formula:"a·b = |a||b|cos(θ) = a₁b₁ + a₂b₂ + a₃b₃"})'>i</span></span>
+          <div class="eq">$\mathbf{a} \cdot \mathbf{b} = \|\mathbf{a}\|\|\mathbf{b}\|\cos\theta = \textstyle\sum a_i b_i$</div>
+          <p class="eq-meaning">Projects one vector onto another. Zero when perpendicular.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+          <span class="eq-label">Cross Product (Vector) <span class="info-bubble" onclick='showInfo(this,{tag:"Vectors",title:"The Cross Product",text:"The cross product creates a new vector perpendicular to both inputs. Its magnitude equals the area of the parallelogram spanned by a and b. Right-hand rule gives direction.",example:"Torque: τ = r × F. The wrench handle crossed with force gives the rotation axis and its magnitude.",formula:"|a × b| = |a||b|sin(θ); direction: right-hand rule"})'>i</span></span>
+          <div class="eq" style="color:var(--teal)">$\mathbf{a} \times \mathbf{b} = \|\mathbf{a}\|\|\mathbf{b}\|\sin\theta\,\hat{\mathbf{n}}$</div>
+          <p class="eq-meaning">Perpendicular to both. Magnitude = area of parallelogram.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(224,82,82,.3)">
+          <span class="eq-label">Norm &amp; Unit Vector</span>
+          <div class="eq" style="color:var(--red)">$\|\mathbf{v}\| = \sqrt{v_1^2 + v_2^2 + \cdots + v_n^2}$</div>
+          <div class="eq" style="font-size:.9rem;color:#a0a888;margin-top:.3rem">$\hat{\mathbf{v}} = \mathbf{v} / \|\mathbf{v}\|$</div>
+          <p class="eq-meaning">Unit vector has length 1 — preserves direction only.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(184,125,232,.3)">
+          <span class="eq-label">Vector Projection</span>
+          <div class="eq" style="color:var(--purple)">$\operatorname{proj}_\mathbf{b}\mathbf{a} = \dfrac{\mathbf{a}\cdot\mathbf{b}}{\|\mathbf{b}\|^2}\,\mathbf{b}$</div>
+          <p class="eq-meaning">Shadow of <b>a</b> onto <b>b</b>. Foundation of Gram-Schmidt orthogonalization.</p>
+        </div>
+      </div>
+    </div>
+    <div class="deep-dive">
+      <div class="deep-dive-title">Vector Spaces — The 8 Axioms</div>
+      <p style="font-size:.9rem;color:#a0a888;line-height:1.7;margin-bottom:1rem">A vector space V over ℝ satisfies closure under addition and scalar multiplication, commutativity, associativity, zero vector, additive inverse, and distributive laws. Any set obeying these rules is a vector space — including functions, polynomials, matrices, and audio signals.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#8899aa;line-height:1.9">
+          <div><span style="color:var(--gold)">V1</span> u + v ∈ V (closure)</div>
+          <div><span style="color:var(--gold)">V2</span> u + v = v + u</div>
+          <div><span style="color:var(--gold)">V3</span> (u+v)+w = u+(v+w)</div>
+          <div><span style="color:var(--gold)">V4</span> ∃ 0 : u + 0 = u</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#8899aa;line-height:1.9">
+          <div><span style="color:var(--cyan)">V5</span> ∃ −u : u + (−u) = 0</div>
+          <div><span style="color:var(--cyan)">V6</span> αu ∈ V</div>
+          <div><span style="color:var(--cyan)">V7</span> α(u+v) = αu + αv</div>
+          <div><span style="color:var(--cyan)">V8</span> 1·u = u</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 2 — MATRICES ══ -->
+<section class="scene" id="sec-matrices" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="scene-label">Section 2 · Matrices</div>
+  <div class="timestamp">18:00 – 36:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Two</span>
+    <h2 class="section-title">Matrices — Linear Transformations</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box">
+        <div class="graph-title">Linear Transformation — apply matrix to the plane</div>
+        <canvas id="transformCanvas" width="460" height="380" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div style="display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap;justify-content:center">
+          <button class="btn btn-dim active" onclick="setTransform('identity',this)">Identity</button>
+          <button class="btn btn-dim" onclick="setTransform('rotate45',this)">Rotate 45°</button>
+          <button class="btn btn-dim" onclick="setTransform('scale',this)">Scale(2,½)</button>
+          <button class="btn btn-dim" onclick="setTransform('shear',this)">Shear</button>
+          <button class="btn btn-dim" onclick="setTransform('reflect',this)">Reflect y</button>
+          <button class="btn btn-dim" onclick="setTransform('project',this)">Project x</button>
+        </div>
+        <div id="transformReadout" style="background:rgba(74,144,217,.05);border:1px solid rgba(74,144,217,.15);border-radius:2px;padding:.8rem;margin-top:.8rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.8;color:#a0b8c8"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="eq-card">
+          <span class="eq-label">Matrix–Vector Multiplication <span class="info-bubble" onclick='showInfo(this,{tag:"Matrices",title:"Matrix × Vector",text:"A matrix transforms a vector. Each row of the matrix dots with the input vector to produce one output component. Column view: output is a linear combination of the matrix columns.",example:"Rotating 90°: x-axis (1,0) goes to (0,1) and y-axis (0,1) goes to (-1,0). Every vector gets rotated.",formula:"Ax = x₁a₁ + x₂a₂ + ... (linear combination of columns)"})'>i</span></span>
+          <div class="eq">$A\mathbf{x} = \begin{pmatrix}a&b\\c&d\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix} = \begin{pmatrix}ax+by\\cx+dy\end{pmatrix}$</div>
+        </div>
+        <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+          <span class="eq-label">Determinant <span class="info-bubble" onclick='showInfo(this,{tag:"Matrices",title:"Determinant = Area Scaling Factor",text:"The determinant tells you how much a matrix scales areas (2D) or volumes (3D). det=0 → singular, space collapses. Negative det → orientation flips.",example:"det=2: unit square maps to a parallelogram of area 2. det=-1: reflection preserving area.",formula:"det(AB) = det(A)·det(B)"})'>i</span></span>
+          <div class="eq" style="color:var(--teal)">$\det\begin{pmatrix}a&b\\c&d\end{pmatrix} = ad - bc$</div>
+          <p class="eq-meaning">Signed area scaling factor. Zero → singular, no inverse.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(224,82,82,.3)">
+          <span class="eq-label">Matrix Inverse</span>
+          <div class="eq" style="color:var(--red)">$A^{-1} = \dfrac{1}{\det A}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}$</div>
+          <p class="eq-meaning">Undoes the transformation. Only exists if det(A) ≠ 0.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(184,125,232,.3)">
+          <span class="eq-label">Matrix Multiplication <span class="info-bubble" onclick='showInfo(this,{tag:"Matrices",title:"Composition of Transformations",text:"Multiplying matrices composes their transformations. AB means: first apply B, then A. Not commutative in general: AB ≠ BA. Associative: (AB)C = A(BC).",example:"Rotate then scale ≠ scale then rotate in general.",formula:"(AB)ᵢⱼ = row i of A · column j of B"})'>i</span></span>
+          <div class="eq" style="color:var(--purple);font-size:.9rem">$(AB)_{ij} = \sum_k A_{ik}B_{kj}$</div>
+          <p class="eq-meaning">Row × column. Composition of transformations.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Matrix calculator -->
+    <div class="graph-box" style="border-color:rgba(212,168,67,.2);margin-bottom:2rem">
+      <div class="graph-title">Matrix Calculator — 2×2 live operations</div>
+      <div style="display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--dim);margin-bottom:.5rem;letter-spacing:.15em">MATRIX A</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem">
+            <input id="ma11" type="number" value="2" style="width:55px;background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+            <input id="ma12" type="number" value="1" style="width:55px;background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+            <input id="ma21" type="number" value="0" style="width:55px;background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+            <input id="ma22" type="number" value="3" style="width:55px;background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--dim);margin-bottom:.5rem;letter-spacing:.15em">MATRIX B</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem">
+            <input id="mb11" type="number" value="1" style="width:55px;background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.2);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+            <input id="mb12" type="number" value="-1" style="width:55px;background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.2);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+            <input id="mb21" type="number" value="2" style="width:55px;background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.2);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+            <input id="mb22" type="number" value="4" style="width:55px;background:rgba(74,144,217,.06);border:1px solid rgba(74,144,217,.2);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .5rem;border-radius:2px;outline:none;text-align:center">
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <button class="btn btn-gold" onclick="matCalc('mul')">A × B</button>
+          <button class="btn btn-dim" onclick="matCalc('add')">A + B</button>
+          <button class="btn btn-dim" onclick="matCalc('inv')">A⁻¹</button>
+          <button class="btn btn-dim" onclick="matCalc('det')">det(A)</button>
+          <button class="btn btn-dim" onclick="matCalc('trans')">Aᵀ</button>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--teal);margin-bottom:.5rem;letter-spacing:.15em">RESULT</div>
+          <div id="matResult" style="font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--teal);min-width:180px;line-height:2;white-space:pre"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 3 — EIGENVALUES ══ -->
+<section class="scene" id="sec-eigen" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 70% 30%,#0d1a2e 0%,var(--bg) 70%)">
+  <div class="scene-label">Section 3 · Eigenvalues</div>
+  <div class="timestamp">36:00 – 52:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Three</span>
+    <h2 class="section-title">Eigenvalues &amp; Eigenvectors</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <p class="prose" style="text-align:center;margin-bottom:2rem">An eigenvector of A is a special direction that doesn't rotate under the transformation — it only scales. The scaling factor is the eigenvalue. These "characteristic" directions reveal the deep structure of any linear map.</p>
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box">
+        <div class="graph-title">Eigenvector visualizer — stretched, not rotated</div>
+        <canvas id="eigenCanvas" width="460" height="320" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div style="margin-top:.8rem">
+          <div class="slider-row"><label>A₁₁</label><input type="range" id="ea11" min="-3" max="3" step=".1" value="2"><span class="slider-val" id="ea11V">2.0</span></div>
+          <div class="slider-row"><label>A₁₂ = A₂₁</label><input type="range" id="ea12" min="-3" max="3" step=".1" value="1"><span class="slider-val" id="ea12V">1.0</span></div>
+          <div class="slider-row"><label>A₂₂</label><input type="range" id="ea22" min="-3" max="3" step=".1" value="3"><span class="slider-val" id="ea22V">3.0</span></div>
+        </div>
+        <div id="eigenReadout" style="background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.15);border-radius:2px;padding:.8rem;margin-top:.8rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.9;color:#c8b888"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="eq-card">
+          <span class="eq-label">Eigenvalue Equation <span class="info-bubble" onclick='showInfo(this,{tag:"Eigenvalues",title:"What makes a vector an eigenvector?",text:"Av = λv means A applied to v gives back the same direction — just scaled by λ. To find eigenvalues: det(A − λI) = 0 is the characteristic polynomial.",example:"Google PageRank: rank vector is the eigenvector of the web link matrix with eigenvalue 1. PCA: data variance directions are eigenvectors of the covariance matrix.",formula:"det(A − λI) = 0"})'>i</span></span>
+          <div class="eq">$A\mathbf{v} = \lambda\mathbf{v}$</div>
+          <p class="eq-meaning">v is only scaled, never rotated. λ is the scale factor.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+          <span class="eq-label">Characteristic Polynomial</span>
+          <div class="eq" style="color:var(--teal)">$\det(A - \lambda I) = 0$</div>
+          <div style="font-size:.82rem;color:#8899aa;margin-top:.4rem">For 2×2: $\lambda^2 - \operatorname{tr}(A)\lambda + \det(A) = 0$</div>
+          <p class="eq-meaning" style="margin-top:.4rem">Trace = sum of eigenvalues. Det = product of eigenvalues.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(184,125,232,.3)">
+          <span class="eq-label">Diagonalization</span>
+          <div class="eq" style="color:var(--purple)">$A = P\,D\,P^{-1}$</div>
+          <p class="eq-meaning">P = eigenvectors as columns. D = eigenvalues on diagonal. Decouples the system.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(232,146,90,.3)">
+          <span class="eq-label">Real-world Applications</span>
+          <div style="text-align:left;font-size:.82rem;color:#a0a888;line-height:1.9;margin-top:.5rem">
+            <div><span style="color:var(--orange)">PCA</span> — Principal component analysis, data compression</div>
+            <div><span style="color:var(--orange)">PageRank</span> — Google's web importance ranking</div>
+            <div><span style="color:var(--orange)">Vibrations</span> — Normal modes of mechanical systems</div>
+            <div><span style="color:var(--orange)">Quantum</span> — Measurable values are eigenvalues of operators</div>
+            <div><span style="color:var(--orange)">Stability</span> — |λ| &lt; 1 → stable fixed point in dynamics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 4 — LINEAR SYSTEMS ══ -->
+<section class="scene" id="sec-systems" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="scene-label">Section 4 · Linear Systems</div>
+  <div class="timestamp">52:00 – 64:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Four</span>
+    <h2 class="section-title">Solving Linear Systems</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="graph-box" style="border-color:rgba(212,168,67,.2);margin-bottom:2rem">
+      <div class="graph-title">Gaussian Elimination — step-by-step augmented matrix</div>
+      <canvas id="gaussCanvas" width="940" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div class="controls" style="justify-content:center;gap:1rem;margin-top:.8rem">
+        <button class="btn btn-gold" onclick="gaussStep()">→ Next step</button>
+        <button class="btn btn-dim" onclick="gaussReset()">↺ Reset</button>
+        <button class="btn btn-teal" onclick="gaussSolve()">▶ Full solve</button>
+      </div>
+      <div id="gaussReadout" style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#8899aa;margin-top:.8rem;padding:.6rem .8rem;background:rgba(212,168,67,.03);border-left:2px solid rgba(212,168,67,.2);border-radius:0 2px 2px 0"></div>
+    </div>
+    <div class="three-col">
+      <div class="eq-card">
+        <span class="eq-label">Three Cases</span>
+        <div style="text-align:left;font-size:.85rem;line-height:1.9;margin-top:.5rem;color:#a0a888">
+          <div><span style="color:var(--green)">Unique solution</span> — det ≠ 0, lines cross once</div>
+          <div><span style="color:var(--gold)">Infinite solutions</span> — dependent rows, lines coincide</div>
+          <div><span style="color:var(--red)">No solution</span> — inconsistent, parallel lines</div>
+        </div>
+      </div>
+      <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+        <span class="eq-label">Row Echelon Form</span>
+        <div class="eq" style="color:var(--teal);font-size:.85rem">$\begin{pmatrix}1&{*}&{*}\\0&1&{*}\\0&0&1\end{pmatrix}$</div>
+        <p class="eq-meaning">Pivot = 1 in each row. Back-substitution gives the solution.</p>
+      </div>
+      <div class="eq-card" style="border-color:rgba(184,125,232,.3)">
+        <span class="eq-label">LU Decomposition</span>
+        <div class="eq" style="color:var(--purple)">$A = LU$</div>
+        <p class="eq-meaning">Lower × Upper-triangular. Efficient for solving Ax=b many times.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 5 — ODEs ══ -->
+<section class="scene" id="sec-ode" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 40% 60%,#0a080f 0%,var(--bg) 70%)">
+  <div class="scene-label">Section 5 · ODEs</div>
+  <div class="timestamp">64:00 – 84:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Five</span>
+    <h2 class="section-title">Ordinary Differential Equations</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box">
+        <div class="graph-title">Slope Field &amp; Solution Curves — click to add a curve</div>
+        <canvas id="slopeFieldCanvas" width="460" height="360" style="width:100%;display:block;background:#04070d;border-radius:2px;cursor:crosshair"></canvas>
+        <div style="display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap">
+          <button class="btn btn-dim active" onclick="setODE('logistic',this)">Logistic</button>
+          <button class="btn btn-dim" onclick="setODE('linear',this)">Linear</button>
+          <button class="btn btn-dim" onclick="setODE('vdp',this)">Van der Pol</button>
+        </div>
+        <div id="odeReadout" style="font-family:'JetBrains Mono',monospace;font-size:.73rem;color:#8899aa;margin-top:.5rem">Click to drop a solution curve from that initial condition</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="eq-card">
+          <span class="eq-label">1st Order Linear ODE <span class="info-bubble" onclick='showInfo(this,{tag:"ODEs",title:"Integrating Factor Method",text:"For y′ + P(x)y = Q(x), multiply by μ(x) = e^∫P dx. Then d/dx[μy] = μQ is directly integrable. The factor turns the left side into a perfect derivative.",example:"Population with immigration: dN/dt = rN + I → N(t) = Ce^(rt) − I/r. The exponential growth competes with the immigration rate.",formula:"y = e^(−∫P dx)·[∫Q·e^(∫P dx) dx + C]"})'>i</span></span>
+          <div class="eq">$y' + P(x)y = Q(x)$</div>
+          <p class="eq-meaning">Integrating factor $\mu = e^{\int P\,dx}$. Then $(\mu y)' = \mu Q$.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(224,82,82,.3)">
+          <span class="eq-label">2nd Order — Constant Coefficients</span>
+          <div class="eq" style="color:var(--red)">$ay'' + by' + cy = 0$</div>
+          <div style="font-size:.8rem;color:#8899aa;line-height:1.75;margin-top:.5rem;text-align:left">
+            Characteristic eq: $ar^2 + br + c = 0$<br>
+            Δ &gt; 0 → <span style="color:var(--green)">two real roots</span> (overdamped)<br>
+            Δ = 0 → <span style="color:var(--gold)">repeated root</span> (critically damped)<br>
+            Δ &lt; 0 → <span style="color:var(--blue)">complex roots</span> (oscillations)
+          </div>
+        </div>
+        <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+          <span class="eq-label">Runge-Kutta 4 (Numerical) <span class="info-bubble" onclick='showInfo(this,{tag:"ODEs",title:"Why RK4 instead of Euler?",text:"Euler method has error O(h²) per step. RK4 uses four slope estimates per step achieving O(h⁵) local error — drastically more accurate for the same step size.",example:"Planetary orbit: Euler drifts and spirals out. RK4 stays on the ellipse for millions of steps.",formula:"yₙ₊₁ = yₙ + h/6·(k₁ + 2k₂ + 2k₃ + k₄)"})'>i</span></span>
+          <div class="eq" style="color:var(--teal);font-size:.9rem">$y_{n+1} = y_n + \tfrac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$</div>
+          <p class="eq-meaning">Four slope samples per step. Gold standard for most ODEs.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Damped oscillator -->
+    <div class="graph-box" style="border-color:rgba(224,82,82,.2);margin-bottom:2rem">
+      <div class="graph-title">Damped Harmonic Oscillator — y'' + 2γy' + ω₀²y = 0</div>
+      <canvas id="dampedCanvas" width="940" height="180" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div style="margin-top:.8rem;display:flex;gap:2rem;flex-wrap:wrap">
+        <div class="slider-row" style="flex:1"><label>Damping γ</label><input type="range" id="dampGamma" min="0" max="4" step=".05" value=".5"><span class="slider-val" id="dampGammaV">0.50</span></div>
+        <div class="slider-row" style="flex:1"><label>Frequency ω₀</label><input type="range" id="dampOmega" min=".5" max="5" step=".1" value="2"><span class="slider-val" id="dampOmegaV">2.0</span></div>
+      </div>
+      <div id="dampReadout" style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#8899aa;margin-top:.5rem;padding:.5rem .8rem;background:rgba(224,82,82,.03);border-left:2px solid rgba(224,82,82,.2)"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 6 — FOURIER ══ -->
+<section class="scene" id="sec-fourier" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="scene-label">Section 6 · Fourier</div>
+  <div class="timestamp">84:00 – 104:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Six</span>
+    <h2 class="section-title">Fourier Series &amp; Transform</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="graph-box" style="border-color:rgba(184,125,232,.2);margin-bottom:2rem">
+      <div class="graph-title">Fourier Series — build any waveform from sines &amp; cosines</div>
+      <canvas id="fourierCanvas" width="940" height="220" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div style="margin-top:.8rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:center">
+        <div class="slider-row" style="margin:0"><label style="min-width:80px">Harmonics N</label><input type="range" id="fourierN" min="1" max="30" value="5"><span class="slider-val" id="fourierNV">5</span></div>
+        <button class="btn btn-dim active" onclick="setWave('square',this)">Square</button>
+        <button class="btn btn-dim" onclick="setWave('sawtooth',this)">Sawtooth</button>
+        <button class="btn btn-dim" onclick="setWave('triangle',this)">Triangle</button>
+      </div>
+    </div>
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box" style="border-color:rgba(184,125,232,.2)">
+        <div class="graph-title">Epicycles — Fourier as rotating vectors</div>
+        <canvas id="epicycleCanvas" width="460" height="320" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div class="slider-row" style="margin-top:.8rem"><label>Components</label><input type="range" id="epicycleN" min="1" max="12" value="5"><span class="slider-val" id="epicycleNV">5</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="eq-card" style="border-color:rgba(184,125,232,.3)">
+          <span class="eq-label">Fourier Series <span class="info-bubble" onclick='showInfo(this,{tag:"Fourier",title:"Every periodic function as a sum of sines",text:"Joseph Fourier (1822) showed any periodic function can be written as an infinite sum of sines and cosines at integer multiples of the fundamental frequency. This was deeply controversial — even Cauchy doubted it.",example:"Square wave needs infinitely many odd harmonics. Smooth functions converge fast. Discontinuities cause Gibbs phenomenon — a 9% overshoot that never vanishes.",formula:"aₙ = (2/L)∫f(x)cos(2πnx/L)dx"})'>i</span></span>
+          <div class="eq" style="color:var(--purple);font-size:.85rem">$f(x) = \dfrac{a_0}{2} + \sum_{n=1}^{\infty}\!\left[a_n\cos\tfrac{2\pi nx}{L} + b_n\sin\tfrac{2\pi nx}{L}\right]$</div>
+        </div>
+        <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+          <span class="eq-label">Fourier Transform</span>
+          <div class="eq" style="color:var(--teal);font-size:.88rem">$\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\,e^{-2\pi i x\xi}\,dx$</div>
+          <p class="eq-meaning">Generalizes to non-periodic functions. Gives a continuous frequency spectrum.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(123,226,139,.3)">
+          <span class="eq-label">Euler's Formula — the bridge</span>
+          <div class="eq" style="color:var(--green)">$e^{i\theta} = \cos\theta + i\sin\theta$</div>
+          <p class="eq-meaning">Complex exponentials <em>are</em> sinusoids. This is why Fourier and complex analysis intertwine.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(232,146,90,.3)">
+          <span class="eq-label">Parseval's Theorem</span>
+          <div class="eq" style="color:var(--orange);font-size:.9rem">$\int|f(x)|^2\,dx = \int|\hat{f}(\xi)|^2\,d\xi$</div>
+          <p class="eq-meaning">Total energy is preserved. Time domain energy = frequency domain energy.</p>
+        </div>
+      </div>
+    </div>
+    <div class="graph-box" style="border-color:rgba(78,205,196,.2)">
+      <div class="graph-title">Frequency Spectrum — Fourier coefficients by harmonic number</div>
+      <canvas id="spectrumCanvas" width="940" height="160" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SECTION 7 — PDEs ══ -->
+<section class="scene" id="sec-pde" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 60% 40%,#0a0f08 0%,var(--bg) 70%)">
+  <div class="scene-label">Section 7 · PDEs</div>
+  <div class="timestamp">104:00 – 130:00</div>
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Seven</span>
+    <h2 class="section-title">Partial Differential Equations</h2>
+  </div>
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <!-- Heat equation -->
+    <div class="graph-box" style="border-color:rgba(224,82,82,.2);margin-bottom:2rem">
+      <div class="graph-title">Heat Equation — ∂u/∂t = α∂²u/∂x² (live simulation)</div>
+      <canvas id="heatCanvas" width="940" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div style="margin-top:.8rem;display:flex;gap:2rem;align-items:center;flex-wrap:wrap;justify-content:center">
+        <div class="slider-row" style="margin:0;flex:1"><label style="min-width:100px">Diffusivity α</label><input type="range" id="heatAlpha" min=".01" max=".4" step=".01" value=".1"><span class="slider-val" id="heatAlphaV">0.10</span></div>
+        <button class="btn btn-red" onclick="heatReset()">↺ Reset</button>
+        <button class="btn btn-dim" onclick="heatAdd()">+ Hot spot</button>
+      </div>
+      <div id="heatReadout" style="font-family:'JetBrains Mono',monospace;font-size:.73rem;color:#8899aa;margin-top:.5rem"></div>
+    </div>
+    <!-- Wave equation -->
+    <div class="graph-box" style="border-color:rgba(74,144,217,.2);margin-bottom:2rem">
+      <div class="graph-title">Wave Equation — ∂²u/∂t² = c²∂²u/∂x² (plucked string)</div>
+      <canvas id="waveEqCanvas" width="940" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div style="margin-top:.8rem;display:flex;gap:2rem;align-items:center;flex-wrap:wrap;justify-content:center">
+        <div class="slider-row" style="margin:0;flex:1"><label style="min-width:80px">Speed c</label><input type="range" id="waveSpeed" min=".5" max="3" step=".1" value="1.5"><span class="slider-val" id="waveSpeedV">1.5</span></div>
+        <button class="btn btn-blue" onclick="waveReset()">↺ Reset</button>
+        <button class="btn btn-dim" onclick="wavePluck()">Pluck string</button>
+      </div>
+    </div>
+    <!-- PDE table -->
+    <div class="table-wrap">
+      <div class="graph-title" style="text-align:center;margin-bottom:.8rem">The Great Equations of Mathematical Physics</div>
+      <table>
+        <thead><tr><th>Name</th><th>Equation</th><th>Describes</th><th>Solution method</th></tr></thead>
+        <tbody>
+          <tr><td>Heat (Fourier)</td><td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--red)">∂u/∂t = α∇²u</td><td>Temperature diffusion</td><td>Fourier series, separation of variables</td></tr>
+          <tr><td>Wave</td><td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blue)">∂²u/∂t² = c²∇²u</td><td>Sound, light, strings</td><td>d'Alembert solution, Fourier</td></tr>
+          <tr><td>Laplace</td><td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--teal)">∇²u = 0</td><td>Steady-state fields</td><td>Complex analysis, Green's functions</td></tr>
+          <tr><td>Schrödinger</td><td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--purple)">iℏ∂ψ/∂t = Ĥψ</td><td>Quantum wave function</td><td>Eigenvalue problem, spectral theory</td></tr>
+          <tr><td>Navier-Stokes</td><td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--orange)">ρ(∂v/∂t + v·∇v) = −∇p + μ∇²v</td><td>Fluid dynamics</td><td>Numerical (CFD) — unsolved in general!</td></tr>
+          <tr><td>Maxwell</td><td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gold)">∇×E = −∂B/∂t</td><td>Electromagnetism, light</td><td>Vector calculus, special relativity</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Reference cards -->
+    <div class="three-col" style="margin-top:2.5rem">
+      <div class="eq-card" style="border-color:rgba(78,205,196,.3)">
+        <span class="eq-label">Separation of Variables</span>
+        <div class="eq" style="color:var(--teal);font-size:.88rem">$u(x,t)=X(x)\,T(t)$</div>
+        <p class="eq-meaning">Split a PDE into two ODEs. Works when boundary conditions align with coordinate axes.</p>
+      </div>
+      <div class="eq-card" style="border-color:rgba(184,125,232,.3)">
+        <span class="eq-label">Laplacian Operator</span>
+        <div class="eq" style="color:var(--purple);font-size:.88rem">$\nabla^2 u = \dfrac{\partial^2 u}{\partial x^2} + \dfrac{\partial^2 u}{\partial y^2}$</div>
+        <p class="eq-meaning">Measures how u differs from its local average. Zero = harmonic function.</p>
+      </div>
+      <div class="eq-card" style="border-color:rgba(232,146,90,.3)">
+        <span class="eq-label">Green's Functions</span>
+        <div class="eq" style="color:var(--orange);font-size:.88rem">$Lu = f \Rightarrow u(x) = \int G(x,s)\,f(s)\,ds$</div>
+        <p class="eq-meaning">Impulse response of a linear operator. The point-source solution encodes everything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ CLOSING ══ -->
+<section class="scene" id="closing" style="min-height:65vh;background:radial-gradient(ellipse at 50% 50%,#0d1225 0%,var(--bg) 70%)">
+  <canvas id="closingGrid" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.2"></canvas>
+  <div style="position:relative;z-index:2;text-align:center;max-width:700px">
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:2rem">
+      Mathematics is not about numbers.<br>It is about <em style="color:var(--gold)">structure</em>.
+    </h2>
+    <p style="color:#9a9080;font-size:1rem;line-height:1.9;margin-bottom:2rem">Vectors, matrices, eigenvalues, differential equations, Fourier series — each is a different lens onto the same deep reality: the geometry underlying all of physics, all of computation, all of nature's patterns.</p>
+    <div style="display:flex;flex-direction:column;gap:.8rem;align-items:center;margin-bottom:2rem">
+      <div style="display:flex;align-items:center;gap:1rem"><span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:80px">Ep. 03</span><span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2)">Topology — Spaces, holes, and the shape of data</span></div>
+      <div style="display:flex;align-items:center;gap:1rem"><span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:80px">Ep. 04</span><span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2)">Statistics &amp; Information Theory</span></div>
+      <div style="display:flex;align-items:center;gap:1rem"><span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:80px">Ep. 05</span><span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2)">Number Theory &amp; Cryptography</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="bottom-stripe">
+  <div class="stripe-item"><span class="stripe-item-value">7</span><span class="stripe-item-label">Sections</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">Ep. 02</span><span class="stripe-item-label">Mathematics</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">130'</span><span class="stripe-item-label">Runtime</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">Av = λv</span><span class="stripe-item-label">Eigenvectors</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">∇²u=0</span><span class="stripe-item-label">Laplace Eq.</span></div>
+</div>
+
+<!-- INFO PANEL -->
+<div class="info-panel" id="globalInfoPanel">
+  <div class="info-panel-header"><span class="info-panel-tag" id="ipTag">Explanation</span><button class="info-panel-close" onclick="closeInfoPanel()">✕</button></div>
+  <div class="info-panel-body">
+    <div class="info-panel-title" id="ipTitle"></div>
+    <div class="info-panel-text" id="ipText"></div>
+    <div class="info-panel-example" id="ipExBox" style="display:none"><span class="info-panel-example-label">Example</span><div class="info-panel-example-text" id="ipEx"></div></div>
+    <div class="info-panel-formula" id="ipFormula" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+/* ══ INFO PANEL ══ */
+(()=>{
+  const p=document.getElementById('globalInfoPanel');let ab=null;
+  window.showInfo=(btn,d)=>{
+    if(ab===btn&&p.classList.contains('visible')){closeInfoPanel();return;}
+    ab=btn;
+    document.getElementById('ipTag').textContent=d.tag||'Math';
+    document.getElementById('ipTitle').textContent=d.title||'';
+    document.getElementById('ipText').textContent=d.text||'';
+    const eb=document.getElementById('ipExBox'),et=document.getElementById('ipEx');
+    if(d.example){eb.style.display='block';et.textContent=d.example;}else eb.style.display='none';
+    const ff=document.getElementById('ipFormula');
+    if(d.formula){ff.style.display='block';ff.textContent=d.formula;}else ff.style.display='none';
+    const r=btn.getBoundingClientRect();
+    let l=r.right+12,t=r.top-20;
+    if(l+340>window.innerWidth-10)l=r.left-352;
+    t=Math.max(10,Math.min(t,window.innerHeight-310));
+    p.style.left=l+'px';p.style.top=t+'px';p.classList.add('visible');
+  };
+  window.closeInfoPanel=()=>{p.classList.remove('visible');ab=null;};
+  document.addEventListener('click',e=>{
+    if(!p.contains(e.target)&&!e.target.classList.contains('info-bubble'))closeInfoPanel();
+  });
+})();
+
+/* ══ ANIMATED GRID BACKGROUND ══ */
+function makeGrid(id){
+  const c=document.getElementById(id);if(!c)return;
+  const ctx=c.getContext('2d');
+  function sz(){c.width=c.offsetWidth;c.height=c.offsetHeight;}sz();
+  window.addEventListener('resize',sz);
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const s=50;ctx.strokeStyle='rgba(212,168,67,.12)';ctx.lineWidth=.5;
+    for(let x=0;x<c.width;x+=s){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke();}
+    for(let y=0;y<c.height;y+=s){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke();}
+  }draw();
+}
+makeGrid('gridBg');makeGrid('closingGrid');
+
+/* ══ VECTOR PLAYGROUND ══ */
+(()=>{
+  const c=document.getElementById('vectorCanvas');if(!c)return;
+  const ctx=c.getContext('2d');const W=c.width,H=c.height;
+  const OX=W/2,OY=H/2,SC=40;
+  function arrow(x1,y1,x2,y2,col,lw=2.5){
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);if(len<2)return;
+    const ux=dx/len,uy=dy/len,hl=10;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-hl*(ux-uy*.5),y2-hl*(uy+ux*.5));
+    ctx.lineTo(x2-hl*(ux+uy*.5),y2-hl*(uy-ux*.5));
+    ctx.closePath();ctx.fillStyle=col;ctx.fill();
+  }
+  function update(){
+    const ax=+document.getElementById('vax').value,ay=+document.getElementById('vay').value;
+    const bx=+document.getElementById('vbx').value,by=+document.getElementById('vby').value;
+    document.getElementById('vaxV').textContent=ax.toFixed(1);
+    document.getElementById('vayV').textContent=ay.toFixed(1);
+    document.getElementById('vbxV').textContent=bx.toFixed(1);
+    document.getElementById('vbyV').textContent=by.toFixed(1);
+    ctx.clearRect(0,0,W,H);
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=.5;
+    for(let x=0;x<W;x+=SC){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=SC){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,OY);ctx.lineTo(W,OY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(OX,0);ctx.lineTo(OX,H);ctx.stroke();
+    // Parallelogram shading
+    ctx.beginPath();
+    ctx.moveTo(OX,OY);ctx.lineTo(OX+ax*SC,OY-ay*SC);
+    ctx.lineTo(OX+(ax+bx)*SC,OY-(ay+by)*SC);ctx.lineTo(OX+bx*SC,OY-by*SC);
+    ctx.closePath();ctx.fillStyle='rgba(212,168,67,.07)';ctx.fill();
+    // Projection of a onto b
+    const dot=ax*bx+ay*by,nb2=bx*bx+by*by;
+    if(nb2>0){const s=dot/nb2;arrow(OX,OY,OX+s*bx*SC,OY-s*by*SC,'rgba(184,125,232,.5)',1.5);}
+    // Sum
+    arrow(OX,OY,OX+(ax+bx)*SC,OY-(ay+by)*SC,'rgba(123,226,139,.7)',1.8);
+    // Vectors a, b
+    arrow(OX,OY,OX+ax*SC,OY-ay*SC,'rgba(212,168,67,.95)');
+    arrow(OX,OY,OX+bx*SC,OY-by*SC,'rgba(91,200,219,.95)');
+    // Labels
+    const lf=(vx,vy,lbl,col)=>{
+      ctx.fillStyle=col;ctx.font='bold 12px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillText(lbl,OX+vx*SC+14*Math.sign(vx||1),OY-vy*SC-10);
+    };
+    lf(ax,ay,'a','rgba(212,168,67,.9)');
+    lf(bx,by,'b','rgba(91,200,219,.9)');
+    lf(ax+bx,ay+by,'a+b','rgba(123,226,139,.7)');
+    // Readout
+    const na=Math.sqrt(ax*ax+ay*ay),nb=Math.sqrt(bx*bx+by*by);
+    const ang=na>0&&nb>0?Math.acos(Math.max(-1,Math.min(1,(ax*bx+ay*by)/(na*nb))))*180/Math.PI:0;
+    document.getElementById('vectorReadout').innerHTML=
+      `<span style="color:#d4a843">a</span> = (${ax.toFixed(1)}, ${ay.toFixed(1)})   |a| = ${na.toFixed(3)}<br>`+
+      `<span style="color:#5bc8db">b</span> = (${bx.toFixed(1)}, ${by.toFixed(1)})   |b| = ${nb.toFixed(3)}<br>`+
+      `<span style="color:#7be28b">a+b</span> = (${(ax+bx).toFixed(1)}, ${(ay+by).toFixed(1)})<br>`+
+      `a·b = ${(ax*bx+ay*by).toFixed(3)}   θ = ${ang.toFixed(1)}°   a×b(z) = ${(ax*by-ay*bx).toFixed(3)}`;
+  }
+  ['vax','vay','vbx','vby'].forEach(id=>document.getElementById(id).addEventListener('input',update));
+  update();
+})();
+
+/* ══ MATRIX TRANSFORM ══ */
+(()=>{
+  const c=document.getElementById('transformCanvas');if(!c)return;
+  const ctx=c.getContext('2d');const W=c.width,H=c.height;
+  const CX=W/2,CY=H/2,S=50;
+  const T={
+    identity:{m:[[1,0],[0,1]],label:'Identity  [[1,0],[0,1]]',det:1},
+    rotate45:{m:[[.707,-.707],[.707,.707]],label:'Rotate 45°  [[c,-s],[s,c]]',det:1},
+    scale:{m:[[2,0],[0,.5]],label:'Scale  [[2,0],[0,0.5]]  det=1',det:1},
+    shear:{m:[[1,1],[0,1]],label:'Shear x  [[1,1],[0,1]]  det=1',det:1},
+    reflect:{m:[[-1,0],[0,1]],label:'Reflect over y  [[-1,0],[0,1]]  det=-1',det:-1},
+    project:{m:[[1,0],[0,0]],label:'Project onto x-axis  det=0 SINGULAR',det:0},
+  };
+  let cur='identity',anim=0,timer=null;
+  window.setTransform=(name,btn)=>{
+    document.querySelectorAll('#sec-matrices .btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');cur=name;anim=0;clearInterval(timer);
+    timer=setInterval(()=>{anim=Math.min(1,anim+.025);draw();if(anim>=1)clearInterval(timer);},16);
+  };
+  function mx(m,p,t){const[x,y]=p;return[t*(m[0][0]*x+m[0][1]*y)+(1-t)*x,t*(m[1][0]*x+m[1][1]*y)+(1-t)*y];}
+  function draw(){
+    const{m,label,det}=T[cur];
+    ctx.clearRect(0,0,W,H);
+    // Background grid (original)
+    ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=.5;
+    for(let i=-6;i<=6;i++){ctx.beginPath();ctx.moveTo(CX+i*S,0);ctx.lineTo(CX+i*S,H);ctx.stroke();ctx.beginPath();ctx.moveTo(0,CY+i*S);ctx.lineTo(W,CY+i*S);ctx.stroke();}
+    // Transformed grid
+    ctx.strokeStyle='rgba(74,144,217,.22)';ctx.lineWidth=.8;
+    for(let i=-6;i<=6;i++){
+      ctx.beginPath();for(let j=-6;j<=6;j++){const[px,py]=mx(m,[i,j],anim);const vx=CX+px*S,vy=CY-py*S;j===-6?ctx.moveTo(vx,vy):ctx.lineTo(vx,vy);}ctx.stroke();
+      ctx.beginPath();for(let j=-6;j<=6;j++){const[px,py]=mx(m,[j,i],anim);const vx=CX+px*S,vy=CY-py*S;j===-6?ctx.moveTo(vx,vy):ctx.lineTo(vx,vy);}ctx.stroke();
+    }
+    // Axes
+    ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,CY);ctx.lineTo(W,CY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,0);ctx.lineTo(CX,H);ctx.stroke();
+    // Basis vectors
+    [[1,0,'rgba(212,168,67,.95)','î'],[0,1,'rgba(224,82,82,.9)','ĵ']].forEach(([bx,by,col,lbl])=>{
+      const[tx,ty]=mx(m,[bx,by],anim);
+      const ex=CX+tx*S,ey=CY-ty*S;
+      ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(ex,ey);ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.stroke();
+      const ang=Math.atan2(ey-CY,ex-CX);const hl=11;
+      ctx.beginPath();ctx.moveTo(ex,ey);
+      ctx.lineTo(ex-hl*Math.cos(ang-.4),ey-hl*Math.sin(ang-.4));
+      ctx.lineTo(ex-hl*Math.cos(ang+.4),ey-hl*Math.sin(ang+.4));
+      ctx.closePath();ctx.fillStyle=col;ctx.fill();
+      ctx.fillStyle=col;ctx.font='bold 13px JetBrains Mono';ctx.textAlign='center';ctx.fillText(lbl,ex+14,ey-8);
+    });
+    const[e1x,e1y]=mx(m,[1,0],1);const[e2x,e2y]=mx(m,[0,1],1);
+    document.getElementById('transformReadout').innerHTML=
+      `${label}\nê₁→(${e1x.toFixed(2)}, ${e1y.toFixed(2)})   ê₂→(${e2x.toFixed(2)}, ${e2y.toFixed(2)})\ndet=${det}   ${det===0?'SINGULAR — no inverse':det<0?'Orientation reversed':'Orientation preserved'}`;
+  }
+  draw();
+})();
+
+/* ══ MATRIX CALCULATOR ══ */
+window.matCalc=op=>{
+  const a11=+document.getElementById('ma11').value,a12=+document.getElementById('ma12').value;
+  const a21=+document.getElementById('ma21').value,a22=+document.getElementById('ma22').value;
+  const b11=+document.getElementById('mb11').value,b12=+document.getElementById('mb12').value;
+  const b21=+document.getElementById('mb21').value,b22=+document.getElementById('mb22').value;
+  const dA=a11*a22-a12*a21;let r='';
+  const f=v=>Number.isInteger(v)?String(v):v.toFixed(3);
+  if(op==='mul'){r=`A×B =\n[${f(a11*b11+a12*b21)}, ${f(a11*b12+a12*b22)}]\n[${f(a21*b11+a22*b21)}, ${f(a21*b12+a22*b22)}]`;}
+  else if(op==='add'){r=`A+B =\n[${f(a11+b11)}, ${f(a12+b12)}]\n[${f(a21+b21)}, ${f(a22+b22)}]`;}
+  else if(op==='inv'){if(Math.abs(dA)<1e-10)r='A⁻¹: singular!';else r=`A⁻¹ =\n[${f(a22/dA)}, ${f(-a12/dA)}]\n[${f(-a21/dA)}, ${f(a11/dA)}]`;}
+  else if(op==='det'){r=`det(A) = ${a11}×${a22} − ${a12}×${a21}\n       = ${dA.toFixed(4)}`;}
+  else if(op==='trans'){r=`Aᵀ =\n[${a11}, ${a21}]\n[${a12}, ${a22}]`;}
+  document.getElementById('matResult').textContent=r;
+};
+
+/* ══ EIGENVALUE VISUALIZER ══ */
+(()=>{
+  const c=document.getElementById('eigenCanvas');if(!c)return;
+  const ctx=c.getContext('2d');const W=c.width,H=c.height;
+  const CX=W/2,CY=H/2,S=48;
+  function mat(){const v=id=>parseFloat(document.getElementById(id).value);return[[v('ea11'),v('ea12')],[v('ea12'),v('ea22')]];}
+  function eigenvalues(m){const tr=m[0][0]+m[1][1],d=m[0][0]*m[1][1]-m[0][1]*m[1][0];const disc=tr*tr-4*d;return disc>=0?[(tr+Math.sqrt(disc))/2,(tr-Math.sqrt(disc))/2]:null;}
+  function eigenvec(m,lam){const a=m[0][0]-lam,b=m[0][1];return Math.abs(b)>1e-8?[b,-a]:[1,0];}
+  function norm(v){const n=Math.hypot(v[0],v[1]);return n>0?[v[0]/n,v[1]/n]:v;}
+  function draw(){
+    ['ea11','ea12','ea22'].forEach(id=>document.getElementById(id+'V').textContent=(+document.getElementById(id).value).toFixed(1));
+    const m=mat();ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=.5;
+    for(let i=-6;i<=6;i++){ctx.beginPath();ctx.moveTo(CX+i*S,0);ctx.lineTo(CX+i*S,H);ctx.stroke();ctx.beginPath();ctx.moveTo(0,CY+i*S);ctx.lineTo(W,CY+i*S);ctx.stroke();}
+    ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,CY);ctx.lineTo(W,CY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,0);ctx.lineTo(CX,H);ctx.stroke();
+    // Unit circle
+    ctx.beginPath();ctx.arc(CX,CY,S,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;ctx.stroke();
+    // Transformed ellipse
+    ctx.beginPath();
+    for(let t=0;t<=Math.PI*2+.05;t+=.04){
+      const ix=Math.cos(t),iy=Math.sin(t);
+      const ox=m[0][0]*ix+m[0][1]*iy,oy=m[1][0]*ix+m[1][1]*iy;
+      t<.04?ctx.moveTo(CX+ox*S,CY-oy*S):ctx.lineTo(CX+ox*S,CY-oy*S);
+    }
+    ctx.strokeStyle='rgba(74,144,217,.5)';ctx.lineWidth=1.5;ctx.stroke();
+    const ev=eigenvalues(m);
+    if(ev){
+      const cols=['rgba(212,168,67,.95)','rgba(78,205,196,.9)'];
+      ev.forEach((lam,i)=>{
+        const v=norm(eigenvec(m,lam));const r=S*1.6;
+        // Dashed line through origin
+        ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(CX-v[0]*r*1.5,CY+v[1]*r*1.5);ctx.lineTo(CX+v[0]*r*1.5,CY-v[1]*r*1.5);ctx.strokeStyle=cols[i].replace('.95','.2)').replace('.9','.2)');ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+        // Eigenvector arrow scaled by |λ|
+        const mag=Math.min(Math.abs(lam),3);
+        ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+v[0]*mag*S,CY-v[1]*mag*S);ctx.strokeStyle=cols[i];ctx.lineWidth=2.5;ctx.stroke();
+        ctx.beginPath();ctx.arc(CX+v[0]*mag*S,CY-v[1]*mag*S,5,0,Math.PI*2);ctx.fillStyle=cols[i];ctx.fill();
+        // λ label
+        ctx.fillStyle=cols[i];ctx.font='11px JetBrains Mono';ctx.textAlign='center';ctx.fillText(`λ${i+1}=${lam.toFixed(2)}`,CX+v[0]*(mag*S+22),CY-v[1]*(mag*S+22));
+      });
+      document.getElementById('eigenReadout').innerHTML=
+        `λ₁ = ${ev[0].toFixed(4)}   λ₂ = ${ev[1].toFixed(4)}<br>`+
+        `trace = ${(ev[0]+ev[1]).toFixed(4)}   det = ${(ev[0]*ev[1]).toFixed(4)}<br>`+
+        `Symmetric matrix → real, orthogonal eigenvectors`;
+    }else{
+      document.getElementById('eigenReadout').textContent='Complex eigenvalues → rotation+scaling, no real eigenvectors';
+    }
+  }
+  ['ea11','ea12','ea22'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  draw();
+})();
+
+/* ══ GAUSSIAN ELIMINATION ══ */
+(()=>{
+  const orig=[[2,1,-1,8],[-3,-1,2,-11],[-2,1,2,-3]];
+  let mat,stepIdx;
+  const steps=[
+    {msg:'Original augmented matrix [A|b] for the system 2x+y−z=8, −3x−y+2z=−11, −2x+y+2z=−3',hi:[]},
+    {op:m=>{m[1]=m[1].map((v,i)=>v+1.5*m[0][i]);},msg:'R2 ← R2 + (3/2)·R1  (eliminate x from row 2)',hi:[1]},
+    {op:m=>{m[2]=m[2].map((v,i)=>v+1*m[0][i]);},msg:'R3 ← R3 + R1  (eliminate x from row 3)',hi:[2]},
+    {op:m=>{m[2]=m[2].map((v,i)=>v+m[1][i]);},msg:'R3 ← R3 + R2  (eliminate y from row 3)',hi:[2]},
+    {msg:'Row echelon form achieved → back-substitute: z=−1, y=3, x=2  ✓',hi:[0,1,2]},
+  ];
+  window.gaussReset=()=>{
+    mat=orig.map(r=>[...r]);stepIdx=0;drawGauss([]);
+    document.getElementById('gaussReadout').textContent='System ready. Click "Next step" to begin elimination.';
+  };
+  window.gaussStep=()=>{
+    if(stepIdx>=steps.length)return;
+    const s=steps[stepIdx];if(s.op)s.op(mat);
+    document.getElementById('gaussReadout').textContent=s.msg;drawGauss(s.hi||[]);stepIdx++;
+  };
+  window.gaussSolve=()=>{gaussReset();let i=0;const t=setInterval(()=>{if(i>=steps.length){clearInterval(t);return;}gaussStep();i++;},700);};
+  function drawGauss(hi){
+    const c=document.getElementById('gaussCanvas');if(!c)return;
+    const ctx=c.getContext('2d');const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const rows=mat.length,cols=mat[0].length;
+    const cw=W/(cols+1

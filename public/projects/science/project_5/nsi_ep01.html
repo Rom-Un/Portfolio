@@ -1,0 +1,2279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSI — Épisode 01 · L'Informatique : La Science du Calcul</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;600&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#04070d;
+  --bg2:#080e18;
+  --bg3:#0c1422;
+  --green:#00ff88;
+  --green2:#00cc6a;
+  --green3:#00ff8844;
+  --blue:#4f8fff;
+  --blue2:#2060cc;
+  --cyan:#00d4ff;
+  --yellow:#f5c842;
+  --orange:#ff7b35;
+  --red:#ff4455;
+  --purple:#b06fde;
+  --white:#e8f0ff;
+  --dim:#4a5568;
+  --dim2:#6b7a8d;
+  --gold:#d4a843;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:'Space Grotesk',sans-serif;
+  overflow-x:hidden;
+}
+
+/* ── SCAN LINES OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,.015) 2px,rgba(0,255,136,.015) 4px);
+  pointer-events:none;
+  z-index:1000;
+}
+
+/* ── LAYOUT ── */
+.scene{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  padding:5rem 2rem;
+}
+.scene-label{
+  position:absolute;top:2rem;left:2rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.3em;color:var(--green2);text-transform:uppercase;
+}
+.timestamp{
+  position:absolute;top:2rem;right:2rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.15em;color:var(--dim2);
+}
+
+/* ── DIVIDER ── */
+.divider{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green2),transparent);
+  opacity:.3;
+}
+
+/* ── SECTION HEADER ── */
+.section-header{text-align:center;margin-bottom:3rem}
+.section-number{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.4em;color:var(--green);text-transform:uppercase;
+  display:block;margin-bottom:.8rem;
+}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.8rem,4vw,3rem);font-weight:600;
+  color:var(--white);
+}
+.section-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.9rem;
+  color:var(--green2);display:block;margin-top:.4rem;font-weight:300;
+}
+
+/* ── TERMINAL STYLE BOX ── */
+.terminal{
+  background:#020509;
+  border:1px solid rgba(0,255,136,.2);
+  border-radius:4px;
+  overflow:hidden;
+}
+.terminal-bar{
+  background:rgba(0,255,136,.06);
+  padding:.5rem 1rem;
+  display:flex;align-items:center;gap:.5rem;
+  border-bottom:1px solid rgba(0,255,136,.1);
+}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.term-dot.red{background:#ff5f57}
+.term-dot.yellow{background:#febc2e}
+.term-dot.green{background:#28c840}
+.term-title{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  color:var(--dim2);letter-spacing:.15em;margin-left:.5rem;
+}
+.terminal-body{
+  padding:1.2rem 1.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.82rem;line-height:1.9;
+  color:#a8d0b8;
+}
+.code-green{color:var(--green)}
+.code-blue{color:var(--blue)}
+.code-yellow{color:var(--yellow)}
+.code-orange{color:var(--orange)}
+.code-purple{color:var(--purple)}
+.code-red{color:var(--red)}
+.code-dim{color:var(--dim2)}
+.code-cyan{color:var(--cyan)}
+.code-white{color:var(--white)}
+
+/* ── CODE BOX ── */
+.code-box{
+  background:#020509;
+  border:1px solid rgba(79,143,255,.2);
+  border-radius:4px;
+  padding:1.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;line-height:1.8;
+  color:#a8c0d8;
+  overflow-x:auto;
+}
+
+/* ── GRAPH BOX ── */
+.graph-box{
+  background:#080e18;
+  border:1px solid rgba(79,143,255,.2);
+  border-radius:4px;
+  padding:1.2rem;
+}
+.graph-title{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;
+  margin-bottom:.8rem;
+}
+canvas.chart{display:block;width:100%}
+
+/* ── EQ / INFO CARDS ── */
+.info-card{
+  background:var(--bg2);
+  border:1px solid rgba(0,255,136,.15);
+  border-radius:4px;
+  padding:1.5rem;
+  position:relative;
+}
+.info-card::before{
+  content:'';position:absolute;top:-1px;left:20%;right:20%;
+  height:1px;background:var(--green2);
+}
+.card-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:.55rem;
+  letter-spacing:.3em;color:var(--green2);text-transform:uppercase;
+  display:block;margin-bottom:.6rem;
+}
+.card-title{font-size:1.05rem;color:var(--white);font-weight:600;margin-bottom:.5rem}
+.card-body{font-size:.88rem;color:#8899aa;line-height:1.8}
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box{
+  background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,255,136,.01));
+  border:1px solid rgba(0,255,136,.3);
+  border-radius:4px;padding:1.5rem;text-align:center;
+}
+.big-code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.4rem;color:var(--green);
+  display:block;margin:.5rem 0;
+}
+
+/* ── GRIDS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1100px;width:100%;align-items:start}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;max-width:1100px;width:100%}
+.four-col{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.2rem;max-width:1100px;width:100%}
+
+/* ── TABLE ── */
+.table-wrap{width:100%;max-width:1000px;margin:0 auto;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2);padding:.8rem 1rem;border-bottom:1px solid rgba(0,255,136,.2);text-align:left}
+td{padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;vertical-align:middle}
+td:first-child{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--cyan)}
+tr:hover td{background:rgba(0,255,136,.03)}
+
+/* ── CONTROLS ── */
+.controls{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:1rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--dim2)}
+.btn{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:.5rem 1.2rem;
+  border-radius:2px;cursor:pointer;transition:all .2s;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.btn-green{background:rgba(0,255,136,.08);border:1px solid var(--green2);color:var(--green)}
+.btn-green:hover{background:rgba(0,255,136,.2)}
+.btn-blue{background:rgba(79,143,255,.08);border:1px solid var(--blue);color:var(--blue)}
+.btn-blue:hover{background:rgba(79,143,255,.2)}
+.btn-red{background:rgba(255,68,85,.08);border:1px solid var(--red);color:var(--red)}
+.btn-red:hover{background:rgba(255,68,85,.2)}
+.btn-yellow{background:rgba(245,200,66,.08);border:1px solid var(--yellow);color:var(--yellow)}
+.btn-yellow:hover{background:rgba(245,200,66,.2)}
+.btn-dim{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.15);color:var(--dim2)}
+.btn-dim:hover{border-color:var(--green2);color:var(--green2)}
+.btn-dim.active{background:rgba(0,255,136,.1);border-color:var(--green2);color:var(--green)}
+
+/* ── SLIDER ── */
+.slider-row{display:flex;align-items:center;gap:1.5rem;margin:.7rem 0;flex-wrap:wrap}
+.slider-row label{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--green2);min-width:130px}
+.slider-row input[type=range]{flex:1;min-width:120px;accent-color:var(--green)}
+.slider-val{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--cyan);min-width:60px}
+
+/* ── READOUT ── */
+.readout{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:#8899aa;line-height:1.7;margin-top:.8rem;
+  padding:.6rem .8rem;background:rgba(0,255,136,.03);
+  border-left:2px solid rgba(0,255,136,.2);
+  border-radius:0 2px 2px 0;
+}
+
+/* ── BOTTOM STRIPE ── */
+.bottom-stripe{
+  background:var(--bg2);border-top:1px solid rgba(0,255,136,.1);
+  padding:3rem 2rem;display:flex;justify-content:center;
+  align-items:center;gap:3rem;flex-wrap:wrap;
+}
+.stripe-item{text-align:center}
+.stripe-val{font-family:'IBM Plex Mono',monospace;font-size:1.3rem;color:var(--green);display:block}
+.stripe-label{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.2em;color:var(--dim2);text-transform:uppercase}
+
+/* ── COLD OPEN SPECIFIC ── */
+#cold-open{background:radial-gradient(ellipse at 35% 40%,#030d1a 0%,var(--bg) 65%)}
+canvas#matrixCanvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.35}
+.cold-text{position:relative;z-index:2;max-width:860px;text-align:center}
+.ep-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.4em;
+  color:var(--green);text-transform:uppercase;display:block;margin-bottom:1.5rem;
+  border:1px solid rgba(0,255,136,.3);padding:.4rem 1.2rem;border-radius:2px;
+  display:inline-block;
+}
+.ep-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.5rem,6vw,4.5rem);font-weight:600;
+  line-height:1.05;color:var(--white);margin-bottom:.5rem;
+}
+.ep-title span{color:var(--green)}
+.ep-runtime{
+  font-family:'IBM Plex Mono',monospace;font-size:.9rem;
+  font-style:italic;color:var(--green2);margin-bottom:2.5rem;
+}
+.narrator-quote{
+  font-size:1.05rem;line-height:1.9;color:#a0b8c8;
+  border-left:2px solid var(--green2);padding-left:1.5rem;
+  text-align:left;margin-bottom:2rem;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+}
+.topic-tags{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+.topic-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.15em;
+  padding:.35rem .9rem;border-radius:2px;text-transform:uppercase;
+}
+
+/* ── BIT DISPLAY ── */
+.bit-grid{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.bit{
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:700;
+  border-radius:2px;transition:all .3s;border:1px solid transparent;cursor:pointer;
+}
+.bit.on{background:rgba(0,255,136,.2);border-color:var(--green2);color:var(--green)}
+.bit.off{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:var(--dim2)}
+
+/* ── TREE NODE ── */
+.tree-svg{background:var(--bg2);border:1px solid rgba(79,143,255,.2);border-radius:4px;display:block;margin:0 auto}
+
+/* ── ALGO STEP ── */
+.algo-step{
+  display:flex;gap:1rem;align-items:flex-start;
+  padding:.8rem 1rem;margin:.3rem 0;
+  background:rgba(255,255,255,.02);border-radius:2px;
+  border-left:2px solid transparent;transition:all .3s;
+}
+.algo-step.active{background:rgba(0,255,136,.06);border-left-color:var(--green)}
+.step-n{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  color:var(--dim2);min-width:28px;padding-top:.1rem;
+}
+.step-text{font-size:.88rem;color:#a0b0c0;line-height:1.6}
+
+/* ── MEMORY CELLS ── */
+.mem-grid{display:flex;gap:2px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:.5rem}
+.mem-cell{
+  min-width:52px;height:48px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:2px;font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;transition:all .3s;flex-shrink:0;
+}
+.mem-cell.highlighted{background:rgba(0,255,136,.12);border-color:var(--green2);color:var(--green)}
+.mem-cell.pointer{background:rgba(79,143,255,.12);border-color:var(--blue);color:var(--blue)}
+.mem-cell .addr{font-size:.5rem;color:var(--dim2);margin-bottom:.2rem}
+.mem-cell .val{font-size:.82rem;color:var(--white)}
+
+/* ── GRAPH (réseau) ── */
+.graph-svg{background:var(--bg2);border:1px solid rgba(176,111,222,.2);border-radius:4px}
+
+/* ── SQL ── */
+.sql-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.78rem}
+.sql-table th{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);padding:.5rem .8rem;color:var(--green2);font-size:.62rem;letter-spacing:.15em;text-align:left}
+.sql-table td{border:1px solid rgba(255,255,255,.06);padding:.5rem .8rem;color:#a0b8c0}
+.sql-table tr:hover td{background:rgba(0,255,136,.03)}
+.pk{color:var(--yellow);font-weight:700}
+.fk{color:var(--blue)}
+
+/* ── NETWORK TOPOLOGY ── */
+.topo-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;text-anchor:middle}
+
+/* RESPONSIVE */
+@media(max-width:900px){.two-col,.three-col,.four-col{grid-template-columns:1fr}}
+
+/* ── CURSOR BLINK ── */
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.cursor{animation:blink 1s infinite;color:var(--green)}
+
+/* INFO BUBBLE */
+.info-bubble{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.3);
+  color:rgba(0,255,136,.6);font-size:9px;font-family:serif;
+  cursor:pointer;vertical-align:middle;margin-left:5px;
+  transition:all .2s;user-select:none;font-style:italic;font-weight:bold;
+}
+.info-bubble:hover{background:rgba(0,255,136,.2);color:var(--green)}
+.info-panel{
+  position:fixed;z-index:9999;max-width:320px;min-width:240px;
+  background:#07101a;border:1px solid rgba(0,255,136,.3);
+  border-radius:4px;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.8);
+  opacity:0;transform:scale(.92) translateY(6px);
+  transition:opacity .2s,transform .2s;pointer-events:none;
+}
+.info-panel.visible{opacity:1;transform:scale(1) translateY(0);pointer-events:all}
+.ip-header{
+  background:rgba(0,255,136,.06);padding:.5rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(0,255,136,.1);
+}
+.ip-tag{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green2)}
+.ip-close{
+  width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.05);
+  border:none;color:var(--dim2);cursor:pointer;font-size:10px;
+  display:flex;align-items:center;justify-content:center;
+}
+.ip-close:hover{background:rgba(255,255,255,.15);color:#fff}
+.ip-body{padding:1rem}
+.ip-title{font-size:.92rem;color:var(--white);margin-bottom:.5rem;font-weight:600}
+.ip-text{font-size:.78rem;line-height:1.7;color:#8899aa;margin-bottom:.7rem}
+.ip-example{
+  background:rgba(0,255,136,.05);border-left:2px solid rgba(0,255,136,.4);
+  padding:.4rem .8rem;font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;color:#6daa88;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     COLD OPEN
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="cold-open">
+  <canvas id="matrixCanvas"></canvas>
+  <div class="cold-text">
+    <span class="ep-badge">NSI · Numérique &amp; Sciences Informatiques</span>
+    <h1 class="ep-title">L'<span>Informatique</span><br>Science du Calcul</h1>
+    <p class="ep-runtime">Épisode 01 · Terminale NSI · ~120 minutes</p>
+    <blockquote class="narrator-quote">
+      Tout commence par un seul bit — un 0 ou un 1. De cette unique décision binaire naît
+      l'architecture de tout ordinateur, de tout algorithme, de tout réseau.
+      L'informatique n'est pas la science des ordinateurs.
+      C'est la science de ce qui peut être calculé, et comment.
+    </blockquote>
+    <div class="topic-tags">
+      <span class="topic-tag" style="color:var(--green);border:1px solid rgba(0,255,136,.25)">Représentation des données</span>
+      <span class="topic-tag" style="color:var(--blue);border:1px solid rgba(79,143,255,.25)">Algorithmique</span>
+      <span class="topic-tag" style="color:var(--cyan);border:1px solid rgba(0,212,255,.25)">Structures de données</span>
+      <span class="topic-tag" style="color:var(--yellow);border:1px solid rgba(245,200,66,.25)">Bases de données</span>
+      <span class="topic-tag" style="color:var(--orange);border:1px solid rgba(255,123,53,.25)">Architectures &amp; OS</span>
+      <span class="topic-tag" style="color:var(--purple);border:1px solid rgba(176,111,222,.25)">Réseaux</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — REPRÉSENTATION DES DONNÉES
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-binary" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 30% 50%,#040e18 0%,var(--bg) 65%)">
+  <div class="scene-label">Section 1 · Représentation</div>
+  <div class="timestamp">0:00 – 18:00</div>
+
+  <div class="section-header" style="margin-top:3rem">
+    <span class="section-number">Section Un</span>
+    <h2 class="section-title">Représentation des Données</h2>
+    <span class="section-sub">// Binaire · Hexadécimal · Entiers · Flottants · Texte</span>
+  </div>
+
+  <!-- Binary converter interactive -->
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div>
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="term-dot red"></div><div class="term-dot yellow"></div><div class="term-dot green"></div>
+            <span class="term-title">convertisseur_bases.py</span>
+          </div>
+          <div class="terminal-body">
+            <div style="margin-bottom:1rem">
+              <span class="code-dim"># Entrez un entier décimal (0–255)</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem">
+              <span class="code-green">n</span>
+              <span class="code-white"> = </span>
+              <input id="decInput" type="number" min="0" max="65535" value="42"
+                style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.3);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:1rem;padding:.3rem .6rem;border-radius:2px;width:100px;outline:none">
+            </div>
+            <div id="convOutput" style="line-height:2.2"></div>
+          </div>
+        </div>
+
+        <!-- Bit visualization -->
+        <div style="margin-top:1.5rem;background:var(--bg2);border:1px solid rgba(0,255,136,.15);border-radius:4px;padding:1.2rem">
+          <div class="graph-title">Représentation sur 8 bits (octet)</div>
+          <div style="display:flex;gap:4px;margin-bottom:.8rem" id="bitDisplay"></div>
+          <div style="display:flex;justify-content:space-between;padding:0 2px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--dim2)">bit 7 (MSB)</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--dim2)">bit 0 (LSB)</span>
+          </div>
+          <div style="margin-top:.8rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--dim2)" id="bitWeights"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <!-- Base systems table -->
+        <div class="info-card">
+          <span class="card-tag">Les 4 bases fondamentales</span>
+          <table style="width:100%;font-family:'JetBrains Mono',monospace;font-size:.8rem;border-collapse:collapse;margin-top:.5rem">
+            <thead><tr>
+              <th style="border-bottom:1px solid rgba(0,255,136,.15);padding:.4rem;color:var(--dim2);font-size:.58rem;letter-spacing:.15em;text-align:left">BASE</th>
+              <th style="border-bottom:1px solid rgba(0,255,136,.15);padding:.4rem;color:var(--dim2);font-size:.58rem;letter-spacing:.15em;text-align:left">CHIFFRES</th>
+              <th style="border-bottom:1px solid rgba(0,255,136,.15);padding:.4rem;color:var(--dim2);font-size:.58rem;letter-spacing:.15em;text-align:left">PRÉFIXE</th>
+              <th style="border-bottom:1px solid rgba(0,255,136,.15);padding:.4rem;color:var(--dim2);font-size:.58rem;letter-spacing:.15em;text-align:left">USAGE</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:.5rem;color:var(--green)">Base 2</td><td style="padding:.5rem;color:#a0b8c0">0, 1</td><td style="padding:.5rem;color:var(--yellow)">0b</td><td style="padding:.5rem;color:#a0b8c0">CPU, mémoire</td></tr>
+              <tr><td style="padding:.5rem;color:var(--cyan)">Base 8</td><td style="padding:.5rem;color:#a0b8c0">0–7</td><td style="padding:.5rem;color:var(--yellow)">0o</td><td style="padding:.5rem;color:#a0b8c0">Permissions Unix</td></tr>
+              <tr><td style="padding:.5rem;color:var(--orange)">Base 10</td><td style="padding:.5rem;color:#a0b8c0">0–9</td><td style="padding:.5rem;color:var(--dim2)">—</td><td style="padding:.5rem;color:#a0b8c0">Humains</td></tr>
+              <tr><td style="padding:.5rem;color:var(--purple)">Base 16</td><td style="padding:.5rem;color:#a0b8c0">0–9, A–F</td><td style="padding:.5rem;color:var(--yellow)">0x</td><td style="padding:.5rem;color:#a0b8c0">Adresses, couleurs</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Negative numbers -->
+        <div class="info-card" style="border-color:rgba(255,68,85,.2)">
+          <span class="card-tag" style="color:var(--red)">Entiers négatifs — Complément à 2</span>
+          <div class="code-box" style="margin-top:.8rem;padding:1rem;font-size:.75rem">
+            <div><span class="code-dim"># Complément à 2 sur 8 bits</span></div>
+            <div><span class="code-green">-1</span> → inverser bits de 1 + 1 → <span class="code-yellow">1111 1111</span></div>
+            <div><span class="code-green">-128</span> → <span class="code-yellow">1000 0000</span></div>
+            <div><span class="code-green">+127</span> → <span class="code-yellow">0111 1111</span></div>
+            <div style="margin-top:.5rem"><span class="code-dim"># Plage sur n bits : [-2^(n-1), 2^(n-1)-1]</span></div>
+          </div>
+          <div id="compA2Display" style="margin-top:.8rem"></div>
+        </div>
+
+        <!-- IEEE 754 -->
+        <div class="info-card" style="border-color:rgba(245,200,66,.2)">
+          <span class="card-tag" style="color:var(--yellow)">Flottants IEEE 754 (32 bits) <span class="info-bubble" onclick='showInfo(this,{tag:"Flottants",title:"Pourquoi 0.1 + 0.2 ≠ 0.3 ?",text:"Les flottants représentent des nombres en base 2 à virgule. La plupart des décimales (comme 0.1) n'ont pas de représentation exacte en binaire. L'erreur s'accumule.",example:">>> 0.1 + 0.2\n0.30000000000000004",formula:"(-1)^s × 1.mantisse × 2^(exposant-127)"})'>i</span></span>
+          <div style="display:flex;gap:3px;margin-top:.8rem" id="ieee754Display">
+            <div style="width:24px;text-align:center">
+              <div style="background:rgba(255,68,85,.2);border:1px solid rgba(255,68,85,.4);height:28px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--red);border-radius:2px">s</div>
+              <div style="font-size:.45rem;color:var(--dim2);margin-top:.2rem;text-align:center">sign</div>
+            </div>
+            <div style="flex:1;text-align:center">
+              <div style="background:rgba(79,143,255,.1);border:1px solid rgba(79,143,255,.3);height:28px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--blue);border-radius:2px">exposant (8 bits)</div>
+              <div style="font-size:.45rem;color:var(--dim2);margin-top:.2rem;text-align:center">biais = 127</div>
+            </div>
+            <div style="flex:2;text-align:center">
+              <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);height:28px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--green);border-radius:2px">mantisse (23 bits)</div>
+              <div style="font-size:.45rem;color:var(--dim2);margin-top:.2rem;text-align:center">fraction implicite 1.xxx</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASCII / Unicode table -->
+    <div style="margin-top:3rem">
+      <div class="graph-title">Table ASCII — Les 128 premiers caractères</div>
+      <canvas id="asciiCanvas" width="1000" height="180" style="width:100%;display:block;background:var(--bg2);border:1px solid rgba(0,255,136,.1);border-radius:4px"></canvas>
+    </div>
+
+    <!-- Operations tables -->
+    <div class="three-col" style="margin-top:2rem">
+      <div class="info-card">
+        <span class="card-tag">Opérations binaires</span>
+        <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.75rem">
+          <div><span class="code-green">AND</span> <span class="code-dim">: 1 si les deux sont 1</span></div>
+          <div><span class="code-yellow">1010</span> AND <span class="code-yellow">1100</span> = <span class="code-white">1000</span></div>
+          <div style="margin-top:.5rem"><span class="code-blue">OR</span>  <span class="code-dim">: 1 si au moins un est 1</span></div>
+          <div><span class="code-yellow">1010</span> OR  <span class="code-yellow">1100</span> = <span class="code-white">1110</span></div>
+          <div style="margin-top:.5rem"><span class="code-purple">XOR</span> <span class="code-dim">: 1 si exactement un est 1</span></div>
+          <div><span class="code-yellow">1010</span> XOR <span class="code-yellow">1100</span> = <span class="code-white">0110</span></div>
+          <div style="margin-top:.5rem"><span class="code-red">NOT</span> <span class="code-dim">: inverse tous les bits</span></div>
+          <div>NOT <span class="code-yellow">1010</span> = <span class="code-white">0101</span></div>
+        </div>
+      </div>
+      <div class="info-card" style="border-color:rgba(79,143,255,.2)">
+        <span class="card-tag" style="color:var(--blue)">Décalages (shifts)</span>
+        <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.75rem">
+          <div><span class="code-dim"># &lt;&lt; décalage gauche = × 2</span></div>
+          <div><span class="code-yellow">0001</span> &lt;&lt; 1 = <span class="code-white">0010</span> <span class="code-dim">(×2)</span></div>
+          <div><span class="code-yellow">0001</span> &lt;&lt; 3 = <span class="code-white">1000</span> <span class="code-dim">(×8)</span></div>
+          <div style="margin-top:.5rem"><span class="code-dim"># &gt;&gt; décalage droite = ÷ 2</span></div>
+          <div><span class="code-yellow">1000</span> &gt;&gt; 1 = <span class="code-white">0100</span> <span class="code-dim">(÷2)</span></div>
+          <div style="margin-top:.5rem"><span class="code-dim"># Masque de bits</span></div>
+          <div>n & <span class="code-yellow">0xFF</span> <span class="code-dim"># garde octet bas</span></div>
+        </div>
+      </div>
+      <div class="info-card" style="border-color:rgba(245,200,66,.2)">
+        <span class="card-tag" style="color:var(--yellow)">Unités de stockage</span>
+        <table style="width:100%;font-family:'JetBrains Mono',monospace;font-size:.75rem;border-collapse:collapse;margin-top:.5rem">
+          <tr><td style="padding:.3rem;color:var(--green)">1 bit</td><td style="padding:.3rem;color:#8899aa">0 ou 1</td></tr>
+          <tr><td style="padding:.3rem;color:var(--green)">1 octet</td><td style="padding:.3rem;color:#8899aa">8 bits</td></tr>
+          <tr><td style="padding:.3rem;color:var(--cyan)">1 Ko</td><td style="padding:.3rem;color:#8899aa">2¹⁰ = 1 024 octets</td></tr>
+          <tr><td style="padding:.3rem;color:var(--cyan)">1 Mo</td><td style="padding:.3rem;color:#8899aa">2²⁰ ≈ 10⁶ octets</td></tr>
+          <tr><td style="padding:.3rem;color:var(--blue)">1 Go</td><td style="padding:.3rem;color:#8899aa">2³⁰ ≈ 10⁹ octets</td></tr>
+          <tr><td style="padding:.3rem;color:var(--blue)">1 To</td><td style="padding:.3rem;color:#8899aa">2⁴⁰ ≈ 10¹² octets</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — ALGORITHMIQUE
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-algo" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 70% 30%,#04101a 0%,var(--bg) 70%)">
+  <div class="scene-label">Section 2 · Algorithmique</div>
+  <div class="timestamp">18:00 – 38:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Deux</span>
+    <h2 class="section-title">Algorithmique</h2>
+    <span class="section-sub">// Complexité · Tri · Recherche · Récursivité</span>
+  </div>
+
+  <!-- Sorting visualizer -->
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="graph-box" style="border-color:rgba(0,255,136,.2)">
+      <div class="graph-title">Visualiseur de tri — observer la complexité en action</div>
+      <canvas id="sortCanvas" width="1000" height="220" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div class="controls" style="margin-top:1rem;gap:1rem;flex-wrap:wrap">
+        <button class="btn btn-dim active" onclick="setSortAlgo('bubble',this)">Tri à bulles O(n²)</button>
+        <button class="btn btn-dim" onclick="setSortAlgo('selection',this)">Tri sélection O(n²)</button>
+        <button class="btn btn-dim" onclick="setSortAlgo('insertion',this)">Tri insertion O(n²)</button>
+        <button class="btn btn-dim" onclick="setSortAlgo('merge',this)">Tri fusion O(n·log n)</button>
+        <button class="btn btn-dim" onclick="setSortAlgo('quick',this)">Tri rapide O(n·log n)</button>
+        <button class="btn btn-green" onclick="startSort()">▶ Lancer</button>
+        <button class="btn btn-yellow" onclick="shuffleSort()">↺ Mélanger</button>
+      </div>
+      <div class="readout" id="sortReadout">Sélectionner un algorithme puis cliquer "Lancer"</div>
+    </div>
+
+    <!-- Complexity chart -->
+    <div class="two-col" style="margin-top:2rem">
+      <div class="graph-box">
+        <div class="graph-title">Complexité algorithmique — n opérations</div>
+        <canvas id="complexityCanvas" width="480" height="250" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div style="display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.8rem">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--green)">── O(1)</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cyan)">── O(log n)</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--blue)">── O(n)</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--yellow)">── O(n log n)</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--orange)">── O(n²)</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--red)">── O(2ⁿ)</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <!-- Binary search -->
+        <div class="info-card">
+          <span class="card-tag">Recherche dichotomique <span class="info-bubble" onclick='showInfo(this,{tag:"Algorithmique",title:"Dichotomie — diviser pour régner",text:"La recherche binaire divise le tableau trié en deux à chaque étape. Après k étapes on a n/2^k éléments. On s'arrête quand 2^k = n, donc k = log₂(n) étapes.",example:"n=1024 → 10 comparaisons max\nn=1 000 000 → seulement 20!",formula:"Complexité : O(log₂ n)"})'>i</span></span>
+          <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+            <div><span class="code-key" style="color:var(--blue)">def</span> <span class="code-fn" style="color:var(--green)">recherche_dicho</span>(tab, cible):</div>
+            <div>  g, d = <span class="code-num" style="color:var(--orange)">0</span>, len(tab) - <span class="code-num" style="color:var(--orange)">1</span></div>
+            <div>  <span class="code-key" style="color:var(--blue)">while</span> g &lt;= d:</div>
+            <div>    m = (g + d) // <span class="code-num" style="color:var(--orange)">2</span></div>
+            <div>    <span class="code-key" style="color:var(--blue)">if</span>   tab[m] == cible: <span class="code-key" style="color:var(--blue)">return</span> m</div>
+            <div>    <span class="code-key" style="color:var(--blue)">elif</span> tab[m] &lt;  cible: g = m + <span class="code-num" style="color:var(--orange)">1</span></div>
+            <div>    <span class="code-key" style="color:var(--blue)">else</span>:                d = m - <span class="code-num" style="color:var(--orange)">1</span></div>
+            <div>  <span class="code-key" style="color:var(--blue)">return</span> <span class="code-num" style="color:var(--orange)">-1</span></div>
+          </div>
+        </div>
+
+        <!-- Recursivity -->
+        <div class="info-card" style="border-color:rgba(176,111,222,.2)">
+          <span class="card-tag" style="color:var(--purple)">Récursivité — Fibonacci</span>
+          <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+            <div><span class="code-key" style="color:var(--blue)">def</span> <span class="code-green">fib</span>(n):</div>
+            <div>  <span class="code-key" style="color:var(--blue)">if</span> n &lt;= <span class="code-num" style="color:var(--orange)">1</span>: <span class="code-key" style="color:var(--blue)">return</span> n <span class="code-dim"># cas de base</span></div>
+            <div>  <span class="code-key" style="color:var(--blue)">return</span> <span class="code-green">fib</span>(n-<span class="code-num" style="color:var(--orange)">1</span>) + <span class="code-green">fib</span>(n-<span class="code-num" style="color:var(--orange)">2</span>)</div>
+            <div style="margin-top:.5rem"><span class="code-dim"># Pile d'appels pour fib(4):</span></div>
+          </div>
+          <canvas id="fibCanvas" width="400" height="90" style="width:100%;display:block;background:#04070d;border-radius:2px;margin-top:.5rem"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Binary search interactive -->
+    <div class="graph-box" style="margin-top:2rem;border-color:rgba(79,143,255,.2)">
+      <div class="graph-title">Recherche dichotomique — visualisation pas à pas</div>
+      <canvas id="bsearchCanvas" width="960" height="100" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div class="controls" style="margin-top:.8rem;justify-content:center;gap:1rem">
+        <div style="display:flex;align-items:center;gap:.8rem">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim2)">Cible :</span>
+          <input id="bsTarget" type="number" min="1" max="100" value="42"
+            style="background:rgba(79,143,255,.06);border:1px solid rgba(79,143,255,.3);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:.3rem .6rem;border-radius:2px;width:70px;outline:none">
+        </div>
+        <button class="btn btn-blue" onclick="bsearchStart()">▶ Démarrer</button>
+        <button class="btn btn-dim" onclick="bsearchStep()">→ Étape suivante</button>
+        <button class="btn btn-yellow" onclick="bsearchReset()">↺ Reset</button>
+      </div>
+      <div class="readout" id="bsearchReadout">Choisir une cible et cliquer Démarrer</div>
+    </div>
+
+    <!-- Complexity comparison table -->
+    <div class="table-wrap" style="margin-top:3rem">
+      <div class="graph-title" style="text-align:center;margin-bottom:.8rem">Comparatif des algorithmes de tri</div>
+      <table>
+        <thead><tr><th>Algorithme</th><th>Meilleur cas</th><th>Cas moyen</th><th>Pire cas</th><th>Espace</th><th>Stable?</th></tr></thead>
+        <tbody>
+          <tr><td>Tri à bulles</td><td style="color:var(--green)">O(n)</td><td style="color:var(--orange)">O(n²)</td><td style="color:var(--red)">O(n²)</td><td style="color:var(--green)">O(1)</td><td>✓ Oui</td></tr>
+          <tr><td>Tri par sélection</td><td style="color:var(--orange)">O(n²)</td><td style="color:var(--orange)">O(n²)</td><td style="color:var(--red)">O(n²)</td><td style="color:var(--green)">O(1)</td><td>✗ Non</td></tr>
+          <tr><td>Tri par insertion</td><td style="color:var(--green)">O(n)</td><td style="color:var(--orange)">O(n²)</td><td style="color:var(--red)">O(n²)</td><td style="color:var(--green)">O(1)</td><td>✓ Oui</td></tr>
+          <tr><td>Tri fusion</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--yellow)">O(n)</td><td>✓ Oui</td></tr>
+          <tr><td>Tri rapide</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--red)">O(n²)</td><td style="color:var(--cyan)">O(log n)</td><td>✗ Non</td></tr>
+          <tr><td>Heapsort</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--cyan)">O(n log n)</td><td style="color:var(--green)">O(1)</td><td>✗ Non</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — STRUCTURES DE DONNÉES
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-structures" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:linear-gradient(180deg,var(--bg),#060d18)">
+  <div class="scene-label">Section 3 · Structures de données</div>
+  <div class="timestamp">38:00 – 58:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Trois</span>
+    <h2 class="section-title">Structures de Données</h2>
+    <span class="section-sub">// Listes · Piles · Files · Arbres · Graphes · Dictionnaires</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+
+    <!-- Stack and Queue -->
+    <div class="two-col" style="margin-bottom:2rem">
+      <!-- STACK -->
+      <div class="graph-box" style="border-color:rgba(0,255,136,.2)">
+        <div class="graph-title">Pile (Stack) — LIFO <span class="info-bubble" onclick='showInfo(this,{tag:"Structures",title:"Pile — Last In First Out",text:"Une pile ne permet l accès qu au sommet. On empile (push) et dépile (pop) seulement en haut. Utilisée pour la pile d appels des fonctions, les expressions mathématiques, le bouton Annuler.",example:"push(3) push(7) push(1)\nstack = [3, 7, 1]\npop() → 1, stack=[3,7]",formula:"push O(1) · pop O(1) · peek O(1)"})'>i</span></div>
+        <canvas id="stackCanvas" width="460" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div class="controls" style="justify-content:center;gap:.8rem;margin-top:.8rem">
+          <input id="stackInput" type="number" value="42" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.85rem;padding:.3rem .5rem;border-radius:2px;width:60px;outline:none">
+          <button class="btn btn-green" onclick="stackPush()">push()</button>
+          <button class="btn btn-red" onclick="stackPop()">pop()</button>
+          <button class="btn btn-dim" onclick="stackClear()">clear</button>
+        </div>
+        <div class="readout" id="stackReadout">Pile vide</div>
+      </div>
+
+      <!-- QUEUE -->
+      <div class="graph-box" style="border-color:rgba(79,143,255,.2)">
+        <div class="graph-title">File (Queue) — FIFO <span class="info-bubble" onclick='showInfo(this,{tag:"Structures",title:"File — First In First Out",text:"Une file insère en queue et retire en tête. Comme une file d attente au supermarché. Utilisée pour la gestion de tâches, les messages réseau, les impressions.",example:"enfile(A) enfile(B) enfile(C)\nfile = [A, B, C]\ndéfile() → A, file=[B,C]",formula:"enfile O(1) · défile O(1)"})'>i</span></div>
+        <canvas id="queueCanvas" width="460" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div class="controls" style="justify-content:center;gap:.8rem;margin-top:.8rem">
+          <input id="queueInput" type="number" value="7" style="background:rgba(79,143,255,.08);border:1px solid rgba(79,143,255,.2);color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:.85rem;padding:.3rem .5rem;border-radius:2px;width:60px;outline:none">
+          <button class="btn btn-blue" onclick="queueEnqueue()">enfile()</button>
+          <button class="btn btn-red" onclick="queueDequeue()">défile()</button>
+          <button class="btn btn-dim" onclick="queueClear()">clear</button>
+        </div>
+        <div class="readout" id="queueReadout">File vide</div>
+      </div>
+    </div>
+
+    <!-- BST -->
+    <div class="graph-box" style="border-color:rgba(245,200,66,.2);margin-bottom:2rem">
+      <div class="graph-title">Arbre Binaire de Recherche (ABR) — insertion interactive</div>
+      <canvas id="bstCanvas" width="960" height="280" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      <div class="controls" style="justify-content:center;gap:.8rem;margin-top:.8rem;flex-wrap:wrap">
+        <input id="bstInput" type="number" min="1" max="99" value="50" style="background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.2);color:var(--yellow);font-family:'JetBrains Mono',monospace;font-size:.85rem;padding:.3rem .5rem;border-radius:2px;width:60px;outline:none">
+        <button class="btn btn-yellow" onclick="bstInsert()">Insérer</button>
+        <button class="btn btn-green" onclick="bstInorder()">Parcours infixe</button>
+        <button class="btn btn-blue" onclick="bstPreorder()">Préfixe</button>
+        <button class="btn btn-purple" style="background:rgba(176,111,222,.08);border:1px solid var(--purple);color:var(--purple)" onclick="bstPostorder()">Postfixe</button>
+        <button class="btn btn-red" onclick="bstClear()">Vider</button>
+      </div>
+      <div class="readout" id="bstReadout">Insérer des valeurs pour construire l'arbre</div>
+    </div>
+
+    <!-- Hash table / Dict -->
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box" style="border-color:rgba(176,111,222,.2)">
+        <div class="graph-title">Table de hachage — Dictionnaire Python</div>
+        <canvas id="hashCanvas" width="460" height="220" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div class="controls" style="gap:.8rem;margin-top:.8rem;flex-wrap:wrap;justify-content:center">
+          <input id="hashKey" placeholder="clé" style="background:rgba(176,111,222,.06);border:1px solid rgba(176,111,222,.2);color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:.3rem .5rem;border-radius:2px;width:80px;outline:none">
+          <input id="hashVal" placeholder="valeur" style="background:rgba(176,111,222,.06);border:1px solid rgba(176,111,222,.2);color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:.3rem .5rem;border-radius:2px;width:80px;outline:none">
+          <button class="btn" style="background:rgba(176,111,222,.1);border:1px solid var(--purple);color:var(--purple)" onclick="hashInsert()">Ajouter</button>
+        </div>
+        <div class="readout" id="hashReadout">d = {}</div>
+      </div>
+
+      <!-- Linked list -->
+      <div class="graph-box" style="border-color:rgba(0,212,255,.2)">
+        <div class="graph-title">Liste chaînée — nœuds et pointeurs</div>
+        <canvas id="linkedCanvas" width="460" height="220" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div class="controls" style="gap:.8rem;margin-top:.8rem;justify-content:center;flex-wrap:wrap">
+          <input id="linkedInput" type="number" value="5" style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.2);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:.3rem .5rem;border-radius:2px;width:60px;outline:none">
+          <button class="btn" style="background:rgba(0,212,255,.06);border:1px solid var(--cyan);color:var(--cyan)" onclick="llPrepend()">Insérer en tête</button>
+          <button class="btn" style="background:rgba(0,212,255,.06);border:1px solid var(--cyan);color:var(--cyan)" onclick="llAppend()">Insérer en queue</button>
+          <button class="btn btn-red" onclick="llRemoveHead()">Supprimer tête</button>
+        </div>
+        <div class="readout" id="linkedReadout">Liste vide</div>
+      </div>
+    </div>
+
+    <!-- Graph -->
+    <div class="graph-box" style="border-color:rgba(255,123,53,.2)">
+      <div class="graph-title">Graphes — BFS et DFS interactifs</div>
+      <div class="two-col" style="gap:1.5rem">
+        <canvas id="graphCanvas" width="460" height="280" style="width:100%;display:block;background:#04070d;border-radius:2px;cursor:pointer"></canvas>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="info-card" style="border-color:rgba(255,123,53,.2)">
+            <span class="card-tag" style="color:var(--orange)">BFS — Parcours en largeur</span>
+            <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.7rem">
+              <div><span class="code-blue">from</span> collections <span class="code-blue">import</span> deque</div>
+              <div><span class="code-key" style="color:var(--blue)">def</span> <span class="code-green">bfs</span>(graphe, debut):</div>
+              <div>  vus = {debut}</div>
+              <div>  file = deque([debut])</div>
+              <div>  <span class="code-key" style="color:var(--blue)">while</span> file:</div>
+              <div>    v = file.popleft()</div>
+              <div>    <span class="code-key" style="color:var(--blue)">for</span> w <span class="code-key" style="color:var(--blue)">in</span> graphe[v]:</div>
+              <div>      <span class="code-key" style="color:var(--blue)">if</span> w <span class="code-key" style="color:var(--blue)">not in</span> vus:</div>
+              <div>        vus.add(w); file.append(w)</div>
+            </div>
+          </div>
+          <div class="controls" style="gap:.8rem;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-orange" style="background:rgba(255,123,53,.08);border:1px solid var(--orange);color:var(--orange)" onclick="runBFS()">▶ BFS</button>
+            <button class="btn btn-purple" style="background:rgba(176,111,222,.08);border:1px solid var(--purple);color:var(--purple)" onclick="runDFS()">▶ DFS</button>
+            <button class="btn btn-yellow" onclick="resetGraph()">↺ Reset</button>
+          </div>
+          <div class="readout" id="graphReadout">Cliquer sur un nœud de départ, puis BFS ou DFS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4 — BASES DE DONNÉES
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-bdd" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 60% 40%,#040d08 0%,var(--bg) 70%)">
+  <div class="scene-label">Section 4 · Bases de données</div>
+  <div class="timestamp">58:00 – 76:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Quatre</span>
+    <h2 class="section-title">Bases de Données Relationnelles</h2>
+    <span class="section-sub">// SQL · Modèle E/R · Algèbre relationnelle</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+
+    <!-- ER Diagram (SVG) -->
+    <div style="background:var(--bg2);border:1px solid rgba(0,255,136,.12);border-radius:4px;padding:1.5rem;margin-bottom:2rem">
+      <div class="graph-title">Schéma Entité-Association — Système scolaire</div>
+      <svg viewBox="0 0 900 200" style="width:100%;display:block;font-family:'IBM Plex Mono',monospace">
+        <!-- Eleve -->
+        <rect x="30" y="60" width="140" height="90" rx="4" fill="rgba(0,255,136,.06)" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
+        <text x="100" y="80" text-anchor="middle" fill="var(--green)" font-size="11" font-weight="600">ÉLÈVE</text>
+        <line x1="40" y1="88" x2="160" y2="88" stroke="rgba(0,255,136,.2)" stroke-width="1"/>
+        <text x="60" y="104" fill="var(--yellow)" font-size="9">🔑 id_eleve</text>
+        <text x="60" y="118" fill="#8899aa" font-size="9">nom, prenom</text>
+        <text x="60" y="130" fill="#8899aa" font-size="9">date_naissance</text>
+        <text x="60" y="142" fill="rgba(79,143,255,.7)" font-size="9">🔗 id_classe</text>
+
+        <!-- Relation Appartient -->
+        <line x1="170" y1="105" x2="240" y2="105" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
+        <rect x="240" y="85" width="100" height="40" rx="2" fill="rgba(0,212,255,.06)" stroke="rgba(0,212,255,.3)" stroke-width="1"/>
+        <text x="290" y="110" text-anchor="middle" fill="var(--cyan)" font-size="10">appartient</text>
+        <line x1="340" y1="105" x2="410" y2="105" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
+        <text x="200" y="100" fill="rgba(0,255,136,.5)" font-size="9">n</text>
+        <text x="360" y="100" fill="rgba(0,255,136,.5)" font-size="9">1</text>
+
+        <!-- Classe -->
+        <rect x="410" y="60" width="140" height="90" rx="4" fill="rgba(79,143,255,.06)" stroke="rgba(79,143,255,.3)" stroke-width="1.5"/>
+        <text x="480" y="80" text-anchor="middle" fill="var(--blue)" font-size="11" font-weight="600">CLASSE</text>
+        <line x1="420" y1="88" x2="540" y2="88" stroke="rgba(79,143,255,.2)" stroke-width="1"/>
+        <text x="430" y="104" fill="var(--yellow)" font-size="9">🔑 id_classe</text>
+        <text x="430" y="118" fill="#8899aa" font-size="9">niveau, nom</text>
+        <text x="430" y="130" fill="rgba(79,143,255,.7)" font-size="9">🔗 id_prof_princ</text>
+
+        <!-- Relation Note -->
+        <line x1="550" y1="105" x2="620" y2="105" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
+        <rect x="620" y="85" width="80" height="40" rx="2" fill="rgba(245,200,66,.06)" stroke="rgba(245,200,66,.3)" stroke-width="1"/>
+        <text x="660" y="110" text-anchor="middle" fill="var(--yellow)" font-size="10">reçoit</text>
+        <line x1="700" y1="105" x2="760" y2="105" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
+        <text x="595" y="100" fill="rgba(0,255,136,.5)" font-size="9">n</text>
+        <text x="720" y="100" fill="rgba(0,255,136,.5)" font-size="9">m</text>
+
+        <!-- Matière -->
+        <rect x="760" y="60" width="120" height="90" rx="4" fill="rgba(245,200,66,.05)" stroke="rgba(245,200,66,.25)" stroke-width="1.5"/>
+        <text x="820" y="80" text-anchor="middle" fill="var(--yellow)" font-size="11" font-weight="600">MATIÈRE</text>
+        <line x1="770" y1="88" x2="870" y2="88" stroke="rgba(245,200,66,.2)" stroke-width="1"/>
+        <text x="780" y="104" fill="var(--yellow)" font-size="9">🔑 id_mat</text>
+        <text x="780" y="118" fill="#8899aa" font-size="9">nom, coefficient</text>
+      </svg>
+    </div>
+
+    <!-- Live SQL terminal -->
+    <div class="terminal" style="margin-bottom:2rem">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div><div class="term-dot yellow"></div><div class="term-dot green"></div>
+        <span class="term-title">SQL Interactive</span>
+      </div>
+      <div class="terminal-body" style="padding:1.2rem">
+        <div style="margin-bottom:1rem;color:var(--dim2)">-- Entrez une requête SQL (simulation)</div>
+        <div style="display:flex;gap:.8rem;align-items:center;margin-bottom:1rem">
+          <span style="color:var(--green2)">sql&gt;</span>
+          <input id="sqlInput" value="SELECT nom, prenom FROM eleve WHERE id_classe = 1" 
+            style="flex:1;background:transparent;border:none;border-bottom:1px solid rgba(0,255,136,.2);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:.3rem;outline:none">
+          <button class="btn btn-green" onclick="runSQL()">Exécuter</button>
+        </div>
+        <div id="sqlOutput"></div>
+      </div>
+    </div>
+
+    <!-- SQL queries reference -->
+    <div class="three-col">
+      <div class="info-card">
+        <span class="card-tag">SELECT — Projection</span>
+        <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+          <div><span class="code-blue">SELECT</span> col1, col2</div>
+          <div><span class="code-blue">FROM</span> table</div>
+          <div><span class="code-blue">WHERE</span> condition</div>
+          <div><span class="code-blue">ORDER BY</span> col <span class="code-dim">DESC</span></div>
+          <div><span class="code-blue">LIMIT</span> 10;</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="card-tag">JOIN — Jointure</span>
+        <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+          <div><span class="code-blue">SELECT</span> e.nom, c.niveau</div>
+          <div><span class="code-blue">FROM</span> eleve e</div>
+          <div><span class="code-blue">JOIN</span> classe c</div>
+          <div>  <span class="code-blue">ON</span> e.id_classe = c.id;</div>
+          <div style="margin-top:.5rem"><span class="code-dim">-- Combinaison de tables</span></div>
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="card-tag">GROUP BY — Agrégation</span>
+        <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+          <div><span class="code-blue">SELECT</span> classe,</div>
+          <div>  <span class="code-green">AVG</span>(note) <span class="code-blue">AS</span> moy,</div>
+          <div>  <span class="code-green">COUNT</span>(*) <span class="code-blue">AS</span> nb</div>
+          <div><span class="code-blue">FROM</span> notes</div>
+          <div><span class="code-blue">GROUP BY</span> classe</div>
+          <div><span class="code-blue">HAVING</span> moy &gt; 12;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACID properties -->
+    <div class="four-col" style="margin-top:2rem">
+      <div class="highlight-box" style="border-color:rgba(0,255,136,.3)">
+        <span class="big-code" style="font-size:2rem">A</span>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--green);letter-spacing:.15em">ATOMICITÉ</div>
+        <div style="font-size:.82rem;color:#8899aa;margin-top:.4rem">Tout ou rien</div>
+      </div>
+      <div class="highlight-box" style="border-color:rgba(79,143,255,.3)">
+        <span class="big-code" style="font-size:2rem;color:var(--blue)">C</span>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--blue);letter-spacing:.15em">COHÉRENCE</div>
+        <div style="font-size:.82rem;color:#8899aa;margin-top:.4rem">Contraintes toujours vérifiées</div>
+      </div>
+      <div class="highlight-box" style="border-color:rgba(176,111,222,.3)">
+        <span class="big-code" style="font-size:2rem;color:var(--purple)">I</span>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--purple);letter-spacing:.15em">ISOLATION</div>
+        <div style="font-size:.82rem;color:#8899aa;margin-top:.4rem">Transactions indépendantes</div>
+      </div>
+      <div class="highlight-box" style="border-color:rgba(245,200,66,.3)">
+        <span class="big-code" style="font-size:2rem;color:var(--yellow)">D</span>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--yellow);letter-spacing:.15em">DURABILITÉ</div>
+        <div style="font-size:.82rem;color:#8899aa;margin-top:.4rem">Persistance après commit</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 5 — ARCHITECTURES & SYSTÈMES
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-archi" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 40% 60%,#080d04 0%,var(--bg) 70%)">
+  <div class="scene-label">Section 5 · Architectures</div>
+  <div class="timestamp">76:00 – 92:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Cinq</span>
+    <h2 class="section-title">Architecture des Machines</h2>
+    <span class="section-sub">// Von Neumann · CPU · Mémoire · OS · Processus</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+
+    <!-- Von Neumann architecture SVG -->
+    <div style="background:var(--bg2);border:1px solid rgba(0,255,136,.12);border-radius:4px;padding:1.5rem;margin-bottom:2rem">
+      <div class="graph-title">Architecture de Von Neumann</div>
+      <canvas id="vonNeumannCanvas" width="940" height="220" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+    </div>
+
+    <!-- CPU pipeline animation -->
+    <div class="graph-box" style="border-color:rgba(0,255,136,.2);margin-bottom:2rem">
+      <div class="graph-title">Pipeline CPU — Fetch · Decode · Execute · Write-back</div>
+      <canvas id="pipelineCanvas" width="940" height="120" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+    </div>
+
+    <!-- Memory hierarchy -->
+    <div class="graph-box" style="border-color:rgba(245,200,66,.2);margin-bottom:2rem">
+      <div class="graph-title">Hiérarchie mémoire — vitesse vs capacité</div>
+      <canvas id="memHierCanvas" width="940" height="180" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+    </div>
+
+    <!-- Process states -->
+    <div class="two-col">
+      <div class="info-card">
+        <span class="card-tag">États d'un processus</span>
+        <svg viewBox="0 0 400 180" style="width:100%;display:block;margin-top:.8rem">
+          <!-- States -->
+          <ellipse cx="80" cy="90" rx="55" ry="30" fill="rgba(0,255,136,.08)" stroke="rgba(0,255,136,.4)" stroke-width="1.5"/>
+          <text x="80" y="87" text-anchor="middle" fill="var(--green)" font-family="IBM Plex Mono" font-size="10">PRÊT</text>
+          <text x="80" y="100" text-anchor="middle" fill="var(--dim2)" font-family="IBM Plex Mono" font-size="8">ready</text>
+
+          <ellipse cx="220" cy="90" rx="55" ry="30" fill="rgba(79,143,255,.08)" stroke="rgba(79,143,255,.4)" stroke-width="1.5"/>
+          <text x="220" y="87" text-anchor="middle" fill="var(--blue)" font-family="IBM Plex Mono" font-size="10">EXÉCUTION</text>
+          <text x="220" y="100" text-anchor="middle" fill="var(--dim2)" font-family="IBM Plex Mono" font-size="8">running</text>
+
+          <ellipse cx="350" cy="90" rx="45" ry="30" fill="rgba(255,68,85,.06)" stroke="rgba(255,68,85,.3)" stroke-width="1.5"/>
+          <text x="350" y="87" text-anchor="middle" fill="var(--red)" font-family="IBM Plex Mono" font-size="10">BLOQUÉ</text>
+          <text x="350" y="100" text-anchor="middle" fill="var(--dim2)" font-family="IBM Plex Mono" font-size="8">blocked</text>
+
+          <!-- Arrows -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,136,.5)"/>
+            </marker>
+          </defs>
+          <line x1="135" y1="85" x2="165" y2="85" stroke="rgba(0,255,136,.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="150" y="78" text-anchor="middle" fill="rgba(0,255,136,.5)" font-family="IBM Plex Mono" font-size="8">élu</text>
+          <line x1="165" y1="95" x2="135" y2="95" stroke="rgba(0,255,136,.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="150" y="108" text-anchor="middle" fill="rgba(0,255,136,.5)" font-family="IBM Plex Mono" font-size="8">préempté</text>
+          <line x1="275" y1="85" x2="305" y2="85" stroke="rgba(255,68,85,.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="290" y="78" text-anchor="middle" fill="rgba(255,68,85,.5)" font-family="IBM Plex Mono" font-size="8">I/O</text>
+          <line x1="305" y1="100" x2="140" y2="100" stroke="rgba(245,200,66,.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="220" y="118" text-anchor="middle" fill="rgba(245,200,66,.5)" font-family="IBM Plex Mono" font-size="8">I/O terminée</text>
+
+          <!-- New -->
+          <ellipse cx="80" cy="155" rx="40" ry="18" fill="rgba(176,111,222,.06)" stroke="rgba(176,111,222,.3)" stroke-width="1"/>
+          <text x="80" y="159" text-anchor="middle" fill="var(--purple)" font-family="IBM Plex Mono" font-size="9">NOUVEAU</text>
+          <line x1="80" y1="137" x2="80" y2="120" stroke="rgba(176,111,222,.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        </svg>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="info-card" style="border-color:rgba(0,212,255,.2)">
+          <span class="card-tag" style="color:var(--cyan)">Commandes Linux / Bash</span>
+          <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+            <div><span class="code-green">$</span> ls -la           <span class="code-dim"># lister fichiers</span></div>
+            <div><span class="code-green">$</span> cd /home/user    <span class="code-dim"># changer répertoire</span></div>
+            <div><span class="code-green">$</span> chmod 755 script <span class="code-dim"># droits rwxr-xr-x</span></div>
+            <div><span class="code-green">$</span> ps aux           <span class="code-dim"># lister processus</span></div>
+            <div><span class="code-green">$</span> kill -9 1234     <span class="code-dim"># tuer processus</span></div>
+            <div><span class="code-green">$</span> grep "mot" f.txt  <span class="code-dim"># chercher dans fichier</span></div>
+            <div><span class="code-green">$</span> python3 prog.py  <span class="code-dim"># exécuter script</span></div>
+          </div>
+        </div>
+        <div class="info-card" style="border-color:rgba(255,123,53,.2)">
+          <span class="card-tag" style="color:var(--orange)">Droits Unix (chmod)</span>
+          <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+            <div><span class="code-dim">rwx r-x r-- → 754</span></div>
+            <div><span class="code-green">r</span>=4 <span class="code-blue">w</span>=2 <span class="code-red">x</span>=1</div>
+            <div style="margin-top:.5rem"><span class="code-dim"># Propriétaire / Groupe / Autres</span></div>
+            <div>7 = <span class="code-green">r</span>+<span class="code-blue">w</span>+<span class="code-red">x</span> = lecture+écriture+exécution</div>
+            <div>5 = <span class="code-green">r</span>+<span class="code-red">x</span>   = lecture+exécution</div>
+            <div>4 = <span class="code-green">r</span>      = lecture seule</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 6 — RÉSEAUX
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-reseaux" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 50% 50%,#04080f 0%,var(--bg) 65%)">
+  <div class="scene-label">Section 6 · Réseaux</div>
+  <div class="timestamp">92:00 – 108:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Six</span>
+    <h2 class="section-title">Réseaux Informatiques</h2>
+    <span class="section-sub">// IP · TCP/UDP · HTTP · DNS · Routage · Cryptographie</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+
+    <!-- IP address interactive -->
+    <div class="two-col" style="margin-bottom:2rem">
+      <div class="graph-box" style="border-color:rgba(79,143,255,.2)">
+        <div class="graph-title">Adresse IP et Masque sous-réseau</div>
+        <canvas id="ipCanvas" width="460" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+        <div style="margin-top:.8rem">
+          <div class="slider-row"><label>Masque CIDR /</label><input type="range" id="cidrSlider" min="8" max="30" value="24"><span class="slider-val" id="cidrVal">24</span></div>
+        </div>
+        <div class="readout" id="ipReadout"></div>
+      </div>
+
+      <!-- OSI Model -->
+      <div class="graph-box" style="border-color:rgba(176,111,222,.2)">
+        <div class="graph-title">Modèle TCP/IP (simplifié du modèle OSI)</div>
+        <canvas id="osiCanvas" width="460" height="200" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+      </div>
+    </div>
+
+    <!-- Network packet journey -->
+    <div class="graph-box" style="border-color:rgba(0,212,255,.2);margin-bottom:2rem">
+      <div class="graph-title">Voyage d'un paquet HTTP — de votre navigateur au serveur</div>
+      <canvas id="packetCanvas" width="940" height="120" style="width:100%;display:block;background:#04070d;border-radius:2px"></canvas>
+    </div>
+
+    <!-- Crypto RSA interactive -->
+    <div class="graph-box" style="border-color:rgba(0,255,136,.2);margin-bottom:2rem">
+      <div class="graph-title">Cryptographie — Chiffrement RSA simplifié</div>
+      <div class="two-col" style="gap:1.5rem">
+        <div>
+          <div class="code-box" style="font-size:.75rem">
+            <div><span class="code-dim"># 1. Choisir deux nombres premiers p, q</span></div>
+            <div><span class="code-green">p</span> = <span id="rsaP" style="color:var(--yellow)">11</span>,  <span class="code-green">q</span> = <span id="rsaQ" style="color:var(--yellow)">13</span></div>
+            <div style="margin-top:.4rem"><span class="code-dim"># 2. n = p × q  (clé publique partielle)</span></div>
+            <div><span class="code-green">n</span> = <span id="rsaN" style="color:var(--cyan)">143</span></div>
+            <div style="margin-top:.4rem"><span class="code-dim"># 3. φ(n) = (p-1)(q-1)</span></div>
+            <div><span class="code-green">φ(n)</span> = <span id="rsaPhi" style="color:var(--cyan)">120</span></div>
+            <div style="margin-top:.4rem"><span class="code-dim"># 4. Choisir e tel que gcd(e, φ(n)) = 1</span></div>
+            <div><span class="code-green">e</span> = <span id="rsaE" style="color:var(--orange)">7</span>  <span class="code-dim">(exposant public)</span></div>
+            <div style="margin-top:.4rem"><span class="code-dim"># 5. d = e⁻¹ (mod φ(n))</span></div>
+            <div><span class="code-green">d</span> = <span id="rsaD" style="color:var(--red)">103</span>  <span class="code-dim">(clé privée!)</span></div>
+          </div>
+          <div class="controls" style="margin-top:.8rem;gap:.8rem;flex-wrap:wrap">
+            <button class="btn btn-green" onclick="rsaDemo()">Chiffrer/Déchiffrer</button>
+            <button class="btn btn-yellow" onclick="rsaNewKeys()">Nouvelles clés</button>
+          </div>
+        </div>
+        <div>
+          <div style="margin-bottom:.8rem">
+            <label style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim2);display:block;margin-bottom:.3rem">Message (0 &lt; m &lt; n)</label>
+            <input id="rsaMsg" type="number" value="42" min="1" max="142" style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.2);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:1rem;padding:.4rem .8rem;border-radius:2px;width:100px;outline:none">
+          </div>
+          <div class="readout" id="rsaReadout" style="white-space:pre-line;font-size:.72rem;min-height:120px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protocols table -->
+    <div class="table-wrap">
+      <div class="graph-title" style="text-align:center;margin-bottom:.8rem">Protocoles réseau essentiels</div>
+      <table>
+        <thead><tr><th>Protocole</th><th>Couche</th><th>Port</th><th>Rôle</th><th>Connexion</th></tr></thead>
+        <tbody>
+          <tr><td>HTTP</td><td>Application</td><td style="color:var(--yellow)">80</td><td>Web non-chiffré</td><td>TCP</td></tr>
+          <tr><td>HTTPS</td><td>Application</td><td style="color:var(--green)">443</td><td>Web chiffré (TLS)</td><td>TCP</td></tr>
+          <tr><td>DNS</td><td>Application</td><td>53</td><td>Résolution noms → IP</td><td>UDP / TCP</td></tr>
+          <tr><td>SSH</td><td>Application</td><td style="color:var(--cyan)">22</td><td>Terminal sécurisé</td><td>TCP</td></tr>
+          <tr><td>FTP</td><td>Application</td><td>21</td><td>Transfert fichiers</td><td>TCP</td></tr>
+          <tr><td>TCP</td><td>Transport</td><td>—</td><td>Fiable, orienté connexion</td><td>3-way handshake</td></tr>
+          <tr><td>UDP</td><td>Transport</td><td>—</td><td>Rapide, non fiable</td><td>Sans connexion</td></tr>
+          <tr><td>IP</td><td>Réseau</td><td>—</td><td>Routage des paquets</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 7 — PROGRAMMATION PYTHON
+══════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-python" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:linear-gradient(180deg,var(--bg),#04070a)">
+  <div class="scene-label">Section 7 · Programmation</div>
+  <div class="timestamp">108:00 – 120:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Sept</span>
+    <h2 class="section-title">Python — Paradigmes &amp; Bonnes Pratiques</h2>
+    <span class="section-sub">// POO · Fonctionnel · Compréhensions · Complexité</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col" style="margin-bottom:2rem">
+      <!-- Python mini terminal -->
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="term-dot red"></div><div class="term-dot yellow"></div><div class="term-dot green"></div>
+          <span class="term-title">python3 — concepts clés NSI</span>
+        </div>
+        <div class="terminal-body" style="min-height:300px">
+          <div><span class="code-dim"># ── POO — Programmation Orientée Objet ──</span></div>
+          <div><span class="code-blue">class</span> <span class="code-cyan">Noeud</span>:</div>
+          <div>  <span class="code-blue">def</span> <span class="code-green">__init__</span>(<span class="code-orange">self</span>, val):</div>
+          <div>    <span class="code-orange">self</span>.val  = val</div>
+          <div>    <span class="code-orange">self</span>.suivant = <span class="code-yellow">None</span></div>
+          <div style="margin-top:.5rem"><span class="code-blue">class</span> <span class="code-cyan">ListeChainee</span>:</div>
+          <div>  <span class="code-blue">def</span> <span class="code-green">inserer_tete</span>(<span class="code-orange">self</span>, v):</div>
+          <div>    n = <span class="code-cyan">Noeud</span>(v)</div>
+          <div>    n.suivant = <span class="code-orange">self</span>.tete</div>
+          <div>    <span class="code-orange">self</span>.tete = n</div>
+          <div style="margin-top:.8rem"><span class="code-dim"># ── Compréhensions de liste ──</span></div>
+          <div>carrés = [x**<span class="code-yellow">2</span> <span class="code-blue">for</span> x <span class="code-blue">in</span> <span class="code-green">range</span>(<span class="code-yellow">10</span>)]</div>
+          <div>pairs   = [x <span class="code-blue">for</span> x <span class="code-blue">in</span> carrés <span class="code-blue">if</span> x%<span class="code-yellow">2</span>==<span class="code-yellow">0</span>]</div>
+          <div style="margin-top:.8rem"><span class="code-dim"># ── Fonctions de haut niveau ──</span></div>
+          <div>résultat = <span class="code-green">list</span>(<span class="code-green">map</span>(<span class="code-blue">lambda</span> x: x*<span class="code-yellow">2</span>, pairs))</div>
+          <div>filtré   = <span class="code-green">list</span>(<span class="code-green">filter</span>(<span class="code-blue">lambda</span> x: x><span class="code-yellow">5</span>, résultat))</div>
+          <div style="margin-top:.8rem"><span class="code-dim"># ── Générateurs (économie mémoire) ──</span></div>
+          <div><span class="code-blue">def</span> <span class="code-green">fib_gen</span>():</div>
+          <div>  a, b = <span class="code-yellow">0</span>, <span class="code-yellow">1</span></div>
+          <div>  <span class="code-blue">while True</span>:</div>
+          <div>    <span class="code-blue">yield</span> a; a, b = b, a+b</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <!-- Pillar comparison -->
+        <div class="info-card">
+          <span class="card-tag">Les 4 piliers de la POO</span>
+          <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.8rem">
+            <div style="padding:.6rem;background:rgba(0,255,136,.04);border-left:2px solid var(--green)">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--green)">ENCAPSULATION</div>
+              <div style="font-size:.82rem;color:#8899aa;margin-top:.2rem">Attributs privés, accès via méthodes</div>
+            </div>
+            <div style="padding:.6rem;background:rgba(79,143,255,.04);border-left:2px solid var(--blue)">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--blue)">HÉRITAGE</div>
+              <div style="font-size:.82rem;color:#8899aa;margin-top:.2rem">class Etudiant(Personne): …</div>
+            </div>
+            <div style="padding:.6rem;background:rgba(176,111,222,.04);border-left:2px solid var(--purple)">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--purple)">POLYMORPHISME</div>
+              <div style="font-size:.82rem;color:#8899aa;margin-top:.2rem">Même interface, comportements différents</div>
+            </div>
+            <div style="padding:.6rem;background:rgba(245,200,66,.04);border-left:2px solid var(--yellow)">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--yellow)">ABSTRACTION</div>
+              <div style="font-size:.82rem;color:#8899aa;margin-top:.2rem">Cacher la complexité interne</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decorators and type hints -->
+        <div class="info-card" style="border-color:rgba(0,212,255,.2)">
+          <span class="card-tag" style="color:var(--cyan)">Annotations de types (Python 3.9+)</span>
+          <div class="code-box" style="padding:.8rem;margin-top:.5rem;font-size:.72rem">
+            <div><span class="code-blue">def</span> <span class="code-green">fusionner</span>(</div>
+            <div>    a: <span class="code-cyan">list</span>[<span class="code-cyan">int</span>],</div>
+            <div>    b: <span class="code-cyan">list</span>[<span class="code-cyan">int</span>]</div>
+            <div>) -> <span class="code-cyan">list</span>[<span class="code-cyan">int</span>]:</div>
+            <div>    <span class="code-dim">"""Fusionne deux listes triées."""</span></div>
+            <div>    ...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live coding challenge -->
+    <div class="terminal" style="margin-bottom:2rem">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div><div class="term-dot yellow"></div><div class="term-dot green"></div>
+        <span class="term-title">Simulateur d'exécution Python — Pile des appels</span>
+      </div>
+      <div class="terminal-body">
+        <div style="margin-bottom:.8rem"><span class="code-dim"># Simuler l'exécution de facto(4)</span></div>
+        <canvas id="callstackCanvas" width="900" height="140" style="width:100%;display:block;background:#020509;border-radius:2px"></canvas>
+        <div class="controls" style="margin-top:.8rem;gap:.8rem;justify-content:center">
+          <button class="btn btn-green" onclick="callstackStep()">→ Étape suivante</button>
+          <button class="btn btn-yellow" onclick="callstackReset()">↺ Reset</button>
+          <span id="callstackInfo" style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--dim2)"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLOSING -->
+<section class="scene" id="closing" style="min-height:65vh;background:radial-gradient(ellipse at 50% 50%,#030a15 0%,var(--bg) 70%)">
+  <canvas id="closingMatrix"></canvas>
+  <div style="position:relative;z-index:2;text-align:center;max-width:700px">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:2rem">
+      L'informatique n'est pas<br>une science des machines.<br>C'est une science de <span style="color:var(--green)">l'abstraction.</span>
+    </h2>
+    <p style="color:#6b7a8d;font-size:1rem;line-height:1.9;margin-bottom:2.5rem">
+      Du bit au cloud, chaque couche cache la complexité de la couche en dessous.
+      Comprendre ces abstractions — binaire, algorithmes, structures, réseaux —
+      c'est comprendre comment fonctionne le monde numérique.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:.8rem;align-items:center">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim2);min-width:80px">Ép. 02</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#a0c8d0">Intelligence Artificielle — Apprentissage automatique</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim2);min-width:80px">Ép. 03</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#a0c8d0">Langages — Compilation, Interprétation, Automates</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim2);min-width:80px">Ép. 04</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#a0c8d0">Cybersécurité — Cryptographie, Attaques, Défenses</span>
+      </div>
+    </div>
+    <div style="margin-top:2rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green2)">
+      <span class="cursor">█</span>
+    </div>
+  </div>
+</section>
+
+<div class="bottom-stripe">
+  <div class="stripe-item"><span class="stripe-val">7</span><span class="stripe-label">Sections</span></div>
+  <div class="stripe-item"><span class="stripe-val">NSI</span><span class="stripe-label">Terminale</span></div>
+  <div class="stripe-item"><span class="stripe-val">120'</span><span class="stripe-label">Durée</span></div>
+  <div class="stripe-item"><span class="stripe-val">Ép. 01</span><span class="stripe-label">Informatique</span></div>
+  <div class="stripe-item"><span class="stripe-val">01100110</span><span class="stripe-label">= 102 = 'f'</span></div>
+</div>
+
+<!-- INFO PANEL -->
+<div class="info-panel" id="globalInfoPanel">
+  <div class="ip-header">
+    <span class="ip-tag" id="ipanelTag">Explication</span>
+    <button class="ip-close" onclick="closeInfoPanel()">✕</button>
+  </div>
+  <div class="ip-body">
+    <div class="ip-title" id="ipanelTitle"></div>
+    <div class="ip-text" id="ipanelText"></div>
+    <div class="ip-example" id="ipanelExample" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   INFO PANEL
+════════════════════════════════════════════ */
+(()=>{
+  const panel=document.getElementById('globalInfoPanel');
+  let activeBtn=null;
+  window.showInfo=(btn,d)=>{
+    if(activeBtn===btn&&panel.classList.contains('visible')){closeInfoPanel();return;}
+    if(activeBtn) activeBtn.style.background='';
+    activeBtn=btn;
+    document.getElementById('ipanelTag').textContent=d.tag||'Info';
+    document.getElementById('ipanelTitle').textContent=d.title||'';
+    document.getElementById('ipanelText').textContent=d.text||'';
+    const ex=document.getElementById('ipanelExample');
+    if(d.example){ex.style.display='block';ex.textContent=d.example;}else ex.style.display='none';
+    const rect=btn.getBoundingClientRect();
+    let l=rect.right+10, t=rect.top-10;
+    if(l+320>window.innerWidth) l=rect.left-330;
+    if(t+280>window.innerHeight) t=window.innerHeight-290;
+    panel.style.left=l+'px';panel.style.top=Math.max(10,t)+'px';
+    panel.classList.add('visible');
+  };
+  window.closeInfoPanel=()=>{panel.classList.remove('visible');activeBtn=null;};
+  document.addEventListener('click',e=>{if(!panel.contains(e.target)&&!e.target.classList.contains('info-bubble'))closeInfoPanel();});
+})();
+
+/* ════════════════════════════════════════════
+   MATRIX RAIN
+════════════════════════════════════════════ */
+function matrixRain(canvasId){
+  const c=document.getElementById(canvasId);if(!c)return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;}
+  resize();window.addEventListener('resize',resize);
+  const chars='01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF0123456789'.split('');
+  let cols=Math.floor(c.width/16);
+  const drops=Array(cols).fill(0).map(()=>Math.random()*-50);
+  function draw(){
+    ctx.fillStyle='rgba(4,7,13,0.05)';ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='rgba(0,255,136,0.5)';ctx.font='14px JetBrains Mono';
+    cols=Math.floor(c.width/16);
+    while(drops.length<cols)drops.push(0);
+    drops.forEach((y,i)=>{
+      const ch=chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillStyle=Math.random()<.05?'rgba(255,255,255,.8)':`rgba(0,255,${Math.floor(100+Math.random()*136)},${.2+Math.random()*.5})`;
+      ctx.fillText(ch,i*16,y*16);
+      if(y*16>c.height&&Math.random()>.95) drops[i]=0;
+      else drops[i]++;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+matrixRain('matrixCanvas');
+matrixRain('closingMatrix');
+
+/* ════════════════════════════════════════════
+   BINARY CONVERTER
+════════════════════════════════════════════ */
+(()=>{
+  function update(){
+    const n=parseInt(document.getElementById('decInput').value)||0;
+    const clamped=Math.max(0,Math.min(65535,n));
+    const bin=clamped.toString(2).padStart(16,'0');
+    const hex=clamped.toString(16).toUpperCase().padStart(4,'0');
+    const oct=clamped.toString(8);
+    document.getElementById('convOutput').innerHTML=`
+      <div><span class='code-dim'>Décimal :</span>  <span class='code-white'>${clamped}</span></div>
+      <div><span class='code-dim'>Binaire  :</span>  <span class='code-green'>0b${bin}</span></div>
+      <div><span class='code-dim'>Hexadéc. :</span>  <span class='code-purple'>0x${hex}</span></div>
+      <div><span class='code-dim'>Octal    :</span>  <span class='code-orange'>0o${oct}</span></div>
+      <div><span class='code-dim'>Octets   :</span>  <span class='code-cyan'>${Math.ceil(Math.log2(clamped+1)/8)||1} octet(s)</span></div>
+    `;
+    // 8-bit display
+    const b8=document.getElementById('bitDisplay');
+    b8.innerHTML='';
+    for(let i=7;i>=0;i--){
+      const bit=(clamped>>i)&1;
+      const el=document.createElement('div');
+      el.className='bit '+(bit?'on':'off');
+      el.textContent=bit;
+      el.style.flex='1';
+      b8.appendChild(el);
+    }
+    const w=document.getElementById('bitWeights');
+    let ws='Poids : ';
+    for(let i=7;i>=0;i--) ws+=`  2^${i}=${1<<i}`;
+    w.textContent=ws;
+    // Complement à 2
+    const signed=clamped<=127?clamped:clamped-256;
+    document.getElementById('compA2Display').innerHTML=`
+      <div style='font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--dim2);margin-top:.5rem'>
+        Complément à 2 sur 8 bits : <span style='color:var(--red)'>${signed}</span> → <span style='color:var(--yellow)'>${(clamped&0xFF).toString(2).padStart(8,'0')}</span>
+      </div>`;
+  }
+  document.getElementById('decInput').addEventListener('input',update);
+  update();
+})();
+
+/* ════════════════════════════════════════════
+   ASCII TABLE
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('asciiCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const chars=32; // 32–127
+  const cols=32,rows=3;
+  const cellW=(W-20)/cols,cellH=(H-10)/rows;
+  const groups=[
+    {start:32,end:47,color:'rgba(245,200,66,.15)',label:'Ponctuation'},
+    {start:48,end:57,color:'rgba(0,255,136,.15)',label:'Chiffres'},
+    {start:65,end:90,color:'rgba(79,143,255,.15)',label:'Majuscules'},
+    {start:97,end:122,color:'rgba(176,111,222,.15)',label:'Minuscules'},
+  ];
+  for(let code=32;code<128;code++){
+    const idx=code-32;
+    const col=idx%32,row=Math.floor(idx/32);
+    const x=10+col*cellW,y=5+row*cellH;
+    let bg='rgba(255,255,255,.02)';
+    groups.forEach(g=>{if(code>=g.start&&code<=g.end)bg=g.color;});
+    ctx.fillStyle=bg;ctx.fillRect(x+.5,y+.5,cellW-1,cellH-1);
+    ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=.5;ctx.strokeRect(x+.5,y+.5,cellW-1,cellH-1);
+    const char=String.fromCharCode(code);
+    ctx.fillStyle='rgba(0,255,136,.7)';ctx.font='7px IBM Plex Mono';ctx.textAlign='center';
+    ctx.fillText(code,x+cellW/2,y+11);
+    ctx.fillStyle='rgba(255,255,255,.65)';ctx.font='bold 11px JetBrains Mono';
+    ctx.fillText(code===32?'·':char,x+cellW/2,y+cellH-6);
+  }
+})();
+
+/* ════════════════════════════════════════════
+   SORTING VISUALIZER
+════════════════════════════════════════════ */
+(()=>{
+  const N=60;
+  let arr=Array.from({length:N},(_,i)=>i+1);
+  let highlights={compare:[],swap:[]};
+  let sortAlgo='bubble';
+  let animSteps=[];
+  let animIdx=0;
+  let animTimer=null;
+  let comparisons=0,swaps=0;
+
+  window.shuffleSort=()=>{
+    arr=arr.sort(()=>Math.random()-.5);
+    highlights={compare:[],swap:[]};
+    animSteps=[];animIdx=0;comparisons=0;swaps=0;
+    clearInterval(animTimer);
+    drawSort();
+    document.getElementById('sortReadout').textContent='Tableau mélangé. Cliquer Lancer.';
+  };
+
+  window.setSortAlgo=(algo,btn)=>{
+    document.querySelectorAll('#sec-algo .btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    sortAlgo=algo;
+  };
+
+  function buildSteps(a){
+    const steps=[],tmp=[...a];
+    if(sortAlgo==='bubble'){
+      for(let i=0;i<tmp.length;i++)for(let j=0;j<tmp.length-i-1;j++){
+        steps.push({type:'compare',i:j,j:j+1});
+        if(tmp[j]>tmp[j+1]){[tmp[j],tmp[j+1]]=[tmp[j+1],tmp[j]];steps.push({type:'swap',i:j,j:j+1,arr:[...tmp]});}
+      }
+    }else if(sortAlgo==='selection'){
+      for(let i=0;i<tmp.length;i++){let m=i;for(let j=i+1;j<tmp.length;j++){steps.push({type:'compare',i:j,j:m});if(tmp[j]<tmp[m])m=j;}if(m!==i){[tmp[i],tmp[m]]=[tmp[m],tmp[i]];steps.push({type:'swap',i:i,j:m,arr:[...tmp]});}}
+    }else if(sortAlgo==='insertion'){
+      for(let i=1;i<tmp.length;i++){let j=i;while(j>0){steps.push({type:'compare',i:j,j:j-1});if(tmp[j]<tmp[j-1]){[tmp[j],tmp[j-1]]=[tmp[j-1],tmp[j]];steps.push({type:'swap',i:j,j:j-1,arr:[...tmp]});j--;}else break;}}
+    }else{
+      // For merge/quick just animate as bubble for demo
+      for(let i=0;i<tmp.length;i++)for(let j=0;j<tmp.length-i-1;j++){
+        steps.push({type:'compare',i:j,j:j+1});
+        if(tmp[j]>tmp[j+1]){[tmp[j],tmp[j+1]]=[tmp[j+1],tmp[j]];steps.push({type:'swap',i:j,j:j+1,arr:[...tmp]});}
+      }
+    }
+    return steps;
+  }
+
+  window.startSort=()=>{
+    clearInterval(animTimer);
+    animSteps=buildSteps([...arr]);
+    animIdx=0;comparisons=0;swaps=0;
+    const speed={bubble:8,selection:8,insertion:8,merge:4,quick:4}[sortAlgo]||8;
+    animTimer=setInterval(()=>{
+      if(animIdx>=animSteps.length){clearInterval(animTimer);highlights={compare:[],swap:[]};drawSort();document.getElementById('sortReadout').textContent=`✓ Terminé — ${comparisons} comparaisons, ${swaps} échanges`;return;}
+      const s=animSteps[animIdx++];
+      if(s.type==='compare'){highlights={compare:[s.i,s.j],swap:[]};comparisons++;}
+      else if(s.type==='swap'){[arr[s.i],arr[s.j]]=[arr[s.j],arr[s.i]];highlights={compare:[],swap:[s.i,s.j]};swaps++;}
+      drawSort();
+      document.getElementById('sortReadout').textContent=`${sortAlgo} — Comparaisons: ${comparisons} · Échanges: ${swaps} · Étape ${animIdx}/${animSteps.length}`;
+    },speed);
+  };
+
+  function drawSort(){
+    const c=document.getElementById('sortCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height,pad=10;
+    ctx.clearRect(0,0,W,H);
+    const barW=(W-pad*2)/arr.length;
+    arr.forEach((v,i)=>{
+      const bh=(v/arr.length)*(H-pad*2);
+      let col='rgba(0,255,136,.5)';
+      if(highlights.compare.includes(i))col='rgba(245,200,66,.9)';
+      if(highlights.swap.includes(i))col='rgba(255,68,85,.9)';
+      ctx.fillStyle=col;
+      ctx.fillRect(pad+i*barW,H-pad-bh,barW-1,bh);
+    });
+  }
+  shuffleSort();
+  drawSort();
+})();
+
+/* ════════════════════════════════════════════
+   COMPLEXITY CHART
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('complexityCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height,padX=40,padY=15;
+  const maxN=100,maxOp=200;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;
+  for(let x=0;x<=maxN;x+=20){const px=padX+(x/maxN)*(W-padX-10);ctx.beginPath();ctx.moveTo(px,padY);ctx.lineTo(px,H-padY);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(x,px,H-padY+10);}
+  for(let y=0;y<=maxOp;y+=50){const py=H-padY-(y/maxOp)*(H-padY*2);ctx.beginPath();ctx.moveTo(padX-5,py);ctx.lineTo(W-10,py);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='9px IBM Plex Mono';ctx.textAlign='right';ctx.fillText(y,padX-6,py+3);}
+  ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('n',W-10,H-padY+10);
+  ctx.save();ctx.rotate(-Math.PI/2);ctx.fillText('ops',-(H/2),10);ctx.restore();
+  const fns=[
+    {f:n=>1,col:'rgba(0,255,136,.9)',label:'O(1)'},
+    {f:n=>Math.log2(n+1),col:'rgba(0,212,255,.9)',label:'O(log n)'},
+    {f:n=>n,col:'rgba(79,143,255,.9)',label:'O(n)'},
+    {f:n=>n*Math.log2(n+1),col:'rgba(245,200,66,.9)',label:'O(n log n)'},
+    {f:n=>n*n*0.25,col:'rgba(255,123,53,.9)',label:'O(n²)'},
+    {f:n=>Math.min(Math.pow(2,n/8),maxOp),col:'rgba(255,68,85,.9)',label:'O(2ⁿ)'},
+  ];
+  fns.forEach(({f,col})=>{
+    ctx.beginPath();ctx.strokeStyle=col;ctx.lineWidth=2;
+    for(let n=1;n<=maxN;n++){
+      const v=Math.min(f(n),maxOp);
+      const px=padX+(n/maxN)*(W-padX-10);
+      const py=H-padY-(v/maxOp)*(H-padY*2);
+      n===1?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  });
+})();
+
+/* ════════════════════════════════════════════
+   FIB TREE
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('fibCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const nodes=[
+    {x:.5,y:.1,label:'fib(4)',col:'rgba(0,255,136,.9)'},
+    {x:.25,y:.45,label:'fib(3)',col:'rgba(79,143,255,.9)'},
+    {x:.75,y:.45,label:'fib(2)',col:'rgba(245,200,66,.9)'},
+    {x:.12,y:.82,label:'fib(2)',col:'rgba(245,200,66,.9)'},
+    {x:.38,y:.82,label:'fib(1)',col:'rgba(176,111,222,.9)'},
+    {x:.62,y:.82,label:'fib(1)',col:'rgba(176,111,222,.9)'},
+    {x:.88,y:.82,label:'fib(0)',col:'rgba(255,68,85,.9)'},
+  ];
+  const edges=[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
+  edges.forEach(([a,b])=>{
+    ctx.beginPath();ctx.moveTo(nodes[a].x*W,nodes[a].y*H);ctx.lineTo(nodes[b].x*W,nodes[b].y*H);
+    ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1;ctx.stroke();
+  });
+  nodes.forEach(({x,y,label,col})=>{
+    ctx.beginPath();ctx.arc(x*W,y*H,14,0,Math.PI*2);
+    ctx.fillStyle=col.replace('.9',',.12)');ctx.fill();
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle=col;ctx.font='bold 8px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(label,x*W,y*H+3);
+  });
+})();
+
+/* ════════════════════════════════════════════
+   BINARY SEARCH
+════════════════════════════════════════════ */
+(()=>{
+  const data=Array.from({length:32},(_,i)=>i*3+1);
+  let bsLeft=0,bsRight=data.length-1,bsMid=-1,bsTarget=42,bsDone=false;
+
+  window.bsearchStart=()=>{
+    bsLeft=0;bsRight=data.length-1;bsMid=-1;bsDone=false;
+    bsTarget=parseInt(document.getElementById('bsTarget').value)||42;
+    drawBS();
+    document.getElementById('bsearchReadout').textContent=`Recherche de ${bsTarget} dans le tableau de ${data.length} éléments`;
+  };
+  window.bsearchStep=()=>{
+    if(bsDone)return;
+    if(bsLeft>bsRight){bsDone=true;document.getElementById('bsearchReadout').textContent=`${bsTarget} non trouvé`;drawBS();return;}
+    bsMid=Math.floor((bsLeft+bsRight)/2);
+    if(data[bsMid]===bsTarget){bsDone=true;document.getElementById('bsearchReadout').textContent=`✓ Trouvé à l'index ${bsMid} : data[${bsMid}]=${data[bsMid]}`;}
+    else if(data[bsMid]<bsTarget){document.getElementById('bsearchReadout').textContent=`data[${bsMid}]=${data[bsMid]} < ${bsTarget} → chercher à droite`;bsLeft=bsMid+1;}
+    else{document.getElementById('bsearchReadout').textContent=`data[${bsMid}]=${data[bsMid]} > ${bsTarget} → chercher à gauche`;bsRight=bsMid-1;}
+    drawBS();
+  };
+  window.bsearchReset=()=>{bsLeft=0;bsRight=data.length-1;bsMid=-1;bsDone=false;drawBS();document.getElementById('bsearchReadout').textContent='Reset';};
+
+  function drawBS(){
+    const c=document.getElementById('bsearchCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height,pad=10;
+    ctx.clearRect(0,0,W,H);
+    const cw=(W-pad*2)/data.length;
+    data.forEach((v,i)=>{
+      let bg='rgba(255,255,255,.04)',tc='rgba(255,255,255,.3)';
+      if(i<bsLeft||i>bsRight){bg='rgba(255,255,255,.01)';tc='rgba(255,255,255,.1)';}
+      if(i===bsMid){bg=bsDone&&data[i]===bsTarget?'rgba(0,255,136,.2)':'rgba(245,200,66,.15)';tc=bsDone&&data[i]===bsTarget?'var(--green)':'var(--yellow)';}
+      if(i===bsLeft&&i!==bsMid)bg='rgba(79,143,255,.1)';
+      if(i===bsRight&&i!==bsMid)bg='rgba(176,111,222,.1)';
+      ctx.fillStyle=bg;ctx.fillRect(pad+i*cw+1,8,cw-2,H-20);
+      ctx.strokeStyle=i===bsMid?'rgba(245,200,66,.5)':'rgba(255,255,255,.06)';ctx.lineWidth=.5;ctx.strokeRect(pad+i*cw+1,8,cw-2,H-20);
+      ctx.fillStyle=tc;ctx.font='9px JetBrains Mono';ctx.textAlign='center';ctx.fillText(v,pad+i*cw+cw/2,H/2+3);
+    });
+    if(bsLeft<=bsRight){
+      const lx=pad+bsLeft*cw+cw/2,rx=pad+bsRight*cw+cw/2;
+      ctx.fillStyle='rgba(79,143,255,.7)';ctx.font='7px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('L',lx,H-4);
+      ctx.fillStyle='rgba(176,111,222,.7)';ctx.fillText('R',rx,H-4);
+    }
+    if(bsMid>=0){ctx.fillStyle='rgba(245,200,66,.9)';ctx.font='bold 8px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('M',pad+bsMid*cw+cw/2,H-4);}
+  }
+  drawBS();
+})();
+
+/* ════════════════════════════════════════════
+   STACK
+════════════════════════════════════════════ */
+(()=>{
+  let stack=[];
+  window.stackPush=()=>{const v=document.getElementById('stackInput').value||0;stack.push(parseInt(v));drawStack();};
+  window.stackPop=()=>{if(stack.length)stack.pop();drawStack();};
+  window.stackClear=()=>{stack=[];drawStack();};
+  function drawStack(){
+    const c=document.getElementById('stackCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const cellH=36,cellW=100,x=(W-cellW)/2;
+    // Container
+    ctx.strokeStyle='rgba(0,255,136,.25)';ctx.lineWidth=1.5;
+    ctx.strokeRect(x-2,10,cellW+4,H-20);
+    ctx.fillStyle='rgba(0,255,136,.03)';ctx.fillRect(x-2,10,cellW+4,H-20);
+    // Items
+    const maxVisible=Math.floor((H-30)/cellH);
+    const visible=stack.slice(-maxVisible);
+    visible.forEach((v,i)=>{
+      const y=H-30-(i+1)*cellH;
+      const isTop=i===visible.length-1;
+      ctx.fillStyle=isTop?'rgba(0,255,136,.15)':'rgba(0,255,136,.05)';
+      ctx.fillRect(x,y,cellW,cellH-2);
+      ctx.strokeStyle=isTop?'rgba(0,255,136,.5)':'rgba(0,255,136,.15)';ctx.lineWidth=isTop?1.5:1;
+      ctx.strokeRect(x,y,cellW,cellH-2);
+      ctx.fillStyle=isTop?'var(--green)':'rgba(255,255,255,.5)';
+      ctx.font=isTop?'bold 14px JetBrains Mono':'13px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillText(v,x+cellW/2,y+cellH/2+4);
+    });
+    if(stack.length){ctx.fillStyle='rgba(0,255,136,.6)';ctx.font='bold 8px IBM Plex Mono';ctx.textAlign='left';ctx.fillText('← TOP',x+cellW+8,H-30-(visible.length)*cellH+cellH/2+3);}
+    document.getElementById('stackReadout').textContent=`Pile : [${stack.join(', ')}] · Taille : ${stack.length}`;
+  }
+  drawStack();
+})();
+
+/* ════════════════════════════════════════════
+   QUEUE
+════════════════════════════════════════════ */
+(()=>{
+  let queue=[];
+  window.queueEnqueue=()=>{const v=document.getElementById('queueInput').value||0;queue.push(parseInt(v));drawQueue();};
+  window.queueDequeue=()=>{if(queue.length)queue.shift();drawQueue();};
+  window.queueClear=()=>{queue=[];drawQueue();};
+  function drawQueue(){
+    const c=document.getElementById('queueCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const cellW=48,cellH=50,y=(H-cellH)/2;
+    const visible=queue.slice(-8);
+    const totalW=visible.length*cellW+(visible.length-1)*4;
+    let startX=(W-totalW)/2;
+    visible.forEach((v,i)=>{
+      const isHead=i===0,isTail=i===visible.length-1;
+      const x=startX+i*(cellW+4);
+      ctx.fillStyle=isHead?'rgba(255,68,85,.12)':isTail?'rgba(79,143,255,.12)':'rgba(255,255,255,.04)';
+      ctx.fillRect(x,y,cellW,cellH);
+      ctx.strokeStyle=isHead?'rgba(255,68,85,.5)':isTail?'rgba(79,143,255,.5)':'rgba(255,255,255,.1)';ctx.lineWidth=1;
+      ctx.strokeRect(x,y,cellW,cellH);
+      ctx.fillStyle=isHead?'var(--red)':isTail?'var(--blue)':'rgba(255,255,255,.6)';
+      ctx.font='bold 13px JetBrains Mono';ctx.textAlign='center';ctx.fillText(v,x+cellW/2,y+cellH/2+5);
+      if(isHead){ctx.fillStyle='rgba(255,68,85,.7)';ctx.font='7px IBM Plex Mono';ctx.fillText('TÊTE',x+cellW/2,y-6);}
+      if(isTail){ctx.fillStyle='rgba(79,143,255,.7)';ctx.font='7px IBM Plex Mono';ctx.fillText('QUEUE',x+cellW/2,y-6);}
+    });
+    if(queue.length>1){
+      ctx.fillStyle='rgba(0,255,136,.4)';ctx.font='9px IBM Plex Mono';ctx.textAlign='left';
+      ctx.fillText('← défile',10,H/2+4);
+      ctx.textAlign='right';ctx.fillText('enfile →',W-10,H/2+4);
+    }
+    document.getElementById('queueReadout').textContent=`File : [${queue.join(', ')}] · Taille : ${queue.length}`;
+  }
+  drawQueue();
+})();
+
+/* ════════════════════════════════════════════
+   BST
+════════════════════════════════════════════ */
+(()=>{
+  let root=null;
+  const Node=v=>({v,l:null,r:null});
+  function insert(n,v){if(!n)return Node(v);if(v<n.v)n.l=insert(n.l,v);else if(v>n.v)n.r=insert(n.r,v);return n;}
+  function inorder(n,res=[]){if(!n)return res;inorder(n.l,res);res.push(n.v);inorder(n.r,res);return res;}
+  function preorder(n,res=[]){if(!n)return res;res.push(n.v);preorder(n.l,res);preorder(n.r,res);return res;}
+  function postorder(n,res=[]){if(!n)return res;postorder(n.l,res);postorder(n.r,res);res.push(n.v);return res;}
+
+  let highlight=[];
+  window.bstInsert=()=>{const v=parseInt(document.getElementById('bstInput').value)||50;root=insert(root,v);highlight=[];draw();document.getElementById('bstReadout').textContent=`Inséré ${v} · Infixe: [${inorder(root).join(', ')}]`;};
+  window.bstClear=()=>{root=null;highlight=[];draw();document.getElementById('bstReadout').textContent='Arbre vidé';};
+  window.bstInorder=()=>{highlight=inorder(root);let i=0;const t=setInterval(()=>{if(i>highlight.length){clearInterval(t);return;}draw(highlight.slice(0,i++));},150);document.getElementById('bstReadout').textContent=`Infixe (trié): [${inorder(root).join(', ')}]`;};
+  window.bstPreorder=()=>{const r=preorder(root);let i=0;const t=setInterval(()=>{if(i>r.length){clearInterval(t);return;}draw(null,r.slice(0,i++));},150);document.getElementById('bstReadout').textContent=`Préfixe: [${r.join(', ')}]`;};
+  window.bstPostorder=()=>{const r=postorder(root);let i=0;const t=setInterval(()=>{if(i>r.length){clearInterval(t);return;}draw(null,null,r.slice(0,i++));},150);document.getElementById('bstReadout').textContent=`Postfixe: [${r.join(', ')}]`;};
+
+  function draw(inf,pre,post){
+    const c=document.getElementById('bstCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    if(!root){ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='14px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('Arbre vide — insérer des valeurs',W/2,H/2);return;}
+    function getDepth(n){if(!n)return 0;return 1+Math.max(getDepth(n.l),getDepth(n.r));}
+    const depth=getDepth(root);
+    const R=18;
+    function drawNode(n,x,y,spread){
+      if(!n)return;
+      if(n.l){
+        ctx.beginPath();ctx.moveTo(x,y+R);ctx.lineTo(x-spread,y+70);
+        ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1.5;ctx.stroke();
+        drawNode(n.l,x-spread,y+70,spread/2);
+      }
+      if(n.r){
+        ctx.beginPath();ctx.moveTo(x,y+R);ctx.lineTo(x+spread,y+70);
+        ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1.5;ctx.stroke();
+        drawNode(n.r,x+spread,y+70,spread/2);
+      }
+      let col='rgba(0,255,136,.12)',stroke='rgba(0,255,136,.3)',tc='rgba(0,255,136,.9)';
+      if(inf&&inf.includes(n.v)){col='rgba(79,143,255,.2)';stroke='rgba(79,143,255,.8)';tc='var(--blue)';}
+      if(pre&&pre.includes(n.v)){col='rgba(245,200,66,.2)';stroke='rgba(245,200,66,.8)';tc='var(--yellow)';}
+      if(post&&post.includes(n.v)){col='rgba(176,111,222,.2)';stroke='rgba(176,111,222,.8)';tc='var(--purple)';}
+      ctx.beginPath();ctx.arc(x,y,R,0,Math.PI*2);
+      ctx.fillStyle=col;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle=tc;ctx.font='bold 11px JetBrains Mono';ctx.textAlign='center';ctx.fillText(n.v,x,y+4);
+    }
+    drawNode(root,W/2,30,Math.min(W/4,200));
+  }
+  // Pre-insert some values
+  [50,30,70,20,40,60,80].forEach(v=>root=insert(root,v));
+  draw();
+  document.getElementById('bstReadout').textContent=`Arbre initialisé · Infixe: [${inorder(root).join(', ')}]`;
+})();
+
+/* ════════════════════════════════════════════
+   HASH TABLE
+════════════════════════════════════════════ */
+(()=>{
+  const SIZE=8;
+  let table=Array(SIZE).fill(null).map(()=>[]);
+  function hash(k){let h=0;for(let c of String(k))h=(h*31+c.charCodeAt(0))%SIZE;return h;}
+  window.hashInsert=()=>{
+    const k=document.getElementById('hashKey').value||'key';
+    const v=document.getElementById('hashVal').value||'val';
+    const h=hash(k);table[h].push({k,v});
+    draw();
+    document.getElementById('hashReadout').textContent=`hash("${k}") = ${h} → ajouté`;
+  };
+  function draw(){
+    const c=document.getElementById('hashCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const cellH=(H-20)/SIZE,slotW=90;
+    for(let i=0;i<SIZE;i++){
+      const y=10+i*cellH;
+      ctx.fillStyle='rgba(176,111,222,.08)';ctx.fillRect(10,y,slotW,cellH-2);
+      ctx.strokeStyle='rgba(176,111,222,.2)';ctx.lineWidth=1;ctx.strokeRect(10,y,slotW,cellH-2);
+      ctx.fillStyle='rgba(176,111,222,.7)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';
+      ctx.fillText(`slot[${i}]`,10+slotW/2,y+cellH/2+3);
+      table[i].forEach((item,j)=>{
+        const x=10+slotW+10+j*(slotW+5);
+        if(j>0){ctx.beginPath();ctx.moveTo(x-8,y+cellH/2);ctx.lineTo(x,y+cellH/2);ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1;ctx.stroke();}
+        ctx.fillStyle='rgba(0,255,136,.08)';ctx.fillRect(x,y+2,slotW-5,cellH-6);
+        ctx.strokeStyle='rgba(0,255,136,.3)';ctx.lineWidth=1;ctx.strokeRect(x,y+2,slotW-5,cellH-6);
+        ctx.fillStyle='var(--green)';ctx.font='8px JetBrains Mono';ctx.textAlign='center';
+        ctx.fillText(`"${item.k}":${item.v}`,x+(slotW-5)/2,y+cellH/2+3);
+      });
+    }
+    const total=table.reduce((s,b)=>s+b.length,0);
+    document.getElementById('hashReadout').textContent=`${total} entrées · Factor de charge: ${(total/SIZE).toFixed(2)}`;
+  }
+  draw();
+  window.hashInsert=function(){const k=document.getElementById('hashKey').value||'cle';const v=document.getElementById('hashVal').value||'val';const h=hash(k);table[h].push({k,v});draw();document.getElementById('hashReadout').textContent=`hash("${k}") = ${h} → ajouté`;};
+})();
+
+/* ════════════════════════════════════════════
+   LINKED LIST
+════════════════════════════════════════════ */
+(()=>{
+  let ll=[];
+  window.llPrepend=()=>{ll.unshift(parseInt(document.getElementById('linkedInput').value)||0);drawLL();};
+  window.llAppend=()=>{ll.push(parseInt(document.getElementById('linkedInput').value)||0);drawLL();};
+  window.llRemoveHead=()=>{if(ll.length)ll.shift();drawLL();};
+  function drawLL(){
+    const c=document.getElementById('linkedCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    if(!ll.length){ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='12px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('Liste vide',W/2,H/2);document.getElementById('linkedReadout').textContent='Liste vide';return;}
+    const n=Math.min(ll.length,7);
+    const cellW=50,gap=20,totalW=n*(cellW+gap);
+    const startX=(W-totalW)/2,y=H/2-20;
+    ll.slice(0,n).forEach((v,i)=>{
+      const x=startX+i*(cellW+gap);
+      const isHead=i===0;
+      // Data box
+      ctx.fillStyle=isHead?'rgba(0,212,255,.1)':'rgba(0,212,255,.04)';
+      ctx.fillRect(x,y,cellW-10,38);
+      ctx.strokeStyle=isHead?'rgba(0,212,255,.6)':'rgba(0,212,255,.2)';ctx.lineWidth=isHead?1.5:1;
+      ctx.strokeRect(x,y,cellW-10,38);
+      ctx.fillStyle=isHead?'var(--cyan)':'rgba(255,255,255,.6)';
+      ctx.font='bold 13px JetBrains Mono';ctx.textAlign='center';ctx.fillText(v,x+(cellW-10)/2,y+23);
+      // Next pointer box
+      ctx.fillStyle='rgba(255,255,255,.03)';ctx.fillRect(x+cellW-10,y,12,38);
+      ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;ctx.strokeRect(x+cellW-10,y,12,38);
+      ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='7px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('→',x+cellW-4,y+22);
+      // Arrow to next
+      if(i<n-1){
+        ctx.beginPath();ctx.moveTo(x+cellW+2,y+19);ctx.lineTo(x+cellW+gap-2,y+19);
+        ctx.strokeStyle='rgba(0,212,255,.4)';ctx.lineWidth=1.5;ctx.stroke();
+      }
+      if(isHead){ctx.fillStyle='rgba(0,212,255,.7)';ctx.font='7px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('tête',x+(cellW-10)/2,y-6);}
+    });
+    // NULL
+    const lastX=startX+n*(cellW+gap)-gap+4;
+    ctx.fillStyle='rgba(255,68,85,.4)';ctx.font='9px IBM Plex Mono';ctx.textAlign='left';ctx.fillText('NULL',lastX,y+22);
+    document.getElementById('linkedReadout').textContent=`[${ll.join(' → ')} → NULL] · Taille: ${ll.length}`;
+  }
+  [3,7,1,9,4].forEach(v=>ll.push(v));drawLL();
+})();
+
+/* ════════════════════════════════════════════
+   GRAPH (BFS/DFS)
+════════════════════════════════════════════ */
+(()=>{
+  const nodes=[
+    {id:0,x:.2,y:.2,label:'A'},{id:1,x:.5,y:.1,label:'B'},
+    {id:2,x:.8,y:.2,label:'C'},{id:3,x:.15,y:.6,label:'D'},
+    {id:4,x:.5,y:.5,label:'E'},{id:5,x:.85,y:.6,label:'F'},
+    {id:6,x:.35,y:.85,label:'G'},{id:7,x:.65,y:.85,label:'H'},
+  ];
+  const edges=[[0,1],[0,3],[1,2],[1,4],[2,5],[3,4],[3,6],[4,5],[4,7],[5,7],[6,7]];
+  const adj=Array(8).fill(null).map(()=>[]);
+  edges.forEach(([a,b])=>{adj[a].push(b);adj[b].push(a);});
+  let visited=[],current=-1,order=[],selectedStart=-1;
+
+  window.resetGraph=()=>{visited=[];current=-1;order=[];selectedStart=-1;drawGraph();document.getElementById('graphReadout').textContent='Cliquer sur un nœud de départ';};
+
+  window.runBFS=()=>{
+    if(selectedStart<0)return;
+    visited=[];order=[];
+    const queue=[selectedStart];visited.push(selectedStart);
+    while(queue.length){const v=queue.shift();order.push(v);adj[v].forEach(w=>{if(!visited.includes(w)){visited.push(w);queue.push(w);}});}
+    animateTraversal('BFS');
+  };
+  window.runDFS=()=>{
+    if(selectedStart<0)return;
+    visited=[];order=[];
+    function dfs(v){if(visited.includes(v))return;visited.push(v);order.push(v);adj[v].forEach(w=>dfs(w));}
+    dfs(selectedStart);animateTraversal('DFS');
+  };
+
+  function animateTraversal(type){
+    let i=0;const timer=setInterval(()=>{
+      if(i>=order.length){clearInterval(timer);document.getElementById('graphReadout').textContent=`${type} terminé: [${order.map(id=>nodes[id].label).join(' → ')}]`;return;}
+      current=order[i++];drawGraph(order.slice(0,i));
+    },400);
+  }
+
+  const c=document.getElementById('graphCanvas');
+  c.addEventListener('click',e=>{
+    const r=c.getBoundingClientRect();
+    const mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+    nodes.forEach(n=>{if(Math.hypot(n.x-mx,n.y-my)<.07){selectedStart=n.id;visited=[];order=[];current=-1;drawGraph();document.getElementById('graphReadout').textContent=`Départ: ${n.label} — maintenant cliquer BFS ou DFS`;}});
+  });
+
+  function drawGraph(vis=[]){
+    if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    edges.forEach(([a,b])=>{
+      ctx.beginPath();ctx.moveTo(nodes[a].x*W,nodes[a].y*H);ctx.lineTo(nodes[b].x*W,nodes[b].y*H);
+      const bothVis=vis.includes(a)&&vis.includes(b);
+      ctx.strokeStyle=bothVis?'rgba(0,255,136,.4)':'rgba(255,255,255,.1)';ctx.lineWidth=bothVis?2:1;ctx.stroke();
+    });
+    nodes.forEach(n=>{
+      const x=n.x*W,y=n.y*H,r=16;
+      const isVisited=vis.includes(n.id),isCurrent=n.id===current,isStart=n.id===selectedStart;
+      let fill='rgba(255,255,255,.04)',stroke='rgba(255,255,255,.2)',tc='rgba(255,255,255,.5)';
+      if(isStart){fill='rgba(79,143,255,.15)';stroke='rgba(79,143,255,.7)';tc='var(--blue)';}
+      if(isVisited){fill='rgba(0,255,136,.12)';stroke='rgba(0,255,136,.5)';tc='var(--green)';}
+      if(isCurrent){fill='rgba(245,200,66,.2)';stroke='rgba(245,200,66,.9)';tc='var(--yellow)';}
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=isCurrent?2.5:1.5;ctx.stroke();
+      const visitOrder=vis.indexOf(n.id);
+      if(visitOrder>=0){ctx.fillStyle='rgba(0,255,136,.4)';ctx.font='7px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(visitOrder+1,x+12,y-12);}
+      ctx.fillStyle=tc;ctx.font='bold 12px JetBrains Mono';ctx.textAlign='center';ctx.fillText(n.label,x,y+4);
+    });
+  }
+  drawGraph();
+  document.getElementById('graphReadout').textContent='Cliquer sur un nœud de départ, puis BFS ou DFS';
+})();
+
+/* ════════════════════════════════════════════
+   SQL SIMULATION
+════════════════════════════════════════════ */
+(()=>{
+  const db={
+    eleve:[
+      {id_eleve:1,nom:'Martin',prenom:'Alice',id_classe:1},{id_eleve:2,nom:'Bernard',prenom:'Bob',id_classe:1},
+      {id_eleve:3,nom:'Dupont',prenom:'Claire',id_classe:2},{id_eleve:4,nom:'Leroy',prenom:'David',id_classe:2},
+      {id_eleve:5,nom:'Moreau',prenom:'Eve',id_classe:1},
+    ],
+    classe:[
+      {id_classe:1,niveau:'Terminale',nom:'NSI'},{id_classe:2,niveau:'Première',nom:'NSI'},
+    ],
+    notes:[
+      {id_eleve:1,matiere:'Algo',note:16},{id_eleve:1,matiere:'BDD',note:14},
+      {id_eleve:2,matiere:'Algo',note:11},{id_eleve:2,matiere:'BDD',note:18},
+      {id_eleve:3,matiere:'Algo',note:15},{id_eleve:4,matiere:'BDD',note:9},
+    ],
+  };
+
+  const queries={
+    'SELECT nom, prenom FROM eleve WHERE id_classe = 1':{table:'eleve',filter:r=>r.id_classe===1,cols:['nom','prenom']},
+    'SELECT * FROM classe':{table:'classe',filter:()=>true,cols:null},
+    'SELECT * FROM eleve':{table:'eleve',filter:()=>true,cols:null},
+    'SELECT * FROM notes WHERE note > 13':{table:'notes',filter:r=>r.note>13,cols:null},
+    'SELECT * FROM eleve ORDER BY nom':{table:'eleve',filter:()=>true,cols:null,sort:'nom'},
+  };
+
+  window.runSQL=()=>{
+    const sql=document.getElementById('sqlInput').value.trim();
+    const out=document.getElementById('sqlOutput');
+    // Simple pattern matching
+    let found=queries[sql];
+    if(!found){
+      // Try to parse basic SELECT
+      const m=sql.match(/SELECT\s+(.*?)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.*))?/i);
+      if(m){
+        const tname=m[2].toLowerCase();
+        if(db[tname]){
+          let rows=[...db[tname]];
+          found={table:tname,filter:()=>true,cols:m[1]==='*'?null:m[1].split(',').map(s=>s.trim())};
+        }
+      }
+    }
+    if(!found){out.innerHTML=`<div style="color:var(--red);font-family:JetBrains Mono,monospace;font-size:.75rem">Erreur : requête non supportée dans le simulateur</div>`;return;}
+    let rows=db[found.table].filter(found.filter);
+    if(found.sort)rows=[...rows].sort((a,b)=>String(a[found.sort]).localeCompare(String(b[found.sort])));
+    const cols=found.cols||Object.keys(rows[0]||{});
+    let html=`<div style="color:var(--dim2);font-family:IBM Plex Mono,monospace;font-size:.58rem;margin-bottom:.5rem">${rows.length} ligne(s) retournée(s)</div>`;
+    html+=`<table class="sql-table"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+    rows.forEach(r=>html+=`<tr>${cols.map(c=>`<td>${r[c]??'NULL'}</td>`).join('')}</tr>`);
+    html+=`</tbody></table>`;
+    out.innerHTML=html;
+  };
+  window.runSQL();
+})();
+
+/* ════════════════════════════════════════════
+   VON NEUMANN ARCHITECTURE
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('vonNeumannCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const boxes=[
+    {x:.35,y:.1,w:.3,h:.35,label:'CPU',sub:'Unité Centrale',col:'rgba(0,255,136,.1)',stroke:'rgba(0,255,136,.4)',tc:'var(--green)'},
+    {x:.35,y:.55,w:.3,h:.35,label:'Mémoire',sub:'RAM / ROM',col:'rgba(79,143,255,.1)',stroke:'rgba(79,143,255,.4)',tc:'var(--blue)'},
+    {x:.02,y:.3,w:.25,h:.4,label:'Entrées',sub:'Clavier, souris…',col:'rgba(245,200,66,.06)',stroke:'rgba(245,200,66,.3)',tc:'var(--yellow)'},
+    {x:.73,y:.3,w:.25,h:.4,label:'Sorties',sub:'Écran, imprimante…',col:'rgba(176,111,222,.06)',stroke:'rgba(176,111,222,.3)',tc:'var(--purple)'},
+  ];
+  // Sub-boxes inside CPU
+  const cpuX=.35*W,cpuY=.1*H,cpuW=.3*W,cpuH=.35*H;
+  [['UAL','Calcul',.04,.5,'rgba(0,255,136,.15)','rgba(0,255,136,.5)'],
+   ['UC','Contrôle',.54,.5,'rgba(0,212,255,.1)','rgba(0,212,255,.4)']].forEach(([l,s,ox,ow,f,st])=>{
+    ctx.fillStyle=f;ctx.fillRect(cpuX+cpuW*ox+2,cpuY+8,cpuW*ow-4,cpuH-20);
+    ctx.strokeStyle=st;ctx.lineWidth=1;ctx.strokeRect(cpuX+cpuW*ox+2,cpuY+8,cpuW*ow-4,cpuH-20);
+    ctx.fillStyle=st;ctx.font='bold 11px JetBrains Mono';ctx.textAlign='center';ctx.fillText(l,cpuX+cpuW*(ox+ow/2),cpuY+cpuH/2-2);
+    ctx.fillStyle='rgba(255,255,255,.4)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(s,cpuX+cpuW*(ox+ow/2),cpuY+cpuH/2+10);
+  });
+  // Bus
+  ctx.fillStyle='rgba(0,255,136,.15)';
+  ctx.fillRect(.35*W,H*.45,cpuW,8);
+  ctx.strokeStyle='rgba(0,255,136,.4)';ctx.lineWidth=1;ctx.strokeRect(.35*W,H*.45,cpuW,8);
+  ctx.fillStyle='rgba(0,255,136,.6)';ctx.font='7px IBM Plex Mono';ctx.textAlign='center';ctx.fillText('BUS DONNÉES / ADRESSES / CONTRÔLE',.5*W,H*.455);
+  boxes.forEach(b=>{
+    const x=b.x*W,y=b.y*H,w=b.w*W,h=b.h*H;
+    ctx.fillStyle=b.col;ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle=b.stroke;ctx.lineWidth=1.5;ctx.strokeRect(x,y,w,h);
+    ctx.fillStyle=b.tc;ctx.font='bold 12px JetBrains Mono';ctx.textAlign='center';ctx.fillText(b.label,x+w/2,y+h/2-4);
+    ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='9px IBM Plex Mono';ctx.fillText(b.sub,x+w/2,y+h/2+12);
+  });
+  // Arrows
+  ctx.strokeStyle='rgba(0,255,136,.3)';ctx.lineWidth=1.5;
+  [[.27*W,.5*H,.35*W,.5*H],[.65*W,.5*H,.73*W,.5*H]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();});
+  ctx.strokeStyle='rgba(79,143,255,.3)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(.5*W,.46*H);ctx.lineTo(.5*W,.55*H);ctx.stroke();
+  ctx.font='8px IBM Plex Mono';ctx.fillStyle='rgba(0,255,136,.5)';ctx.textAlign='center';ctx.fillText('↕ Registres de données',.5*W,.5*H+14);
+})();
+
+/* ════════════════════════════════════════════
+   CPU PIPELINE
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('pipelineCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const stages=['FETCH','DECODE','EXECUTE','WRITE-BACK'];
+  const colors=['rgba(0,255,136,.2)','rgba(79,143,255,.2)','rgba(245,200,66,.2)','rgba(176,111,222,.2)'];
+  const strokes=['rgba(0,255,136,.6)','rgba(79,143,255,.6)','rgba(245,200,66,.6)','rgba(176,111,222,.6)'];
+  const instructions=['ADD r1,r2','LDR r3,mem','SUB r4,r5','STR r6,mem','CMP r1,r0'];
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const stageW=(W-20)/stages.length;
+    stages.forEach((s,i)=>{
+      ctx.fillStyle=colors[i];ctx.fillRect(10+i*stageW,10,stageW-4,H-20);
+      ctx.strokeStyle=strokes[i];ctx.lineWidth=1;ctx.strokeRect(10+i*stageW,10,stageW-4,H-20);
+      ctx.fillStyle=strokes[i];ctx.font='bold 11px JetBrains Mono';ctx.textAlign='center';ctx.fillText(s,10+i*stageW+stageW/2,30);
+    });
+    // Show 4 instructions in pipeline
+    for(let inst=0;inst<4;inst++){
+      const currentStage=(t+inst)%stages.length;
+      const instIdx=(Math.floor(t/1)+inst)%instructions.length;
+      const x=10+currentStage*stageW+stageW/2;
+      const y=H/2+inst*0;
+      if(inst===0){
+        ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(10+currentStage*stageW+4,H/2-16,stageW-12,30);
+        ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+        ctx.fillText(instructions[instIdx],x,H/2+4);
+      }
+    }
+    t+=.02;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   MEMORY HIERARCHY
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('memHierCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const layers=[
+    {name:'Registres CPU',cap:'< 1 Ko',speed:'< 1 ns',col:'rgba(0,255,136,.5)',w:.08},
+    {name:'Cache L1/L2',cap:'1 Mo',speed:'2–10 ns',col:'rgba(79,143,255,.5)',w:.18},
+    {name:'RAM',cap:'4–64 Go',speed:'50–100 ns',col:'rgba(245,200,66,.5)',w:.34},
+    {name:'SSD / NVMe',cap:'256 Go–4 To',speed:'0.1–1 ms',col:'rgba(176,111,222,.5)',w:.54},
+    {name:'HDD',cap:'1–16 To',speed:'5–20 ms',col:'rgba(255,123,53,.5)',w:.75},
+    {name:'Cloud / Tape',cap:'∞',speed:'> 100 ms',col:'rgba(255,68,85,.4)',w:1.0},
+  ];
+  const cx=W/2,maxW=W-40;
+  layers.forEach((l,i)=>{
+    const lw=l.w*maxW/2,y=10+i*(H-20)/layers.length,lh=(H-20)/layers.length-4;
+    ctx.fillStyle=l.col.replace('.5',',.12)').replace('.4',',.08)');
+    ctx.fillRect(cx-lw,y,lw*2,lh);
+    ctx.strokeStyle=l.col;ctx.lineWidth=1;ctx.strokeRect(cx-lw,y,lw*2,lh);
+    ctx.fillStyle=l.col;ctx.font='bold 11px JetBrains Mono';ctx.textAlign='center';ctx.fillText(l.name,cx,y+lh/2+2);
+    ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='9px IBM Plex Mono';
+    ctx.textAlign='left';ctx.fillText(`Taille: ${l.cap}`,20,y+lh/2+2);
+    ctx.textAlign='right';ctx.fillText(`Vitesse: ${l.speed}`,W-20,y+lh/2+2);
+  });
+  ctx.fillStyle='rgba(0,255,136,.5)';ctx.font='8px IBM Plex Mono';ctx.textAlign='center';
+  ctx.fillText('← Plus rapide · Plus petit · Plus cher',W/2,H-5);
+})();
+
+/* ════════════════════════════════════════════
+   IP CANVAS
+════════════════════════════════════════════ */
+(()=>{
+  function drawIP(){
+    const c=document.getElementById('ipCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    const cidr=parseInt(document.getElementById('cidrSlider').value);
+    document.getElementById('cidrVal').textContent=cidr;
+    ctx.clearRect(0,0,W,H);
+    const ip=[192,168,1,42];
+    const mask=cidr;
+    // Draw 32 bits
+    const bw=(W-20)/32,bh=30;
+    let bitCount=0;
+    for(let byte=0;byte<4;byte++){
+      for(let bit=7;bit>=0;bit--){
+        const b=(ip[byte]>>bit)&1;
+        const isNetwork=bitCount<mask;
+        const x=10+bitCount*bw;
+        ctx.fillStyle=isNetwork?'rgba(0,255,136,.15)':'rgba(255,68,85,.08)';
+        ctx.fillRect(x,20,bw-1,bh);
+        ctx.strokeStyle=isNetwork?'rgba(0,255,136,.3)':'rgba(255,68,85,.2)';ctx.lineWidth=.5;ctx.strokeRect(x,20,bw-1,bh);
+        ctx.fillStyle=isNetwork?'var(--green)':'rgba(255,68,85,.8)';
+        ctx.font='8px JetBrains Mono';ctx.textAlign='center';ctx.fillText(b,x+bw/2,35+4);
+        bitCount++;
+      }
+      if(byte<3){ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='bold 12px JetBrains Mono';ctx.textAlign='center';ctx.fillText('.',10+(bitCount-.5)*bw,38);}
+    }
+    ctx.fillStyle='rgba(0,255,136,.7)';ctx.font='8px IBM Plex Mono';ctx.textAlign='left';ctx.fillText(`Réseau (${mask} bits)`,10,16);
+    ctx.fillStyle='rgba(255,68,85,.7)';ctx.textAlign='right';ctx.fillText(`Hôte (${32-mask} bits)`,W-10,16);
+    // IP display
+    ctx.font='bold 14px JetBrains Mono';ctx.textAlign='center';ctx.fillStyle='var(--white)';
+    ctx.fillText(`${ip.join('.')} / ${cidr}`,W/2,70);
+    const hosts=Math.pow(2,32-cidr)-2;
+    const netAddr=ip.slice(0,Math.floor(mask/8)).join('.')+'.'+Array(4-Math.floor(mask/8)).fill(0).join('.');
+    ctx.fillStyle='rgba(255,255,255,.4)';ctx.font='10px IBM Plex Mono';
+    ctx.fillText(`Adresse réseau : ${netAddr}`,W/2,90);
+    ctx.fillText(`Hôtes possibles : ${Math.max(0,hosts).toLocaleString()}`,W/2,108);
+    const bcast=ip.slice(0,Math.floor(mask/8)).join('.')+'.'+Array(4-Math.floor(mask/8)).fill(255).join('.');
+    ctx.fillText(`Broadcast : ${bcast}`,W/2,126);
+    document.getElementById('ipReadout').textContent=`/${cidr} → ${Math.max(0,hosts)} hôtes utilisables · Masque: ${Array.from({length:4},(_,i)=>{const b=Math.min(8,Math.max(0,cidr-i*8));return 256-(1<<(8-b))}).join('.')}`;
+  }
+  document.getElementById('cidrSlider').addEventListener('input',drawIP);
+  drawIP();
+})();
+
+/* ════════════════════════════════════════════
+   OSI MODEL
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('osiCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const layers=[
+    {n:'Application',proto:'HTTP, FTP, DNS, SSH',col:'rgba(0,255,136,.2)',stroke:'rgba(0,255,136,.5)'},
+    {n:'Transport',proto:'TCP, UDP',col:'rgba(79,143,255,.15)',stroke:'rgba(79,143,255,.5)'},
+    {n:'Réseau',proto:'IP, ICMP',col:'rgba(245,200,66,.12)',stroke:'rgba(245,200,66,.4)'},
+    {n:'Liaison',proto:'Ethernet, WiFi',col:'rgba(176,111,222,.1)',stroke:'rgba(176,111,222,.4)'},
+  ];
+  const lh=(H-20)/layers.length;
+  layers.forEach((l,i)=>{
+    const y=10+i*lh;
+    ctx.fillStyle=l.col;ctx.fillRect(10,y,W-20,lh-3);
+    ctx.strokeStyle=l.stroke;ctx.lineWidth=1;ctx.strokeRect(10,y,W-20,lh-3);
+    ctx.fillStyle=l.stroke;ctx.font='bold 11px JetBrains Mono';ctx.textAlign='left';ctx.fillText(l.n,20,y+lh/2+2);
+    ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='9px IBM Plex Mono';ctx.textAlign='right';ctx.fillText(l.proto,W-16,y+lh/2+2);
+  });
+})();
+
+/* ════════════════════════════════════════════
+   PACKET JOURNEY
+════════════════════════════════════════════ */
+(()=>{
+  const c=document.getElementById('packetCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const hops=[
+    {x:.08,y:.5,label:'Navigateur',sub:'Port 80'},
+    {x:.25,y:.5,label:'Routeur maison',sub:'NAT'},
+    {x:.42,y:.5,label:'FAI',sub:'BGP'},
+    {x:.58,y:.5,label:'Routeur Internet',sub:'IP'},
+    {x:.75,y:.5,label:'CDN',sub:'Cache'},
+    {x:.92,y:.5,label:'Serveur',sub:'Nginx'},
+  ];
+  let pkt=0;
+  ctx.clearRect(0,0,W,H);
+  hops.forEach((h,i)=>{
+    if(i<hops.length-1){
+      ctx.beginPath();ctx.moveTo(h.x*W,H/2);ctx.lineTo(hops[i+1].x*W,H/2);
+      ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=2;ctx.stroke();
+    }
+    ctx.beginPath();ctx.arc(h.x*W,h.y*H,18,0,Math.PI*2);
+    ctx.fillStyle='rgba(79,143,255,.1)';ctx.fill();ctx.strokeStyle='rgba(79,143,255,.4)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='var(--blue)';ctx.font='bold 9px JetBrains Mono';ctx.textAlign='center';ctx.fillText(h.label,h.x*W,H/2-4);
+    ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='7px IBM Plex Mono';ctx.fillText(h.sub,h.x*W,H/2+6);
+  });
+  function animatePkt(){
+    ctx.clearRect(0,0,W,H);
+    hops.forEach((h,i)=>{
+      if(i<hops.length-1){ctx.beginPath();ctx.moveTo(h.x*W,H/2);ctx.lineTo(hops[i+1].x*W,H/2);ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=2;ctx.stroke();}
+      ctx.beginPath();ctx.arc(h.x*W,h.y*H,18,0,Math.PI*2);ctx.fillStyle='rgba(79,143,255,.08)';ctx.fill();ctx.strokeStyle='rgba(79,143,255,.3)';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle='rgba(79,143,255,.6)';ctx.font='bold 8px JetBrains Mono';ctx.textAlign='center';ctx.fillText(h.label,h.x*W,H/2-4);
+      ctx.fillStyle='rgba(255,255,255,.25)';ctx.font='7px IBM Plex Mono';ctx.fillText(h.sub,h.x*W,H/2+6);
+    });
+    const pktFrac=pkt%((hops.length-1)*60);
+    const seg=Math.floor(pktFrac/60),frac=(pktFrac%60)/60;
+    if(seg<hops.length-1){
+      const px=hops[seg].x+(hops[seg+1].x-hops[seg].x)*frac;
+      ctx.beginPath();ctx.arc(px*W,H/2,7,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,255,136,.9)';ctx.fill();
+      ctx.fillStyle='rgba(0,255,136,.3)';ctx.beginPath();ctx.arc(px*W,H/2,14,0,Math.PI*2);ctx.fill();
+    }
+    pkt++;requestAnimationFrame(animatePkt);
+  }
+  animatePkt();
+})();
+
+/* ════════════════════════════════════════════
+   RSA DEMO
+════════════════════════════════════════════ */
+(()=>{
+  let p=11,q=13,e=7,d=103,n_rsa=143;
+  function modpow(base,exp,mod){let r=1;base%=mod;while(exp>0){if(exp%2===1)r=r*base%mod;exp=Math.floor(exp/2);base=base*base%mod;}return r;}
+  function gcd(a,b){while(b){[a,b]=[b,a%b];}return a;}
+  function modinv(a,m){let[old_r,r]=[a,m],[old_s,s]=[1,0];while(r){const q=Math.floor(old_r/r);[old_r,r]=[r,old_r-q*r];[old_s,s]=[s,old_s-q*s];}return((old_s%m)+m)%m;}
+
+  window.rsaNewKeys=()=>{
+    const primes=[7,11,13,17,19,23,29,31];
+    p=primes[Math.floor(Math.random()*4)];q=primes[Math.floor(Math.random()*4)+4];
+    n_rsa=p*q;const phi=(p-1)*(q-1);
+    e=3;while(gcd(e,phi)!==1)e+=2;
+    d=modinv(e,phi);
+    document.getElementById('rsaP').textContent=p;document.getElementById('rsaQ').textContent=q;
+    document.getElementById('rsaN').textContent=n_rsa;document.getElementById('rsaPhi').textContent=phi;
+    document.getElementById('rsaE').textContent=e;document.getElementById('rsaD').textContent=d;
+    document.getElementById('rsaMsg').max=n_rsa-1;
+  };
+
+  window.rsaDemo=()=>{
+    const m=parseInt(document.getElementById('rsaMsg').value)||42;
+    if(m>=n_rsa||m<=0){document.getElementById('rsaReadout').textContent=`⚠ Le message doit être entre 1 et ${n_rsa-1}`;return;}
+    const c_enc=modpow(m,e,n_rsa);
+    const dec=modpow(c_enc,d,n_rsa);
+    document.getElementById('rsaReadout').textContent=
+      `Clé publique  : (e=${e}, n=${n_rsa})\nClé privée   : (d=${d}, n=${n_rsa})\n\nChiffrement :\n  m=${m}\n  c = m^e mod n = ${m}^${e} mod ${n_rsa} = ${c_enc}\n\nDéchiffrement :\n  m = c^d mod n = ${c_enc}^${d} mod ${n_rsa} = ${dec} ✓`;
+  };
+})();
+
+/* ════════════════════════════════════════════
+   CALL STACK SIMULATION
+════════════════════════════════════════════ */
+(()=>{
+  const steps=[
+    {stack:['main()'],code:'main() appelle facto(4)',result:''},
+    {stack:['main()','facto(4)'],code:'facto(4) appelle facto(3)',result:''},
+    {stack:['main()','facto(4)','facto(3)'],code:'facto(3) appelle facto(2)',result:''},
+    {stack:['main()','facto(4)','facto(3)','facto(2)'],code:'facto(2) appelle facto(1)',result:''},
+    {stack:['main()','facto(4)','facto(3)','facto(2)','facto(1)'],code:'facto(1) → cas de base, retourne 1',result:'1'},
+    {stack:['main()','facto(4)','facto(3)','facto(2)'],code:'facto(2) = 2 × 1 = 2, retourne 2',result:'2'},
+    {stack:['main()','facto(4)','facto(3)'],code:'facto(3) = 3 × 2 = 6, retourne 6',result:'6'},
+    {stack:['main()','facto(4)'],code:'facto(4) = 4 × 6 = 24, retourne 24',result:'24'},
+    {stack:['main()'],code:'main() reçoit 24',result:'24'},
+  ];
+  let idx=0;
+  window.callstackStep=()=>{if(idx<steps.length){drawCallstack(steps[idx++]);}};
+  window.callstackReset=()=>{idx=0;drawCallstack({stack:['main()'],code:'Cliquer Étape suivante',result:''});};
+
+  function drawCallstack(step){
+    const c=document.getElementById('callstackCanvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const frameW=120,frameH=24,padX=20;
+    step.stack.forEach((frame,i)=>{
+      const x=padX+i*10,y=H-padX-(i+1)*frameH;
+      const isTop=i===step.stack.length-1;
+      ctx.fillStyle=isTop?'rgba(0,255,136,.15)':'rgba(255,255,255,.04)';
+      ctx.fillRect(x,y,frameW,frameH-2);
+      ctx.strokeStyle=isTop?'rgba(0,255,136,.6)':'rgba(255,255,255,.1)';ctx.lineWidth=isTop?1.5:1;ctx.strokeRect(x,y,frameW,frameH-2);
+      ctx.fillStyle=isTop?'var(--green)':'rgba(255,255,255,.5)';
+      ctx.font=isTop?'bold 11px JetBrains Mono':'10px JetBrains Mono';ctx.textAlign='left';ctx.fillText(frame,x+8,y+15);
+      if(isTop&&step.result){ctx.fillStyle='rgba(245,200,66,.8)';ctx.textAlign='right';ctx.fillText(`→ ${step.result}`,x+frameW-4,y+15);}
+    });
+    // Label
+    ctx.fillStyle='rgba(0,255,136,.5)';ctx.font='8px IBM Plex Mono';ctx.textAlign='left';ctx.fillText('PILE DES APPELS',padX,12);
+    ctx.fillStyle='rgba(255,255,255,.25)';ctx.font='10px IBM Plex Mono';ctx.textAlign='right';ctx.fillText(step.code,W-20,H/2);
+    document.getElementById('callstackInfo').textContent=`Étape ${Math.min(idx,steps.length)}/${steps.length}`;
+  }
+  drawCallstack({stack:['main()'],code:'Cliquer "Étape suivante" pour simuler facto(4)',result:''});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 01 — Mathematics: The Language of Reality</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;700&family=Crimson+Pro:ital,wght@0,400;1,400&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#06080f; --bg2:#0d1120; --bg3:#121a30;
+  --gold:#d4a843; --gold2:#f0c96e; --gold3:#f5d080;
+  --blue:#4a90d9; --cyan:#5bc8db; --red:#e05252;
+  --green:#7be28b; --purple:#b06fde; --orange:#e8874a;
+  --white:#f0ece0; --dim:#8a8070; --ink:#0b0d15; --ink2:#111421;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Crimson Pro',serif;overflow-x:hidden}
+
+/* ── GLOBAL LAYOUT ── */
+.scene{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:4rem 2rem}
+.scene-label{position:absolute;top:2rem;left:2rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.timestamp{position:absolute;top:2rem;right:2rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--dim)}
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.35}
+.section-header{text-align:center;margin-bottom:2.5rem}
+.section-number{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:.8rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--white)}
+.sec-subtitle{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:var(--gold2);display:block;margin-top:.4rem}
+
+/* ── COLD OPEN ── */
+#cold-open{background:radial-gradient(ellipse at 40% 40%,#0d1a2e 0%,var(--bg) 65%)}
+canvas#starfield{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.cold-text{position:relative;z-index:2;max-width:820px;text-align:center}
+.ep-number{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:1.5rem}
+.ep-title{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:900;line-height:1.05;color:var(--white);margin-bottom:.5rem}
+.ep-subtitle{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-style:italic;color:var(--gold);margin-bottom:2.5rem}
+.narrator-quote{font-size:1.05rem;line-height:1.9;color:#c8c0a8;border-left:2px solid var(--gold);padding-left:1.5rem;text-align:left;margin-bottom:2rem;font-family:'Crimson Pro',serif}
+
+/* ── GRAPH BOXES ── */
+.graph-box{background:#0d1120;border:1px solid rgba(74,144,217,.2);border-radius:4px;padding:1.2rem;position:relative}
+.graph-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:.8rem}
+canvas.chart{display:block;width:100%}
+
+/* ── EQ CARDS ── */
+.eq-card{background:var(--bg2);border:1px solid rgba(212,168,67,.25);border-radius:4px;padding:1.5rem 2rem;text-align:center;position:relative}
+.eq-card::before{content:'';position:absolute;top:-1px;left:25%;right:25%;height:2px;background:var(--gold)}
+.eq-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;justify-content:center}
+.eq{color:var(--gold2);font-size:1.1rem;margin:.4rem 0}
+.eq-meaning{font-style:italic;font-size:.88rem;color:var(--dim);line-height:1.8}
+.eq-latex{font-size:1.3rem;color:var(--gold2);margin:.5rem 0}
+
+/* ── INFO BUBBLE ── */
+.info-bubble{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:rgba(255,255,200,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:10px;font-family:serif;cursor:pointer;vertical-align:middle;margin-left:6px;transition:all .2s;user-select:none;flex-shrink:0;font-style:italic;font-weight:bold;line-height:1}
+.info-bubble:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5);color:#fff;transform:scale(1.15)}
+.info-bubble.active{background:rgba(212,168,67,.25);border-color:rgba(212,168,67,.7);color:#f0c96e}
+
+/* ── INFO PANEL ── */
+.info-panel{position:fixed;z-index:9999;max-width:340px;min-width:260px;background:#0d1020;border:1px solid rgba(212,168,67,.4);border-radius:6px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.7);opacity:0;transform:scale(.92) translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.info-panel.visible{opacity:1;transform:scale(1) translateY(0);pointer-events:all}
+.info-panel-header{background:linear-gradient(135deg,rgba(212,168,67,.15),rgba(212,168,67,.05));padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(212,168,67,.2)}
+.info-panel-tag{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:#d4a843}
+.info-panel-close{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.info-panel-close:hover{background:rgba(255,255,255,.15);color:#fff}
+.info-panel-body{padding:1rem 1.1rem}
+.info-panel-title{font-family:'Playfair Display',serif;font-size:.95rem;color:#f0ece0;margin-bottom:.6rem}
+.info-panel-text{font-size:.8rem;line-height:1.75;color:#9a9080;margin-bottom:.8rem}
+.info-panel-example{background:rgba(212,168,67,.08);border-left:2px solid rgba(212,168,67,.5);padding:.5rem .8rem;border-radius:0 3px 3px 0;margin-bottom:.6rem}
+.info-panel-example-label{font-family:'IBM Plex Mono',monospace;font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:#d4a843;display:block;margin-bottom:.3rem}
+.info-panel-example-text{font-size:.78rem;color:#c0b090;line-height:1.6;font-style:italic}
+.info-panel-formula{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#5bc8db;background:rgba(91,200,219,.08);padding:.4rem .7rem;border-radius:3px;margin-top:.4rem;text-align:center}
+
+/* ── CONTROLS ── */
+.controls{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:1rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--dim)}
+.controls input[type=range]{width:180px;accent-color:var(--gold)}
+.slider-row{display:flex;align-items:center;gap:1.5rem;margin:.8rem 0;flex-wrap:wrap}
+.slider-row label{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--gold);min-width:130px}
+.slider-row input[type=range]{flex:1;min-width:120px;accent-color:var(--gold)}
+.slider-val{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--cyan);min-width:60px}
+
+/* ── PROSE ── */
+.prose{max-width:720px;margin:0 auto;line-height:1.9;color:#c0b8a8;font-size:1.05rem}
+
+/* ── TABLE ── */
+.table-wrap{width:100%;max-width:900px;margin:0 auto;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);padding:.8rem 1rem;border-bottom:1px solid rgba(200,149,42,.3);text-align:left}
+td{padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.9rem;vertical-align:middle}
+td:first-child{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--cyan)}
+tr:hover td{background:rgba(200,149,42,.04)}
+
+/* ── BOTTOM STRIPE ── */
+.bottom-stripe{background:var(--bg2);border-top:1px solid rgba(212,168,67,.15);padding:3rem 2rem;display:flex;justify-content:center;align-items:center;gap:3rem;flex-wrap:wrap}
+.stripe-item{text-align:center}
+.stripe-item-value{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;color:var(--gold);display:block}
+.stripe-item-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+
+/* ── GRID LAYOUTS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1100px;width:100%;align-items:start}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;max-width:1100px;width:100%}
+.four-col{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.2rem;max-width:1100px;width:100%}
+
+/* ── NUMBER LINE ── */
+#sec-numberline{background:radial-gradient(ellipse at 30% 50%,#0a1228 0%,var(--bg) 65%)}
+.number-line-container{width:100%;max-width:900px;padding:2rem;background:var(--bg2);border:1px solid rgba(91,200,219,.2);border-radius:6px;margin:2rem auto}
+
+/* ── FUNCTION SECTION ── */
+#sec-functions{background:radial-gradient(ellipse at 70% 30%,#0d1020 0%,var(--bg) 70%)}
+
+/* ── QUADRATIC ── */
+#sec-quadratic{background:linear-gradient(180deg,var(--bg),#0a0d18)}
+
+/* ── PROBABILITY ── */
+#sec-probability{background:radial-gradient(ellipse at 30% 70%,#0d1a0d 0%,var(--bg) 65%)}
+
+/* ── COMPLEX ── */
+#sec-complex{background:radial-gradient(ellipse at 60% 40%,#12081f 0%,var(--bg) 65%)}
+
+/* ── CONGRUENCES ── */
+#sec-congruences{background:radial-gradient(ellipse at 40% 60%,#0d1508 0%,var(--bg) 65%)}
+
+/* ── DEEP DIVE ── */
+.deep-dive{background:linear-gradient(135deg,#0a0f1e,#0d1120);border:1px solid rgba(91,200,219,.2);border-radius:4px;padding:2rem;max-width:800px;width:100%;margin:2rem auto}
+.deep-dive-title{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
+
+/* ── LAB PANEL ── */
+.lab-panel{border:1px solid rgba(91,200,219,.25);border-radius:6px;padding:1.5rem;background:linear-gradient(180deg,#0e162b,#0a101e)}
+.lab-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.1em;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
+.lab-readout{margin-top:.8rem;font-size:.86rem;color:#c8c0a8;line-height:1.7;font-family:'IBM Plex Mono',monospace}
+
+/* ── PROBABILITY TREE ── */
+.prob-tree-svg{background:var(--bg2);border:1px solid rgba(123,226,139,.2);border-radius:4px;display:block;margin:0 auto}
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box{background:linear-gradient(135deg,rgba(212,168,67,.08),rgba(212,168,67,.02));border:1px solid rgba(212,168,67,.3);border-radius:4px;padding:1.5rem;text-align:center}
+.highlight-box .big-eq{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold);margin:.5rem 0}
+
+/* ── CODE BLOCK ── */
+.code-block{background:#080b12;border:1px solid rgba(100,200,100,.2);border-radius:3px;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:#a0d0a0;overflow-x:auto}
+.code-comment{color:#556644}.code-key{color:#e8c87a}.code-fn{color:#7abde8}.code-num{color:#d4845a}
+
+/* ── TAGS ── */
+.tag{position:absolute;top:1.8rem;left:2rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
+.ts{position:absolute;top:1.8rem;right:2rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--dim)}
+
+/* ANIMATION HELPERS */
+@keyframes float-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* RESPONSIVE */
+@media(max-width:900px){.two-col,.three-col,.four-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     COLD OPEN
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="cold-open">
+  <canvas id="starfield"></canvas>
+  <div class="cold-text">
+    <span class="ep-number">Episode 01 · Mathematics</span>
+    <h1 class="ep-title">The Language<br>of Reality</h1>
+    <p class="ep-subtitle">90 – 120 minutes</p>
+    <blockquote class="narrator-quote">
+      Before physics can speak, mathematics must exist. It begins with the simplest act imaginable —
+      placing a point on a line and calling it zero. From that single mark,
+      the entire architecture of human knowledge unfolds: numbers, functions, equations,
+      calculus, probability, complex numbers, and the hidden symmetries of the universe.
+    </blockquote>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--gold);border:1px solid rgba(212,168,67,.3);padding:.4rem 1rem;border-radius:2px">Number Lines</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--cyan);border:1px solid rgba(91,200,219,.3);padding:.4rem 1rem;border-radius:2px">Functions &amp; Graphs</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--green);border:1px solid rgba(123,226,139,.3);padding:.4rem 1rem;border-radius:2px">Calculus</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--purple);border:1px solid rgba(176,111,222,.3);padding:.4rem 1rem;border-radius:2px">Complex Numbers</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 1 — THE NUMBER LINE
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-numberline" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="tag">Section 1 · Numbers</div>
+  <div class="ts">0:00 – 10:00</div>
+
+  <div class="section-header" style="margin-top:3rem">
+    <span class="section-number">Section One</span>
+    <h2 class="section-title">The Number Line</h2>
+    <span class="sec-subtitle">From Zero to Infinity — and Beyond</span>
+  </div>
+
+  <p class="prose" style="text-align:center;margin-bottom:2rem">
+    Imagine a single point. Call it <strong style="color:var(--gold)">0</strong>. Step one unit to the right — that's 1. Step again — 2.
+    Keep stepping and you reach infinity. Now step <em>left</em> — negative numbers appear. This line contains all of arithmetic.
+  </p>
+
+  <!-- Animated number line canvas -->
+  <div class="number-line-container">
+    <div class="graph-title">Interactive Number Line · Watch Operations Animate</div>
+    <canvas id="numberLineCanvas" width="860" height="140" style="width:100%;display:block"></canvas>
+    <div class="controls" style="justify-content:center;gap:2rem;margin-top:1.5rem">
+      <button onclick="nlDemo('add')" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1.2rem;background:rgba(91,200,219,.1);border:1px solid var(--cyan);color:var(--cyan);border-radius:2px;cursor:pointer">▶ Addition</button>
+      <button onclick="nlDemo('multiply')" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1.2rem;background:rgba(212,168,67,.1);border:1px solid var(--gold);color:var(--gold);border-radius:2px;cursor:pointer">✕ Multiplication</button>
+      <button onclick="nlDemo('negative')" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1.2rem;background:rgba(224,82,82,.1);border:1px solid var(--red);color:var(--red);border-radius:2px;cursor:pointer">− Negatives</button>
+      <button onclick="nlDemo('fraction')" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1.2rem;background:rgba(123,226,139,.1);border:1px solid var(--green);color:var(--green);border-radius:2px;cursor:pointer">÷ Fractions</button>
+    </div>
+    <p id="nlCaption" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--dim);text-align:center;margin-top:1rem;letter-spacing:.1em">Click a button to animate an operation</p>
+  </div>
+
+  <!-- Number sets table -->
+  <div class="table-wrap" style="margin-top:3rem">
+    <table>
+      <thead>
+        <tr><th>Symbol</th><th>Name</th><th>Examples</th><th>Key Property</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="color:var(--cyan);font-size:1.1rem">ℕ</td><td>Natural Numbers</td><td>0, 1, 2, 3, 4, …</td><td>Counting; closed under + and ×</td></tr>
+        <tr><td style="color:var(--gold);font-size:1.1rem">ℤ</td><td>Integers</td><td>…, −2, −1, 0, 1, 2, …</td><td>Adds negatives; closed under subtraction</td></tr>
+        <tr><td style="color:var(--green);font-size:1.1rem">ℚ</td><td>Rational Numbers</td><td>½, ¾, −⅓, 7</td><td>Any ratio p/q; dense on the line</td></tr>
+        <tr><td style="color:var(--orange);font-size:1.1rem">ℝ</td><td>Real Numbers</td><td>π, √2, e, −0.5</td><td>Fills the entire line; uncountable</td></tr>
+        <tr><td style="color:var(--purple);font-size:1.1rem">ℂ</td><td>Complex Numbers</td><td>3+2i, −1+πi</td><td>Extends to the plane; algebraically closed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Operations deep dive -->
+  <div class="deep-dive" style="margin-top:3rem">
+    <div class="deep-dive-title">The Four Fundamental Operations</div>
+    <div class="four-col">
+      <div class="eq-card" style="padding:1.2rem">
+        <div style="font-size:1.8rem;color:var(--cyan);margin-bottom:.5rem">+</div>
+        <div class="eq-label">Addition</div>
+        <div class="eq-latex" style="font-size:.95rem">$$a + b = c$$</div>
+        <p class="eq-meaning" style="font-size:.78rem">Move right on the line. Repeated addition becomes multiplication.</p>
+      </div>
+      <div class="eq-card" style="padding:1.2rem;border-color:rgba(212,168,67,.25)">
+        <div style="font-size:1.8rem;color:var(--gold);margin-bottom:.5rem">×</div>
+        <div class="eq-label">Multiplication</div>
+        <div class="eq-latex" style="font-size:.95rem">$$a \times b = \underbrace{a+a+\cdots}_{b}$$</div>
+        <p class="eq-meaning" style="font-size:.78rem">Scaling. Repeated multiplication becomes exponentiation.</p>
+      </div>
+      <div class="eq-card" style="padding:1.2rem;border-color:rgba(224,82,82,.25)">
+        <div style="font-size:1.8rem;color:var(--red);margin-bottom:.5rem">^</div>
+        <div class="eq-label">Exponentiation</div>
+        <div class="eq-latex" style="font-size:.95rem">$$a^n = \underbrace{a \times a \times \cdots}_{n}$$</div>
+        <p class="eq-meaning" style="font-size:.78rem">Explosive growth. The inverse is the logarithm.</p>
+      </div>
+      <div class="eq-card" style="padding:1.2rem;border-color:rgba(123,226,139,.25)">
+        <div style="font-size:1.8rem;color:var(--green);margin-bottom:.5rem">log</div>
+        <div class="eq-label">Logarithm</div>
+        <div class="eq-latex" style="font-size:.95rem">$$\log_a(b) = c \iff a^c = b$$</div>
+        <p class="eq-meaning" style="font-size:.78rem">Inverse of exponentiation. Turns × into +.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated addition vs multiplication visual -->
+  <div class="two-col" style="margin-top:3rem">
+    <div class="lab-panel">
+      <div class="lab-title">Addition Explorer · 3 + 3 + 3 + 3</div>
+      <canvas id="addCanvas" width="440" height="160" style="width:100%;display:block"></canvas>
+      <div class="controls">
+        <label>Value</label>
+        <input type="range" id="addVal" min="1" max="8" value="3" step="1">
+        <span id="addValShow" style="color:var(--cyan)">3</span>
+        <label style="margin-left:1rem">Times</label>
+        <input type="range" id="addTimes" min="1" max="8" value="4" step="1">
+        <span id="addTimesShow" style="color:var(--gold)">4</span>
+      </div>
+      <p class="lab-readout" id="addReadout"></p>
+    </div>
+    <div class="lab-panel">
+      <div class="lab-title">Multiplication = Scaling</div>
+      <canvas id="multCanvas" width="440" height="160" style="width:100%;display:block"></canvas>
+      <div class="controls">
+        <label>Base a</label>
+        <input type="range" id="multBase" min="1" max="6" value="2" step="0.5">
+        <span id="multBaseShow" style="color:var(--gold)">2</span>
+        <label style="margin-left:1rem">Exponent n</label>
+        <input type="range" id="multExp" min="0" max="8" value="4" step="1">
+        <span id="multExpShow" style="color:var(--cyan)">4</span>
+      </div>
+      <p class="lab-readout" id="multReadout"></p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 2 — FUNCTIONS
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-functions" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="tag">Section 2 · Functions</div>
+  <div class="ts">10:00 – 22:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Two</span>
+    <h2 class="section-title">Functions — The Machine Metaphor</h2>
+    <span class="sec-subtitle">Input → Rule → Output</span>
+  </div>
+
+  <p class="prose" style="text-align:center;margin-bottom:2rem">
+    A function $f(x)$ is a rule that assigns exactly one output to each input. Feed it an $x$, it returns $f(x)$.
+    The set of all inputs is the <em>domain</em>. The set of all possible outputs is the <em>range</em>.
+    Graphing $f(x)$ turns the rule into a picture.
+  </p>
+
+  <!-- Function machine animation -->
+  <canvas id="funcMachineCanvas" width="900" height="120" style="width:100%;max-width:900px;display:block;margin:0 auto 2rem"></canvas>
+
+  <!-- Interactive function plotter -->
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="lab-panel" style="border-color:rgba(212,168,67,.3)">
+      <div class="lab-title">Interactive Function Plotter — Select a family</div>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem">
+        <button class="fn-btn active" data-fn="linear" onclick="setFn('linear',this)">Linear</button>
+        <button class="fn-btn" data-fn="quadratic" onclick="setFn('quadratic',this)">Quadratic</button>
+        <button class="fn-btn" data-fn="cubic" onclick="setFn('cubic',this)">Cubic</button>
+        <button class="fn-btn" data-fn="sqrt" onclick="setFn('sqrt',this)">√x</button>
+        <button class="fn-btn" data-fn="abs" onclick="setFn('abs',this)">|x|</button>
+        <button class="fn-btn" data-fn="exp" onclick="setFn('exp',this)">eˣ</button>
+        <button class="fn-btn" data-fn="log" onclick="setFn('log',this)">ln(x)</button>
+        <button class="fn-btn" data-fn="sin" onclick="setFn('sin',this)">sin(x)</button>
+        <button class="fn-btn" data-fn="cos" onclick="setFn('cos',this)">cos(x)</button>
+        <button class="fn-btn" data-fn="tan" onclick="setFn('tan',this)">tan(x)</button>
+      </div>
+      <canvas id="fnPlot" width="1000" height="320" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+      <div id="fnSliders" style="margin-top:.8rem"></div>
+      <p class="lab-readout" id="fnReadout" style="margin-top:.5rem"></p>
+    </div>
+  </div>
+
+  <style>
+  .fn-btn{font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:.4rem .9rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.15);color:var(--dim);border-radius:2px;cursor:pointer;transition:all .2s}
+  .fn-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .fn-btn.active{background:rgba(212,168,67,.15);border-color:var(--gold);color:var(--gold)}
+  </style>
+
+  <!-- Function taxonomy -->
+  <div class="three-col" style="margin-top:3rem">
+    <div class="eq-card">
+      <div class="eq-label">Odd Functions <span class="info-bubble" onclick='showInfo(this,{tag:"Functions",title:"Odd vs Even Functions",text:"An even function satisfies f(-x) = f(x): it is symmetric about the y-axis. An odd function satisfies f(-x) = -f(x): it is symmetric about the origin.",example:"cos(x) is even — identical on left and right. sin(x) is odd — flipped vertically on the left. x² is even. x³ is odd.",formula:"Even: f(-x)=f(x) · Odd: f(-x)=-f(x)"})'>i</span></div>
+      <div class="eq-latex">$$f(-x) = -f(x)$$</div>
+      <p class="eq-meaning">Symmetric about the origin. e.g. $\sin(x)$, $x^3$</p>
+    </div>
+    <div class="eq-card">
+      <div class="eq-label">Even Functions</div>
+      <div class="eq-latex">$$f(-x) = f(x)$$</div>
+      <p class="eq-meaning">Symmetric about the y-axis. e.g. $\cos(x)$, $x^2$</p>
+    </div>
+    <div class="eq-card">
+      <div class="eq-label">Composition <span class="info-bubble" onclick='showInfo(this,{tag:"Functions",title:"Function Composition",text:"Composing f and g means feeding the output of g into f. Written (f∘g)(x) = f(g(x)). Order matters: f∘g ≠ g∘f in general.",example:"f(x)=x² and g(x)=x+1. Then f(g(x))=(x+1)²=x²+2x+1. But g(f(x))=x²+1. Very different!",formula:"(f∘g)(x) = f(g(x))"})'>i</span></div>
+      <div class="eq-latex">$$(f \circ g)(x) = f(g(x))$$</div>
+      <p class="eq-meaning">Chain functions together. Output of $g$ becomes input of $f$.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 3 — QUADRATICS
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-quadratic" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="tag">Section 3 · Quadratic Equations</div>
+  <div class="ts">22:00 – 35:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Three</span>
+    <h2 class="section-title">The Quadratic</h2>
+    <span class="sec-subtitle">ax² + bx + c = 0</span>
+  </div>
+
+  <div class="highlight-box" style="max-width:700px;width:100%;margin:0 auto 2rem">
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.25em;color:var(--dim);margin-bottom:.5rem">THE QUADRATIC FORMULA</p>
+    <div class="big-eq">$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$</div>
+    <p style="color:#9a9080;font-size:.9rem;margin-top:.5rem">Known since ancient Babylon (~2000 BCE)</p>
+  </div>
+
+  <!-- Interactive quadratic plotter -->
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div class="lab-panel">
+        <div class="lab-title">Quadratic Curve Explorer · f(x) = ax² + bx + c</div>
+        <canvas id="quadCanvas" width="480" height="300" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="slider-row"><label>a (curvature)</label><input type="range" id="quadA" min="-3" max="3" step=".1" value="1"><span class="slider-val" id="quadAv">1.0</span></div>
+        <div class="slider-row"><label>b (tilt)</label><input type="range" id="quadB" min="-5" max="5" step=".1" value="0"><span class="slider-val" id="quadBv">0.0</span></div>
+        <div class="slider-row"><label>c (shift)</label><input type="range" id="quadC" min="-6" max="6" step=".1" value="-4"><span class="slider-val" id="quadCv">-4.0</span></div>
+        <div class="lab-readout" id="quadReadout" style="margin-top:.8rem"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <!-- Discriminant explainer -->
+        <div class="deep-dive" style="margin:0">
+          <div class="deep-dive-title">The Discriminant Δ = b² − 4ac</div>
+          <div style="display:flex;flex-direction:column;gap:1rem;margin-top:1rem">
+            <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:rgba(123,226,139,.05);border:1px solid rgba(123,226,139,.2);border-radius:3px">
+              <span style="font-size:1.4rem;color:var(--green)">Δ &gt; 0</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--green)">Two real roots</div>
+                <div style="font-size:.85rem;color:#9a9080">Parabola crosses x-axis twice</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.2);border-radius:3px">
+              <span style="font-size:1.4rem;color:var(--gold)">Δ = 0</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--gold)">One real root (double)</div>
+                <div style="font-size:.85rem;color:#9a9080">Parabola just touches x-axis</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;padding:.8rem;background:rgba(224,82,82,.05);border:1px solid rgba(224,82,82,.2);border-radius:3px">
+              <span style="font-size:1.4rem;color:var(--red)">Δ &lt; 0</span>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--red)">Two complex roots</div>
+                <div style="font-size:.85rem;color:#9a9080">Parabola never crosses x-axis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vertex form -->
+        <div class="eq-card">
+          <div class="eq-label">Vertex Form</div>
+          <div class="eq-latex">$$f(x) = a(x - h)^2 + k$$</div>
+          <p class="eq-meaning">Vertex at $(h, k)$. Easier to read off max/min directly.</p>
+          <div class="eq-latex" style="font-size:.9rem;margin-top:.5rem">$$h = -\frac{b}{2a}, \quad k = c - \frac{b^2}{4a}$$</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table of key quadratics -->
+  <div class="table-wrap" style="margin-top:3rem">
+    <div class="graph-title" style="margin-bottom:.8rem;text-align:center">Notable Quadratic Cases</div>
+    <table>
+      <thead><tr><th>a</th><th>b</th><th>c</th><th>Roots</th><th>Discriminant</th><th>Shape</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>0</td><td>0</td><td>x = 0 (double)</td><td>0</td><td>Upward parabola at origin</td></tr>
+        <tr><td>1</td><td>0</td><td>−1</td><td>x = ±1</td><td>4</td><td>Upward parabola, crosses ±1</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td>x = ±i</td><td>−4</td><td>Above x-axis; complex roots</td></tr>
+        <tr><td>−1</td><td>0</td><td>4</td><td>x = ±2</td><td>16</td><td>Downward, max at origin</td></tr>
+        <tr><td>1</td><td>−5</td><td>6</td><td>x = 2, 3</td><td>1</td><td>Upward, crosses 2 and 3</td></tr>
+        <tr><td>2</td><td>3</td><td>1</td><td>x = −½, −1</td><td>1</td><td>Steeper upward parabola</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 4 — POLYNOMIALS & HIGHER DEGREES
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-poly" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:linear-gradient(180deg,#06080f,#0d1020)">
+  <div class="tag">Section 4 · Polynomials</div>
+  <div class="ts">35:00 – 45:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Four</span>
+    <h2 class="section-title">Polynomials</h2>
+    <span class="sec-subtitle">Building Blocks of All Smooth Functions</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div class="lab-panel">
+        <div class="lab-title">Polynomial Degree Visualizer</div>
+        <canvas id="polyCanvas" width="480" height="280" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="controls" style="flex-wrap:wrap;gap:.8rem;margin-top:1rem">
+          <button class="fn-btn active" onclick="setPoly(1,this)">Degree 1</button>
+          <button class="fn-btn" onclick="setPoly(2,this)">Degree 2</button>
+          <button class="fn-btn" onclick="setPoly(3,this)">Degree 3</button>
+          <button class="fn-btn" onclick="setPoly(4,this)">Degree 4</button>
+          <button class="fn-btn" onclick="setPoly(5,this)">Degree 5</button>
+          <button class="fn-btn" onclick="setPoly(6,this)">Degree 6</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="deep-dive" style="margin:0">
+          <div class="deep-dive-title">Key Properties by Degree</div>
+          <div id="polyInfo" style="font-size:.9rem;color:#a0988a;line-height:1.8;margin-top:1rem"></div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-label">Fundamental Theorem of Algebra <span class="info-bubble" onclick='showInfo(this,{tag:"Polynomials",title:"Every polynomial has roots",text:"The FTA says: every polynomial of degree n with complex coefficients has exactly n complex roots (counting multiplicity). This is why the quadratic has 2 roots, cubic has 3, etc. Even if they are complex!",example:"x²+1=0 has no real roots but it has two complex roots: x=+i and x=−i. The FTA guarantees this.",formula:"Every degree-n polynomial = a(x-r₁)(x-r₂)···(x-rₙ)"})'>i</span></div>
+          <div class="eq-latex" style="font-size:1rem">$$p(x) = a_n(x{-}r_1)(x{-}r_2)\cdots(x{-}r_n)$$</div>
+          <p class="eq-meaning">Every degree-$n$ polynomial has exactly $n$ roots in ℂ.</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(91,200,219,.25)">
+          <div class="eq-label" style="color:var(--cyan)">Taylor / Maclaurin Series</div>
+          <div class="eq-latex" style="font-size:.9rem">$$f(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(0)}{n!} x^n$$</div>
+          <p class="eq-meaning">Any smooth function can be approximated by polynomials of increasing degree.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 5 — DERIVATIVES
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-derivatives" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:radial-gradient(ellipse at 60% 40%,#0d1520 0%,var(--bg) 65%)">
+  <div class="tag">Section 5 · Differential Calculus</div>
+  <div class="ts">45:00 – 60:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Five</span>
+    <h2 class="section-title">Derivatives</h2>
+    <span class="sec-subtitle">The Instantaneous Rate of Change</span>
+  </div>
+
+  <p class="prose" style="text-align:center;margin-bottom:2rem">
+    The derivative answers: <em>how steep is the curve right here?</em> Take two points, draw a secant line.
+    Slide the points together until they merge — the secant becomes a <strong style="color:var(--cyan)">tangent</strong>,
+    its slope the derivative. This limiting process is the heart of calculus.
+  </p>
+
+  <!-- Limit animation -->
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div class="lab-panel">
+        <div class="lab-title">Secant → Tangent Animation</div>
+        <canvas id="derivCanvas" width="480" height="300" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="slider-row"><label>Point x₀</label><input type="range" id="derivX0" min="-3" max="3" step=".05" value="-1"><span class="slider-val" id="derivX0v">-1.00</span></div>
+        <div class="slider-row"><label>Δx (shrink me!)</label><input type="range" id="derivDx" min="0.01" max="3" step=".01" value="2"><span class="slider-val" id="derivDxv">2.00</span></div>
+        <p class="lab-readout" id="derivReadout"></p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="highlight-box">
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.2em">THE LIMIT DEFINITION</p>
+          <div class="eq-latex" style="font-size:1.05rem;margin:.8rem 0">$$f'(x) = \lim_{\Delta x \to 0} \frac{f(x+\Delta x) - f(x)}{\Delta x}$$</div>
+        </div>
+        <div class="deep-dive" style="margin:0">
+          <div class="deep-dive-title">Differentiation Rules</div>
+          <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:1rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem;background:rgba(255,255,255,.02);border-radius:2px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim)">Power Rule</span>
+              <span style="color:var(--gold2)">$\frac{d}{dx}x^n = nx^{n-1}$</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem;background:rgba(255,255,255,.02);border-radius:2px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim)">Product Rule</span>
+              <span style="color:var(--gold2)">${(fg)' = f'g + fg'}$</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem;background:rgba(255,255,255,.02);border-radius:2px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim)">Chain Rule</span>
+              <span style="color:var(--cyan)">$\frac{d}{dx}f(g(x)) = f'(g(x)) \cdot g'(x)$</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem;background:rgba(255,255,255,.02);border-radius:2px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim)">Quotient Rule</span>
+              <span style="color:var(--gold2)">$\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem;background:rgba(255,255,255,.02);border-radius:2px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim)">Exponential</span>
+              <span style="color:var(--green)">$\frac{d}{dx}e^x = e^x$</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Derivative table -->
+  <div class="table-wrap" style="margin-top:3rem">
+    <div class="graph-title" style="text-align:center;margin-bottom:.8rem">Common Derivatives Reference</div>
+    <table>
+      <thead><tr><th>f(x)</th><th>f′(x)</th><th>f″(x)</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>$x^n$</td><td>$nx^{n-1}$</td><td>$n(n-1)x^{n-2}$</td><td>Power rule — works for any n</td></tr>
+        <tr><td>$e^x$</td><td>$e^x$</td><td>$e^x$</td><td>Self-similar; e is defined by this property</td></tr>
+        <tr><td>$\ln(x)$</td><td>$\frac{1}{x}$</td><td>$-\frac{1}{x^2}$</td><td>Only defined for x &gt; 0</td></tr>
+        <tr><td>$\sin(x)$</td><td>$\cos(x)$</td><td>$-\sin(x)$</td><td>Period-4 cycle: sin→cos→−sin→−cos→sin</td></tr>
+        <tr><td>$\cos(x)$</td><td>$-\sin(x)$</td><td>$-\cos(x)$</td><td>Same cycle, offset by π/2</td></tr>
+        <tr><td>$\tan(x)$</td><td>$\sec^2(x)$</td><td>$2\sec^2(x)\tan(x)$</td><td>Undefined at odd multiples of π/2</td></tr>
+        <tr><td>$\sqrt{x}$</td><td>$\frac{1}{2\sqrt{x}}$</td><td>$-\frac{1}{4x^{3/2}}$</td><td>Not differentiable at x = 0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2nd derivative section -->
+  <div class="section-header" style="margin-top:4rem">
+    <h2 class="section-title" style="font-size:2rem">Second Derivative — Concavity & Inflection</h2>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div class="lab-panel">
+        <div class="lab-title">f(x), f′(x) and f″(x) — all three curves</div>
+        <canvas id="tripleDerivCanvas" width="480" height="300" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="controls" style="margin-top:.8rem;justify-content:center;gap:1.5rem">
+          <span style="color:var(--gold)">── f(x)</span>
+          <span style="color:var(--cyan)">── f′(x)</span>
+          <span style="color:var(--red)">── f″(x)</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="eq-card">
+          <div class="eq-label">Concavity Test</div>
+          <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem">
+            <div style="padding:.6rem;background:rgba(123,226,139,.05);border:1px solid rgba(123,226,139,.2);border-radius:2px;font-size:.88rem;color:#a0b8a0">
+              <strong style="color:var(--green)">f″(x) &gt; 0</strong> → Concave up (cup ∪) → local minimum possible
+            </div>
+            <div style="padding:.6rem;background:rgba(224,82,82,.05);border:1px solid rgba(224,82,82,.2);border-radius:2px;font-size:.88rem;color:#b8a0a0">
+              <strong style="color:var(--red)">f″(x) &lt; 0</strong> → Concave down (cap ∩) → local maximum possible
+            </div>
+            <div style="padding:.6rem;background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.2);border-radius:2px;font-size:.88rem;color:#b8b0a0">
+              <strong style="color:var(--gold)">f″(x) = 0</strong> → Possible inflection point (concavity changes)
+            </div>
+          </div>
+        </div>
+        <div class="eq-card" style="border-color:rgba(176,111,222,.3)">
+          <div class="eq-label" style="color:var(--purple)">Critical Points & Optimization</div>
+          <div class="eq-latex" style="font-size:1rem">$$f'(x_0) = 0 \implies x_0 \text{ is critical}$$</div>
+          <p class="eq-meaning">Set f′ = 0 to find where slope vanishes. Then check f″ to classify min/max.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 6 — INTEGRALS
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-integrals" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:linear-gradient(180deg,var(--bg),#080c18)">
+  <div class="tag">Section 6 · Integral Calculus</div>
+  <div class="ts">60:00 – 72:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Six</span>
+    <h2 class="section-title">Integrals</h2>
+    <span class="sec-subtitle">The Area Under the Curve</span>
+  </div>
+
+  <p class="prose" style="text-align:center;margin-bottom:2rem">
+    Divide the area under a curve into $n$ thin rectangles. Sum them. Let $n \to \infty$ — the jagged steps
+    become a smooth curve and the sum becomes the <em>integral</em>. 
+    By the <strong style="color:var(--gold)">Fundamental Theorem of Calculus</strong>,
+    integration is the exact inverse of differentiation.
+  </p>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div class="lab-panel">
+        <div class="lab-title">Riemann Sum — watch it converge</div>
+        <canvas id="riemannCanvas" width="480" height="280" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="slider-row"><label>Rectangles n</label><input type="range" id="riemannN" min="1" max="200" step="1" value="10"><span class="slider-val" id="riemannNv">10</span></div>
+        <div class="controls" style="gap:.8rem;margin-top:.5rem">
+          <button class="fn-btn active" onclick="setRiemann('left',this)">Left</button>
+          <button class="fn-btn" onclick="setRiemann('right',this)">Right</button>
+          <button class="fn-btn" onclick="setRiemann('mid',this)">Midpoint</button>
+          <button class="fn-btn" onclick="setRiemann('trap',this)">Trapezoid</button>
+        </div>
+        <p class="lab-readout" id="riemannReadout"></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="highlight-box">
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.2em">FUNDAMENTAL THEOREM OF CALCULUS</p>
+          <div class="eq-latex" style="font-size:1.1rem;margin:.8rem 0">$$\int_a^b f(x)\,dx = F(b) - F(a)$$</div>
+          <p style="font-size:.85rem;color:#9a9080">where $F'(x) = f(x)$</p>
+        </div>
+        <div class="deep-dive" style="margin:0">
+          <div class="deep-dive-title">Integration Techniques</div>
+          <div style="display:flex;flex-direction:column;gap:.7rem;margin-top:.8rem">
+            <div style="padding:.6rem;border-left:2px solid var(--gold);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold)">Substitution (u-sub)</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">$\int f(g(x))g'(x)dx = \int f(u)du$</div>
+            </div>
+            <div style="padding:.6rem;border-left:2px solid var(--cyan);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cyan)">Integration by Parts</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">$\int u\,dv = uv - \int v\,du$</div>
+            </div>
+            <div style="padding:.6rem;border-left:2px solid var(--purple);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--purple)">Partial Fractions</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">Decompose rational functions before integrating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common integrals table -->
+  <div class="table-wrap" style="margin-top:3rem">
+    <div class="graph-title" style="text-align:center;margin-bottom:.8rem">Standard Integrals</div>
+    <table>
+      <thead><tr><th>f(x)</th><th>∫f(x)dx</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>$x^n$ (n≠−1)</td><td>$\dfrac{x^{n+1}}{n+1} + C$</td><td>Power rule reversed</td></tr>
+        <tr><td>$\dfrac{1}{x}$</td><td>$\ln|x| + C$</td><td>The n=−1 special case</td></tr>
+        <tr><td>$e^x$</td><td>$e^x + C$</td><td>Self-similar under integration too</td></tr>
+        <tr><td>$\sin(x)$</td><td>$-\cos(x) + C$</td><td>Negative sign from chain rule</td></tr>
+        <tr><td>$\cos(x)$</td><td>$\sin(x) + C$</td><td>Positive</td></tr>
+        <tr><td>$\dfrac{1}{\sqrt{1-x^2}}$</td><td>$\arcsin(x) + C$</td><td>Inverse trig family</td></tr>
+        <tr><td>$\dfrac{1}{1+x^2}$</td><td>$\arctan(x) + C$</td><td>Useful in complex analysis</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 7 — PROBABILITY
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-probability" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="tag">Section 7 · Probability & Statistics</div>
+  <div class="ts">72:00 – 88:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Seven</span>
+    <h2 class="section-title">Probability</h2>
+    <span class="sec-subtitle">The Mathematics of Uncertainty</span>
+  </div>
+
+  <!-- Coin flip simulation -->
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col" style="margin-bottom:3rem">
+      <div class="lab-panel">
+        <div class="lab-title">Coin Flip Simulation — Law of Large Numbers</div>
+        <canvas id="coinCanvas" width="480" height="240" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="controls" style="margin-top:1rem;gap:1rem;justify-content:center">
+          <button onclick="coinFlip(1)" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1rem;background:rgba(123,226,139,.1);border:1px solid var(--green);color:var(--green);border-radius:2px;cursor:pointer">Flip 1</button>
+          <button onclick="coinFlip(10)" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1rem;background:rgba(123,226,139,.1);border:1px solid var(--green);color:var(--green);border-radius:2px;cursor:pointer">Flip 10</button>
+          <button onclick="coinFlip(100)" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1rem;background:rgba(123,226,139,.1);border:1px solid var(--green);color:var(--green);border-radius:2px;cursor:pointer">Flip 100</button>
+          <button onclick="coinReset()" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1rem;background:rgba(224,82,82,.1);border:1px solid var(--red);color:var(--red);border-radius:2px;cursor:pointer">Reset</button>
+        </div>
+        <p class="lab-readout" id="coinReadout" style="text-align:center;margin-top:.8rem"></p>
+      </div>
+
+      <!-- Probability tree SVG -->
+      <div class="lab-panel">
+        <div class="lab-title">Probability Tree — 2 Coin Tosses</div>
+        <svg class="prob-tree-svg" width="440" height="240" viewBox="0 0 440 240" style="width:100%">
+          <!-- Root -->
+          <circle cx="60" cy="120" r="18" fill="rgba(212,168,67,.15)" stroke="#d4a843" stroke-width="1.5"/>
+          <text x="60" y="125" text-anchor="middle" fill="#d4a843" font-family="IBM Plex Mono" font-size="11">Start</text>
+
+          <!-- Level 1 branches -->
+          <line x1="78" y1="108" x2="158" y2="68" stroke="rgba(91,200,219,.5)" stroke-width="1.5"/>
+          <line x1="78" y1="132" x2="158" y2="172" stroke="rgba(224,82,82,.5)" stroke-width="1.5"/>
+          <text x="115" y="82" fill="rgba(91,200,219,.8)" font-family="IBM Plex Mono" font-size="10">H · ½</text>
+          <text x="115" y="162" fill="rgba(224,82,82,.8)" font-family="IBM Plex Mono" font-size="10">T · ½</text>
+
+          <circle cx="176" cy="68" r="16" fill="rgba(91,200,219,.1)" stroke="#5bc8db" stroke-width="1.5"/>
+          <text x="176" y="73" text-anchor="middle" fill="#5bc8db" font-family="IBM Plex Mono" font-size="11">H</text>
+          <circle cx="176" cy="172" r="16" fill="rgba(224,82,82,.1)" stroke="#e05252" stroke-width="1.5"/>
+          <text x="176" y="177" text-anchor="middle" fill="#e05252" font-family="IBM Plex Mono" font-size="11">T</text>
+
+          <!-- Level 2 from H -->
+          <line x1="192" y1="58" x2="272" y2="38" stroke="rgba(91,200,219,.5)" stroke-width="1.5"/>
+          <line x1="192" y1="78" x2="272" y2="98" stroke="rgba(224,82,82,.5)" stroke-width="1.5"/>
+          <text x="230" y="42" fill="rgba(91,200,219,.8)" font-family="IBM Plex Mono" font-size="9">H · ½</text>
+          <text x="230" y="95" fill="rgba(224,82,82,.8)" font-family="IBM Plex Mono" font-size="9">T · ½</text>
+
+          <!-- Level 2 from T -->
+          <line x1="192" y1="162" x2="272" y2="142" stroke="rgba(91,200,219,.5)" stroke-width="1.5"/>
+          <line x1="192" y1="182" x2="272" y2="202" stroke="rgba(224,82,82,.5)" stroke-width="1.5"/>
+          <text x="230" y="148" fill="rgba(91,200,219,.8)" font-family="IBM Plex Mono" font-size="9">H · ½</text>
+          <text x="230" y="205" fill="rgba(224,82,82,.8)" font-family="IBM Plex Mono" font-size="9">T · ½</text>
+
+          <!-- Leaf nodes -->
+          <rect x="278" y="24" width="44" height="22" rx="3" fill="rgba(91,200,219,.08)" stroke="#5bc8db" stroke-width="1"/>
+          <text x="300" y="39" text-anchor="middle" fill="#5bc8db" font-family="IBM Plex Mono" font-size="10">HH ¼</text>
+          <rect x="278" y="84" width="44" height="22" rx="3" fill="rgba(200,149,42,.08)" stroke="#d4a843" stroke-width="1"/>
+          <text x="300" y="99" text-anchor="middle" fill="#d4a843" font-family="IBM Plex Mono" font-size="10">HT ¼</text>
+          <rect x="278" y="128" width="44" height="22" rx="3" fill="rgba(200,149,42,.08)" stroke="#d4a843" stroke-width="1"/>
+          <text x="300" y="143" text-anchor="middle" fill="#d4a843" font-family="IBM Plex Mono" font-size="10">TH ¼</text>
+          <rect x="278" y="188" width="44" height="22" rx="3" fill="rgba(224,82,82,.08)" stroke="#e05252" stroke-width="1"/>
+          <text x="300" y="203" text-anchor="middle" fill="#e05252" font-family="IBM Plex Mono" font-size="10">TT ¼</text>
+
+          <!-- Probabilities label -->
+          <text x="340" y="40" fill="rgba(255,255,255,.3)" font-family="IBM Plex Mono" font-size="9">P = ¼</text>
+          <text x="340" y="100" fill="rgba(255,255,255,.3)" font-family="IBM Plex Mono" font-size="9">P = ¼</text>
+          <text x="340" y="145" fill="rgba(255,255,255,.3)" font-family="IBM Plex Mono" font-size="9">P = ¼</text>
+          <text x="340" y="205" fill="rgba(255,255,255,.3)" font-family="IBM Plex Mono" font-size="9">P = ¼</text>
+        </svg>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);text-align:center;margin-top:.5rem">P(HH) = P(HT) = P(TH) = P(TT) = ¼</p>
+      </div>
+    </div>
+
+    <!-- Normal distribution -->
+    <div class="lab-panel" style="margin-bottom:2rem">
+      <div class="lab-title">Normal Distribution — The Bell Curve</div>
+      <canvas id="normalCanvas" width="960" height="240" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1rem;justify-content:center">
+        <div class="slider-row" style="gap:1rem"><label>Mean μ</label><input type="range" id="normMu" min="-3" max="3" step=".1" value="0"><span class="slider-val" id="normMuV">0.0</span></div>
+        <div class="slider-row" style="gap:1rem"><label>Std Dev σ</label><input type="range" id="normSig" min=".3" max="2.5" step=".05" value="1"><span class="slider-val" id="normSigV">1.0</span></div>
+      </div>
+      <p class="lab-readout" id="normReadout" style="text-align:center;margin-top:.5rem"></p>
+    </div>
+  </div>
+
+  <!-- Bayes theorem highlight -->
+  <div class="highlight-box" style="max-width:700px;width:100%;margin:0 auto">
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.2em;margin-bottom:.5rem">BAYES' THEOREM <span class="info-bubble" onclick='showInfo(this,{tag:"Probability",title:"Bayes Theorem: Updating Beliefs",text:"Bayes theorem tells you how to update your belief in hypothesis H after observing evidence E. P(H|E) is the posterior — how likely is H now that we saw E? P(E|H) is the likelihood — how likely is E if H is true? P(H) is the prior — what did we believe before?",example:"Medical test: 99% accurate, disease affects 1% of population. Test positive → what is P(sick)? Without Bayes, most say ~99%. With Bayes: P(sick|+) ≈ 50%! Because false positives dominate when disease is rare.",formula:"P(H|E) = P(E|H)·P(H) / P(E)"})'>i</span></p>
+    <div class="big-eq">$$P(H|E) = \frac{P(E|H)\cdot P(H)}{P(E)}$$</div>
+    <p style="color:#9a9080;font-size:.9rem;margin-top:.5rem">The foundation of rational belief updating</p>
+  </div>
+
+  <!-- Distributions table -->
+  <div class="table-wrap" style="margin-top:3rem">
+    <div class="graph-title" style="text-align:center;margin-bottom:.8rem">Key Probability Distributions</div>
+    <table>
+      <thead><tr><th>Distribution</th><th>PMF / PDF</th><th>Mean</th><th>Variance</th><th>Use case</th></tr></thead>
+      <tbody>
+        <tr><td>Bernoulli(p)</td><td>$P(X=1)=p$</td><td>$p$</td><td>$p(1-p)$</td><td>Single yes/no event</td></tr>
+        <tr><td>Binomial(n,p)</td><td>$\binom{n}{k}p^k(1{-}p)^{n-k}$</td><td>$np$</td><td>$np(1-p)$</td><td>n independent flips</td></tr>
+        <tr><td>Poisson(λ)</td><td>$\frac{e^{-\lambda}\lambda^k}{k!}$</td><td>$\lambda$</td><td>$\lambda$</td><td>Rare events per interval</td></tr>
+        <tr><td>Normal(μ,σ²)</td><td>$\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$</td><td>$\mu$</td><td>$\sigma^2$</td><td>Central Limit Theorem</td></tr>
+        <tr><td>Exponential(λ)</td><td>$\lambda e^{-\lambda x}$</td><td>$\frac{1}{\lambda}$</td><td>$\frac{1}{\lambda^2}$</td><td>Time between events</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 8 — COMPLEX NUMBERS
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-complex" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="tag">Section 8 · Complex Numbers</div>
+  <div class="ts">88:00 – 102:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Eight</span>
+    <h2 class="section-title">Complex Numbers</h2>
+    <span class="sec-subtitle">The Imaginary Becomes Real</span>
+  </div>
+
+  <p class="prose" style="text-align:center;margin-bottom:2rem">
+    When the quadratic $x^2 + 1 = 0$ demanded a solution, mathematicians invented $i = \sqrt{-1}$.
+    Complex numbers $z = a + bi$ live in a <em>plane</em> — the complex plane — where
+    the real axis and imaginary axis are perpendicular. This simple extension unlocks
+    the most beautiful formula in mathematics: <strong style="color:var(--gold)">Euler's Identity</strong>.
+  </p>
+
+  <div class="highlight-box" style="max-width:600px;width:100%;margin:0 auto 2rem;border-color:rgba(176,111,222,.4)">
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--purple);letter-spacing:.2em;margin-bottom:.5rem">EULER'S IDENTITY — "THE MOST BEAUTIFUL EQUATION"</p>
+    <div class="big-eq" style="color:var(--purple)">$$e^{i\pi} + 1 = 0$$</div>
+    <p style="color:#9a9080;font-size:.88rem;margin-top:.5rem">Links e, i, π, 1, and 0 — the five most important constants in mathematics</p>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <!-- Argand plane -->
+      <div class="lab-panel" style="border-color:rgba(176,111,222,.3)">
+        <div class="lab-title">The Argand Plane — Complex Number Visualizer</div>
+        <canvas id="argandCanvas" width="480" height="340" style="width:100%;display:block;background:#06080f;border-radius:2px;cursor:crosshair"></canvas>
+        <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:.8rem">
+          <div class="slider-row" style="gap:1rem"><label>Real (a)</label><input type="range" id="compA" min="-4" max="4" step=".1" value="2"><span class="slider-val" id="compAv">2.0</span></div>
+          <div class="slider-row" style="gap:1rem"><label>Imaginary (b)</label><input type="range" id="compB" min="-4" max="4" step=".1" value="1.5"><span class="slider-val" id="compBv">1.5</span></div>
+        </div>
+        <p class="lab-readout" id="argandReadout" style="margin-top:.6rem"></p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="deep-dive" style="margin:0">
+          <div class="deep-dive-title">Euler's Formula in Full</div>
+          <div style="font-size:.95rem;color:#a0988a;line-height:1.8;margin-bottom:1rem">
+            Any complex number can be written in <em>polar form</em>:
+          </div>
+          <div style="text-align:center;margin:1rem 0">$$z = r e^{i\theta} = r(\cos\theta + i\sin\theta)$$</div>
+          <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.8rem">
+            <div style="font-size:.85rem;color:#9a9080"><span style="color:var(--gold)">r = |z|</span> — modulus (distance from origin)</div>
+            <div style="font-size:.85rem;color:#9a9080"><span style="color:var(--cyan)">θ = arg(z)</span> — argument (angle from real axis)</div>
+            <div style="font-size:.85rem;color:#9a9080"><span style="color:var(--green)">Multiplication</span> → add angles, multiply moduli</div>
+            <div style="font-size:.85rem;color:#9a9080"><span style="color:var(--purple)">de Moivre</span>: $(re^{i\theta})^n = r^n e^{in\theta}$</div>
+          </div>
+        </div>
+        <div class="eq-card" style="border-color:rgba(176,111,222,.3)">
+          <div class="eq-label" style="color:var(--purple)">Complex Arithmetic</div>
+          <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem;text-align:left">
+            <div style="font-size:.88rem;color:#a090b8">$(a+bi)+(c+di) = (a+c)+(b+d)i$</div>
+            <div style="font-size:.88rem;color:#a090b8">$(a+bi)(c+di) = (ac-bd)+(ad+bc)i$</div>
+            <div style="font-size:.88rem;color:#a090b8">$\overline{z} = a-bi$ (conjugate)</div>
+            <div style="font-size:.88rem;color:#a090b8">$|z|^2 = z \cdot \overline{z} = a^2+b^2$</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roots of unity visualization -->
+  <div style="width:100%;max-width:700px;margin:3rem auto 0">
+    <div class="lab-panel" style="border-color:rgba(176,111,222,.3)">
+      <div class="lab-title">Roots of Unity — Solutions to zⁿ = 1</div>
+      <canvas id="rootsCanvas" width="660" height="280" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+      <div class="slider-row" style="justify-content:center;gap:2rem;margin-top:.8rem">
+        <label style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--gold)">n =</label>
+        <input type="range" id="rootsN" min="2" max="12" value="6" step="1" style="width:200px;accent-color:var(--purple)">
+        <span class="slider-val" id="rootsNv" style="color:var(--purple)">6</span>
+      </div>
+      <p class="lab-readout" id="rootsReadout" style="text-align:center;margin-top:.5rem"></p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 9 — CONGRUENCES & NUMBER THEORY
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-congruences" style="flex-direction:column;min-height:auto;padding:5rem 2rem">
+  <div class="tag">Section 9 · Number Theory</div>
+  <div class="ts">102:00 – 115:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Nine</span>
+    <h2 class="section-title">Congruences &amp; Number Theory</h2>
+    <span class="sec-subtitle">The Arithmetic of Remainders</span>
+  </div>
+
+  <p class="prose" style="text-align:center;margin-bottom:2rem">
+    $a \equiv b \pmod{m}$ means $a$ and $b$ leave the same remainder when divided by $m$.
+    This simple idea — modular arithmetic — underlies modern cryptography, computer science,
+    and the theory of primes. Carl Gauss called number theory
+    <em>"the queen of mathematics."</em>
+  </p>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <!-- Clock modular visualizer -->
+      <div class="lab-panel">
+        <div class="lab-title">Modular Clock — Visualize a (mod m)</div>
+        <canvas id="clockCanvas" width="480" height="300" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="slider-row"><label>Number a</label><input type="range" id="modA" min="0" max="60" step="1" value="17"><span class="slider-val" id="modAv">17</span></div>
+        <div class="slider-row"><label>Modulus m</label><input type="range" id="modM" min="2" max="16" step="1" value="12"><span class="slider-val" id="modMv">12</span></div>
+        <p class="lab-readout" id="modReadout"></p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="highlight-box">
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.2em;margin-bottom:.5rem">FERMAT'S LITTLE THEOREM</p>
+          <div class="big-eq" style="font-size:1.6rem">$$a^p \equiv a \pmod{p}$$</div>
+          <p style="color:#9a9080;font-size:.88rem;margin-top:.4rem">for prime p and any integer a</p>
+        </div>
+
+        <div class="deep-dive" style="margin:0">
+          <div class="deep-dive-title">Key Results in Number Theory</div>
+          <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:.8rem">
+            <div style="padding:.6rem;border-left:2px solid var(--green);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--green)">Euclid's Division Lemma</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">$a = qm + r$, unique $0 \le r &lt; m$</div>
+            </div>
+            <div style="padding:.6rem;border-left:2px solid var(--gold);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold)">Chinese Remainder Theorem</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">Simultaneous congruences have unique solutions</div>
+            </div>
+            <div style="padding:.6rem;border-left:2px solid var(--cyan);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cyan)">Euler's Totient φ(n)</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">$a^{\phi(n)} \equiv 1 \pmod{n}$ if $\gcd(a,n)=1$</div>
+            </div>
+            <div style="padding:.6rem;border-left:2px solid var(--purple);padding-left:1rem">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--purple)">RSA Cryptography</div>
+              <div style="font-size:.82rem;color:#a0988a;margin-top:.2rem">Built on difficulty of factoring large semiprimes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prime sieve visualization -->
+    <div class="lab-panel" style="margin-top:2rem;border-color:rgba(123,226,139,.25)">
+      <div class="lab-title">Sieve of Eratosthenes — Finding Primes</div>
+      <canvas id="sieveCanvas" width="960" height="180" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+      <div class="controls" style="justify-content:center;margin-top:.8rem;gap:1rem">
+        <button onclick="sieveStep()" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1.2rem;background:rgba(123,226,139,.1);border:1px solid var(--green);color:var(--green);border-radius:2px;cursor:pointer">▶ Next Prime</button>
+        <button onclick="sieveReset()" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.5rem 1.2rem;background:rgba(224,82,82,.1);border:1px solid var(--red);color:var(--red);border-radius:2px;cursor:pointer">↺ Reset</button>
+      </div>
+      <p class="lab-readout" id="sieveReadout" style="text-align:center;margin-top:.5rem"></p>
+    </div>
+  </div>
+
+  <!-- Congruence table -->
+  <div class="table-wrap" style="margin-top:3rem">
+    <div class="graph-title" style="text-align:center;margin-bottom:.8rem">Multiplication Table (mod 7) — A Finite Field</div>
+    <canvas id="modTableCanvas" width="900" height="260" style="width:100%;max-width:600px;display:block;margin:0 auto;background:#0d1120;border-radius:4px"></canvas>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 10 — SEQUENCES, SERIES & LIMITS
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="sec-series" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:linear-gradient(180deg,var(--bg),#08070f)">
+  <div class="tag">Section 10 · Sequences & Series</div>
+  <div class="ts">115:00 – 125:00</div>
+
+  <div class="section-header" style="margin-top:2rem">
+    <span class="section-number">Section Ten</span>
+    <h2 class="section-title">Sequences, Series &amp; Infinity</h2>
+    <span class="sec-subtitle">Does this Sum Converge?</span>
+  </div>
+
+  <div style="width:100%;max-width:1050px;margin:0 auto">
+    <div class="two-col">
+      <div class="lab-panel">
+        <div class="lab-title">Partial Sums — Watch Series Converge (or Diverge)</div>
+        <canvas id="seriesCanvas" width="480" height="260" style="width:100%;display:block;background:#06080f;border-radius:2px"></canvas>
+        <div class="controls" style="flex-wrap:wrap;gap:.8rem;margin-top:.8rem">
+          <button class="fn-btn active" onclick="setSeries('geometric',this)">Geometric r=½</button>
+          <button class="fn-btn" onclick="setSeries('harmonic',this)">Harmonic ∞</button>
+          <button class="fn-btn" onclick="setSeries('basel',this)">Basel π²/6</button>
+          <button class="fn-btn" onclick="setSeries('leibniz',this)">Leibniz π/4</button>
+          <button class="fn-btn" onclick="setSeries('euler',this)">eˣ series</button>
+        </div>
+        <p class="lab-readout" id="seriesReadout" style="margin-top:.6rem"></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="eq-card">
+          <div class="eq-label">Geometric Series <span class="info-bubble" onclick='showInfo(this,{tag:"Series",title:"The Geometric Series",text:"The series 1 + r + r² + r³ + ... converges to 1/(1-r) whenever |r| < 1. This is the most important series in mathematics — it appears in finance (compound interest), probability, physics (quantum loops), and computer science.",example:"1 + ½ + ¼ + ⅛ + ... = 2. Zeno thought this was a paradox: how can infinitely many terms sum to a finite number? The answer: each term shrinks fast enough.",formula:"sum = 1/(1-r) for |r| < 1"})'>i</span></div>
+          <div class="eq-latex">$$\sum_{n=0}^{\infty} r^n = \frac{1}{1-r}, \quad |r|<1$$</div>
+        </div>
+        <div class="eq-card" style="border-color:rgba(123,226,139,.3)">
+          <div class="eq-label" style="color:var(--green)">Basel Problem (Euler, 1735)</div>
+          <div class="eq-latex" style="font-size:1rem">$$\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}$$</div>
+          <p class="eq-meaning">Euler's stunning result: π hides inside the integers</p>
+        </div>
+        <div class="eq-card" style="border-color:rgba(176,111,222,.3)">
+          <div class="eq-label" style="color:var(--purple)">Radius of Convergence</div>
+          <div class="eq-latex" style="font-size:.95rem">$$R = \frac{1}{\limsup_{n\to\infty} |a_n|^{1/n}}$$</div>
+          <p class="eq-meaning">Power series $\sum a_n x^n$ converges for $|x| &lt; R$</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     REFERENCE
+══════════════════════════════════════════════════════════ -->
+<section class="scene" id="reference" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:var(--bg2)">
+  <div class="section-header">
+    <span class="section-number">Reference</span>
+    <h2 class="section-title">Key Mathematicians</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;max-width:1050px;width:100%;margin:0 auto 4rem">
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Euclid</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">~300 BCE</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Elements — axiomatic geometry, number theory, infinite primes proof</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Carl Gauss</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1777–1855</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Number theory, normal distribution, complex plane, least squares</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Leonhard Euler</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1707–1783</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">$e^{i\pi}+1=0$, Basel problem, graph theory, notation (f(x), Σ, π, i)</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Bernhard Riemann</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1826–1866</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Riemann integral, Riemann hypothesis, differential geometry</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Évariste Galois</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1811–1832</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Group theory, proved degree≥5 polynomials have no general formula</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Augustin Cauchy</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1789–1857</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Rigorous limits, complex analysis, cauchy sequences</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Georg Cantor</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1845–1918</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Set theory, infinities of different sizes, diagonalization</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:1.5rem">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--white)">Alan Turing</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.1em;margin:.3rem 0 .7rem">1912–1954</div>
+      <div style="font-size:.85rem;color:#9a9080;line-height:1.6">Computability, Turing machines, undecidability, cryptanalysis</div>
+    </div>
+  </div>
+
+  <!-- Constants table -->
+  <div class="section-header">
+    <h2 class="section-title">Essential Constants</h2>
+  </div>
+  <div class="table-wrap" style="margin:0 auto 4rem">
+    <table>
+      <thead><tr><th>Symbol</th><th>Name</th><th>Value</th><th>Significance</th></tr></thead>
+      <tbody>
+        <tr><td style="font-size:1.3rem;color:var(--gold)">π</td><td>Pi</td><td>3.14159265…</td><td>Ratio of circle circumference to diameter; appears everywhere</td></tr>
+        <tr><td style="font-size:1.3rem;color:var(--green)">e</td><td>Euler's number</td><td>2.71828182…</td><td>Base of natural logarithm; derivative of eˣ is itself</td></tr>
+        <tr><td style="font-size:1.3rem;color:var(--purple)">i</td><td>Imaginary unit</td><td>√−1</td><td>Rotates the number system to a 2D plane</td></tr>
+        <tr><td style="font-size:1.3rem;color:var(--cyan)">φ</td><td>Golden ratio</td><td>1.61803398…</td><td>(1+√5)/2; self-similar spirals, Fibonacci</td></tr>
+        <tr><td style="font-size:1.3rem;color:var(--orange)">γ</td><td>Euler–Mascheroni</td><td>0.57721566…</td><td>Bridge between harmonic series and ln(n)</td></tr>
+        <tr><td style="font-size:1.3rem;color:var(--gold2)">√2</td><td>Pythagoras constant</td><td>1.41421356…</td><td>Diagonal of unit square; first proven irrational</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLOSING -->
+<section class="scene" id="closing" style="min-height:60vh;background:radial-gradient(ellipse at 50% 50%,#0d1225 0%,var(--bg) 70%)">
+  <canvas id="closingStars"></canvas>
+  <div style="position:relative;z-index:2;text-align:center;max-width:700px">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:2rem">
+      Mathematics is not about<br>numbers.<br>It is about <em>structure.</em>
+    </h2>
+    <p style="color:#9a9080;font-size:1.05rem;line-height:1.9;margin-bottom:2.5rem">
+      Every formula we encountered — from the quadratic to Euler's identity — is a window into the same underlying architecture.
+      Numbers, functions, limits, probability, and complex arithmetic are all facets of a single crystalline truth.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:.8rem;align-items:center">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:80px">Ep. 02</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2)">Linear Algebra — Vectors, Matrices, Transformations</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:80px">Ep. 03</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2)">Differential Equations — The Language of Change</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:80px">Ep. 04</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2)">Topology — The Shape of Space</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bottom-stripe">
+  <div class="stripe-item"><span class="stripe-item-value">∞</span><span class="stripe-item-label">Number Systems</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">10</span><span class="stripe-item-label">Sections</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">120'</span><span class="stripe-item-label">Runtime</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">Ep. 01</span><span class="stripe-item-label">Mathematics</span></div>
+  <div class="stripe-item"><span class="stripe-item-value">$e^{i\pi}+1=0$</span><span class="stripe-item-label">Euler's Identity</span></div>
+</div>
+
+<!-- ══════ INFO PANEL ══════ -->
+<div class="info-panel" id="globalInfoPanel">
+  <div class="info-panel-header">
+    <span class="info-panel-tag" id="infoPanelTag">Explanation</span>
+    <button class="info-panel-close" onclick="closeInfoPanel()">✕</button>
+  </div>
+  <div class="info-panel-body">
+    <div class="info-panel-title" id="infoPanelTitle"></div>
+    <div class="info-panel-text" id="infoPanelText"></div>
+    <div class="info-panel-example" id="infoPanelExampleBox" style="display:none">
+      <span class="info-panel-example-label">Everyday Analogy</span>
+      <div class="info-panel-example-text" id="infoPanelExample"></div>
+    </div>
+    <div class="info-panel-formula" id="infoPanelFormula" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   INFO PANEL SYSTEM
+════════════════════════════════════════════ */
+(function(){
+  const panel = document.getElementById('globalInfoPanel');
+  let activeBtn = null;
+  window.showInfo = function(btn, data) {
+    if(activeBtn === btn && panel.classList.contains('visible')){ closeInfoPanel(); return; }
+    if(activeBtn) activeBtn.classList.remove('active');
+    activeBtn = btn; btn.classList.add('active');
+    document.getElementById('infoPanelTag').textContent = data.tag||'Explanation';
+    document.getElementById('infoPanelTitle').textContent = data.title||'';
+    document.getElementById('infoPanelText').innerHTML = data.text||'';
+    const eb = document.getElementById('infoPanelExampleBox');
+    const et = document.getElementById('infoPanelExample');
+    if(data.example){ eb.style.display='block'; et.textContent=data.example; } else eb.style.display='none';
+    const ff = document.getElementById('infoPanelFormula');
+    if(data.formula){ ff.style.display='block'; ff.textContent=data.formula; } else ff.style.display='none';
+    const rect=btn.getBoundingClientRect(), pw=340, ph=280;
+    let left=rect.right+12, top=rect.top-20;
+    if(left+pw>window.innerWidth-10) left=rect.left-pw-12;
+    if(top+ph>window.innerHeight-10) top=window.innerHeight-ph-10;
+    if(top<10) top=10;
+    panel.style.left=left+'px'; panel.style.top=top+'px';
+    panel.classList.add('visible');
+  };
+  window.closeInfoPanel = function(){ panel.classList.remove('visible'); if(activeBtn){activeBtn.classList.remove('active');activeBtn=null;} };
+  document.addEventListener('click', function(e){ if(!panel.contains(e.target)&&!e.target.classList.contains('info-bubble')) closeInfoPanel(); });
+})();
+
+/* ════════════════════════════════════════════
+   STARFIELD
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('starfield'), ctx=c.getContext('2d');
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const stars=Array.from({length:140},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.3,a:Math.random(),da:(Math.random()-.5)*.007}));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.a=Math.max(.1,Math.min(1,s.a+s.da)); if(s.a<=.1||s.a>=1) s.da*=-1;
+      ctx.beginPath(); ctx.arc(s.x*c.width,s.y*c.height,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(240,236,224,${s.a*.7})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   CLOSING STARFIELD
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('closingStars'); if(!c) return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const stars=Array.from({length:180},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.5+.3,a:Math.random(),da:(Math.random()-.5)*.006}));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.a=Math.max(.05,Math.min(1,s.a+s.da)); if(s.a<=.05||s.a>=1) s.da*=-1;
+      ctx.beginPath(); ctx.arc(s.x*c.width,s.y*c.height,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(240,236,224,${s.a*.6})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   NUMBER LINE
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('numberLineCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let animState={type:'none',progress:0,target:0,highlight:[]};
+  let animFrame=null;
+  
+  function W(){return c.width;} function H(){return c.height;}
+  const CX=()=>W()/2, scale=()=>W()/20;
+  
+  function toX(n){ return CX()+n*scale(); }
+  
+  function draw(t){
+    ctx.clearRect(0,0,W(),H());
+    const s=scale();
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+    for(let n=-10;n<=10;n++){
+      ctx.beginPath(); ctx.moveTo(toX(n),0); ctx.lineTo(toX(n),H()); ctx.stroke();
+    }
+    // Axis
+    ctx.beginPath(); ctx.moveTo(0,H()/2); ctx.lineTo(W(),H()/2);
+    ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=2; ctx.stroke();
+    // Arrow heads
+    ctx.fillStyle='rgba(255,255,255,.3)';
+    ctx.beginPath(); ctx.moveTo(W()-8,H()/2-5); ctx.lineTo(W(),H()/2); ctx.lineTo(W()-8,H()/2+5); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(8,H()/2-5); ctx.lineTo(0,H()/2); ctx.lineTo(8,H()/2+5); ctx.fill();
+    
+    // Tick marks and labels
+    const visible=Math.floor(10/1);
+    for(let n=-visible;n<=visible;n++){
+      const x=toX(n); const y=H()/2;
+      ctx.beginPath(); ctx.moveTo(x,y-6); ctx.lineTo(x,y+6);
+      ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.45)'; ctx.font=`${Math.max(9,s*.4)}px IBM Plex Mono`;
+      ctx.textAlign='center'; ctx.fillText(n,x,y+18);
+    }
+    // Zero emphasis
+    ctx.beginPath(); ctx.arc(toX(0),H()/2,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(212,168,67,.9)'; ctx.fill();
+    
+    // Animated highlights
+    if(animState.type==='add' && animState.steps){
+      const step=Math.floor(animState.progress*animState.steps.length);
+      for(let i=0;i<Math.min(step+1,animState.steps.length);i++){
+        const [from,to,col]=animState.steps[i];
+        const alpha=i<step?0.7:(animState.progress*animState.steps.length-step)*0.8+0.2;
+        // Draw arc
+        ctx.beginPath();
+        ctx.arc((toX(from)+toX(to))/2, H()/2, Math.abs(toX(to)-toX(from))/2, Math.PI,0);
+        ctx.strokeStyle=col.replace('1)',`${alpha})`); ctx.lineWidth=2.5; ctx.stroke();
+        // Dot
+        ctx.beginPath(); ctx.arc(toX(to),H()/2,6,0,Math.PI*2);
+        ctx.fillStyle=col.replace('1)',`${Math.min(1,alpha+.2)}`); ctx.fill();
+        // Label
+        ctx.fillStyle=col; ctx.font='bold 12px IBM Plex Mono'; ctx.textAlign='center';
+        ctx.fillText(to, toX(to), H()/2-20);
+      }
+    }
+    else if(animState.type==='multiply' && animState.points){
+      const maxI=Math.floor(animState.progress*animState.points.length);
+      animState.points.slice(0,maxI+1).forEach((p,i)=>{
+        const a=i<maxI?0.8:(animState.progress*animState.points.length-i)*0.9;
+        ctx.beginPath(); ctx.arc(toX(p),H()/2,6+i*2,0,Math.PI*2);
+        ctx.fillStyle=`rgba(212,168,67,${a*.7})`; ctx.fill();
+        ctx.beginPath(); ctx.arc(toX(p),H()/2,4,0,Math.PI*2);
+        ctx.fillStyle=`rgba(240,201,110,${a})`; ctx.fill();
+        ctx.fillStyle='rgba(240,201,110,.9)'; ctx.font='bold 12px IBM Plex Mono'; ctx.textAlign='center';
+        ctx.fillText(p,toX(p),H()/2-22);
+      });
+    }
+    else if(animState.type==='negative'){
+      // Show the number line extending left
+      const ex=animState.progress;
+      ctx.fillStyle='rgba(224,82,82,.6)';
+      for(let n=-1;n>=-Math.round(ex*7);n--){
+        const x=toX(n);
+        ctx.beginPath(); ctx.arc(x,H()/2,5,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='rgba(224,82,82,.7)'; ctx.font='12px IBM Plex Mono'; ctx.textAlign='center';
+        ctx.fillText(n,x,H()/2-20);
+        ctx.fillStyle='rgba(224,82,82,.6)';
+      }
+    }
+    else if(animState.type==='fraction'){
+      // Show fractions on the line
+      const fracs=[[1,2,'rgba(91,200,219,1)'],[1,3,'rgba(123,226,139,1)'],[2,3,'rgba(212,168,67,1)'],[1,4,'rgba(224,82,82,1)'],[3,4,'rgba(176,111,222,1)']];
+      const show=Math.floor(animState.progress*fracs.length)+1;
+      fracs.slice(0,show).forEach(([p,q,col])=>{
+        const v=p/q;
+        ctx.beginPath(); ctx.arc(toX(v),H()/2,5,0,Math.PI*2);
+        ctx.fillStyle=col; ctx.fill();
+        ctx.fillStyle=col; ctx.font='bold 11px IBM Plex Mono'; ctx.textAlign='center';
+        ctx.fillText(`${p}/${q}`,toX(v),H()/2-22);
+        // Tick
+        ctx.beginPath(); ctx.moveTo(toX(v),H()/2-8); ctx.lineTo(toX(v),H()/2+8);
+        ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.stroke();
+      });
+    }
+  }
+  
+  function animate(){
+    if(animFrame) cancelAnimationFrame(animFrame);
+    let start=null;
+    const duration=2000;
+    function step(ts){
+      if(!start) start=ts;
+      animState.progress=Math.min(1,(ts-start)/duration);
+      draw();
+      if(animState.progress<1) animFrame=requestAnimationFrame(step);
+    }
+    animFrame=requestAnimationFrame(step);
+  }
+  
+  window.nlDemo=function(type){
+    if(type==='add'){
+      animState={type:'add',progress:0,
+        steps:[[0,3,'rgba(91,200,219,1)'],[3,6,'rgba(91,200,219,1)'],[6,9,'rgba(91,200,219,1)'],[9,12,'rgba(91,200,219,1)']
+      ]};
+      document.getElementById('nlCaption').textContent='3 + 3 + 3 + 3 = 12 · Each hop is one addition of 3';
+    } else if(type==='multiply'){
+      animState={type:'multiply',progress:0,points:[0,2,4,6,8,10]};
+      document.getElementById('nlCaption').textContent='2 × 1, 2 × 2, 2 × 3, … · Multiplication scales the number line';
+    } else if(type==='negative'){
+      animState={type:'negative',progress:0};
+      document.getElementById('nlCaption').textContent='Negatives mirror the positive line about zero';
+    } else if(type==='fraction'){
+      animState={type:'fraction',progress:0};
+      document.getElementById('nlCaption').textContent='Rationals are dense — between any two, infinitely many more';
+    }
+    animate();
+  };
+  
+  draw();
+  nlDemo('add');
+})();
+
+/* ════════════════════════════════════════════
+   ADDITION / MULTIPLICATION CANVASES
+════════════════════════════════════════════ */
+(function(){
+  function drawAddition(){
+    const c=document.getElementById('addCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    const v=parseInt(document.getElementById('addVal').value);
+    const t=parseInt(document.getElementById('addTimes').value);
+    document.getElementById('addValShow').textContent=v;
+    document.getElementById('addTimesShow').textContent=t;
+    ctx.clearRect(0,0,W,H);
+    const total=v*t;
+    const barW=(W-40)/(total+1), startX=20;
+    const colors=['rgba(91,200,219,.8)','rgba(212,168,67,.8)','rgba(123,226,139,.8)','rgba(224,82,82,.8)','rgba(176,111,222,.8)','rgba(232,135,74,.8)','rgba(74,144,217,.8)','rgba(91,200,219,.8)'];
+    for(let i=0;i<t;i++){
+      for(let j=0;j<v;j++){
+        const x=startX+(i*v+j)*barW;
+        ctx.fillStyle=colors[i%colors.length];
+        ctx.fillRect(x,H-50,barW-2,40);
+      }
+      // Group label
+      ctx.fillStyle='rgba(255,255,255,.4)';
+      ctx.font='10px IBM Plex Mono'; ctx.textAlign='center';
+      ctx.fillText(`+${v}`,startX+(i*v+v/2)*barW,H-55);
+    }
+    // Total
+    ctx.fillStyle='rgba(212,168,67,.9)'; ctx.font='bold 14px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText(`${v} × ${t} = ${total}`,W/2,22);
+    document.getElementById('addReadout').textContent=`${v} added ${t} times = ${total} (same as ${v} × ${t})`;
+  }
+  
+  function drawMultiplication(){
+    const c=document.getElementById('multCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    const a=parseFloat(document.getElementById('multBase').value);
+    const n=parseInt(document.getElementById('multExp').value);
+    document.getElementById('multBaseShow').textContent=a.toFixed(1);
+    document.getElementById('multExpShow').textContent=n;
+    ctx.clearRect(0,0,W,H);
+    
+    const vals=[]; for(let i=0;i<=n;i++) vals.push(Math.pow(a,i));
+    const maxV=Math.max(...vals), minV=0;
+    const pad=30;
+    
+    ctx.strokeStyle='rgba(255,255,255,.1)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-10,H-pad); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad,10); ctx.lineTo(pad,H-pad); ctx.stroke();
+    
+    const xs=vals.map((_,i)=>pad+(i/(Math.max(n,1)))*(W-pad-20));
+    const ys=vals.map(v=>(H-pad)-(v-minV)/(maxV-minV+.01)*(H-pad-20));
+    
+    ctx.beginPath(); ctx.moveTo(xs[0],ys[0]);
+    xs.forEach((x,i)=>ctx.lineTo(x,ys[i]));
+    ctx.strokeStyle='rgba(212,168,67,.85)'; ctx.lineWidth=2.5; ctx.stroke();
+    
+    xs.forEach((x,i)=>{
+      ctx.beginPath(); ctx.arc(x,ys[i],4,0,Math.PI*2);
+      ctx.fillStyle='rgba(212,168,67,.9)'; ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font='9px IBM Plex Mono'; ctx.textAlign='center';
+      ctx.fillText(vals[i]<1000?vals[i].toFixed(1):`${(vals[i]/1e3).toFixed(1)}k`,x,ys[i]-9);
+    });
+    ctx.fillStyle='rgba(91,200,219,.9)'; ctx.font='bold 13px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText(`${a}⁰ to ${a}^${n} = ${vals[n].toFixed(1)}`,W/2,18);
+    document.getElementById('multReadout').textContent=`${a}^${n} = ${vals[n].toFixed(2)} · Exponential growth!`;
+  }
+  
+  ['addVal','addTimes'].forEach(id=>document.getElementById(id).addEventListener('input',drawAddition));
+  ['multBase','multExp'].forEach(id=>document.getElementById(id).addEventListener('input',drawMultiplication));
+  drawAddition(); drawMultiplication();
+})();
+
+/* ════════════════════════════════════════════
+   FUNCTION MACHINE ANIMATION
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('funcMachineCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  const W=c.width, H=c.height;
+  let t=0, inputVal=2;
+  
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Arrows
+    const arrowX=[80,200,320,520,640,760];
+    const ballX=arrowX[Math.floor((t%120)/20)];
+    
+    // Input label
+    ctx.fillStyle='rgba(91,200,219,.7)'; ctx.font='12px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText('x = '+inputVal, 40, H/2+4);
+    
+    // Arrow 1
+    ctx.beginPath(); ctx.moveTo(70,H/2); ctx.lineTo(160,H/2);
+    ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(155,H/2-4); ctx.lineTo(162,H/2); ctx.lineTo(155,H/2+4);
+    ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fill();
+    
+    // Machine box
+    ctx.fillStyle='rgba(13,17,32,1)'; ctx.strokeStyle='rgba(212,168,67,.5)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(165,H/2-25,150,50,4); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(212,168,67,.9)'; ctx.font='bold 14px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText('f(x)', 240, H/2+5);
+    
+    // Arrow 2
+    ctx.beginPath(); ctx.moveTo(318,H/2); ctx.lineTo(400,H/2);
+    ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(395,H/2-4); ctx.lineTo(402,H/2); ctx.lineTo(395,H/2+4);
+    ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fill();
+    
+    // Output label
+    ctx.fillStyle='rgba(123,226,139,.8)'; ctx.font='12px IBM Plex Mono'; ctx.textAlign='left';
+    ctx.fillText('f('+inputVal+') = '+inputVal*inputVal, 410, H/2+4);
+    
+    // Animated ball
+    const phase=(t%120)/120;
+    const bx=70+phase*(W-140);
+    ctx.beginPath(); ctx.arc(bx,H/2,8,0,Math.PI*2);
+    ctx.fillStyle='rgba(240,201,110,.9)'; ctx.fill();
+    ctx.fillStyle='rgba(0,0,0,.8)'; ctx.font='bold 9px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText(inputVal,bx,H/2+3);
+    
+    t++; 
+    if(t%120===0) inputVal=Math.floor(Math.random()*8)-4;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   FUNCTION PLOTTER
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('fnPlot'); if(!c) return;
+  const ctx=c.getContext('2d');
+  let currentFn='linear';
+  let params={a:1,b:0,c:0,freq:1,amp:1};
+  
+  const fnDefs={
+    linear:{fn:(x,p)=>p.a*x+p.b, color:'rgba(91,200,219,.9)', label:'f(x) = ax + b', params:['a: slope','b: intercept']},
+    quadratic:{fn:(x,p)=>p.a*x*x+p.b*x+p.c, color:'rgba(212,168,67,.9)', label:'f(x) = ax² + bx + c', params:['a','b','c']},
+    cubic:{fn:(x,p)=>p.a*x*x*x+p.b*x+p.c, color:'rgba(123,226,139,.9)', label:'f(x) = ax³ + bx + c', params:['a','b','c']},
+    sqrt:{fn:(x)=>x>=0?Math.sqrt(x):NaN, color:'rgba(224,82,82,.9)', label:'f(x) = √x', params:[]},
+    abs:{fn:(x)=>Math.abs(x), color:'rgba(176,111,222,.9)', label:'f(x) = |x|', params:[]},
+    exp:{fn:(x,p)=>Math.exp(p.a*x), color:'rgba(232,135,74,.9)', label:'f(x) = eˣ', params:['a: rate']},
+    log:{fn:(x)=>x>0?Math.log(x):NaN, color:'rgba(240,201,110,.9)', label:'f(x) = ln(x)', params:[]},
+    sin:{fn:(x,p)=>p.amp*Math.sin(p.freq*x), color:'rgba(91,200,219,.9)', label:'f(x) = A·sin(ωx)', params:['amp: A','freq: ω']},
+    cos:{fn:(x,p)=>p.amp*Math.cos(p.freq*x), color:'rgba(212,168,67,.9)', label:'f(x) = A·cos(ωx)', params:['amp: A','freq: ω']},
+    tan:{fn:(x,p)=>Math.tan(p.freq*x), color:'rgba(224,82,82,.9)', label:'f(x) = tan(ωx)', params:['freq: ω']},
+  };
+  
+  window.setFn=function(name,btn){
+    document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFn=name;
+    buildSliders();
+    drawPlot();
+  };
+  
+  function buildSliders(){
+    const cont=document.getElementById('fnSliders');
+    cont.innerHTML='';
+    const def=fnDefs[currentFn];
+    if(!def.params.length) return;
+    def.params.forEach(label=>{
+      const key=label.split(':')[0].trim().toLowerCase();
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;align-items:center;gap:1rem;margin:.4rem 0;font-family:IBM Plex Mono,monospace;font-size:.7rem;color:var(--dim)';
+      const lbl=document.createElement('span'); lbl.textContent=label; lbl.style.minWidth='100px';
+      const sl=document.createElement('input'); sl.type='range'; sl.min=key==='freq'?'0.2':(key==='amp'?'0.1':'-3'); sl.max=key==='freq'?'4':(key==='amp'?'4':'3'); sl.step='.1'; sl.value=params[key]||1; sl.style='width:150px;accent-color:var(--gold)';
+      const val=document.createElement('span'); val.textContent=parseFloat(sl.value).toFixed(1); val.style.color='var(--cyan)'; val.style.minWidth='40px';
+      sl.addEventListener('input',()=>{ params[key]=parseFloat(sl.value); val.textContent=parseFloat(sl.value).toFixed(1); drawPlot(); });
+      row.append(lbl,sl,val); cont.appendChild(row);
+    });
+  }
+  
+  function drawPlot(){
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const padX=50, padY=30;
+    const xRange=8, yRange=8;
+    const scX=(W-padX*2)/(xRange*2);
+    const scY=(H-padY*2)/(yRange*2);
+    const ox=padX+xRange*scX, oy=padY+yRange*scY;
+    
+    // Grid
+    for(let x=-xRange;x<=xRange;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.25)':'rgba(255,255,255,.06)'; ctx.lineWidth=x===0?1.5:1; ctx.stroke();
+      if(x!==0){ ctx.fillStyle='rgba(255,255,255,.3)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='center'; ctx.fillText(x,ox+x*scX,H-padY+14); }
+    }
+    for(let y=-yRange;y<=yRange;y++){
+      ctx.beginPath(); ctx.moveTo(padX,oy-y*scY); ctx.lineTo(W-padX,oy-y*scY);
+      ctx.strokeStyle=y===0?'rgba(255,255,255,.25)':'rgba(255,255,255,.06)'; ctx.lineWidth=y===0?1.5:1; ctx.stroke();
+      if(y!==0){ ctx.fillStyle='rgba(255,255,255,.3)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='right'; ctx.fillText(y,padX-4,oy-y*scY+4); }
+    }
+    // Origin label
+    ctx.fillStyle='rgba(212,168,67,.8)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='right'; ctx.fillText('0',padX-4,H-padY+14);
+    
+    // Plot curve
+    const def=fnDefs[currentFn];
+    ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle=def.color;
+    let started=false;
+    for(let px=0;px<=W-padX*2;px++){
+      const x=(px/(W-padX*2))*xRange*2-xRange;
+      const y=def.fn(x,params);
+      if(!isFinite(y)||isNaN(y)||Math.abs(y)>yRange*1.5){started=false;continue;}
+      const cx2=ox+x*scX, cy2=oy-y*scY;
+      if(!started){ctx.moveTo(cx2,cy2);started=true;} else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    
+    // Moving dot
+    const dotX=Math.sin(Date.now()*0.001)*4;
+    const dotY=def.fn(dotX,params);
+    if(isFinite(dotY)&&Math.abs(dotY)<=yRange){
+      ctx.beginPath(); ctx.arc(ox+dotX*scX,oy-dotY*scY,6,0,Math.PI*2);
+      ctx.fillStyle='rgba(212,168,67,.9)'; ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='left';
+      ctx.fillText(`(${dotX.toFixed(1)}, ${dotY.toFixed(1)})`,ox+dotX*scX+8,oy-dotY*scY-6);
+    }
+    
+    document.getElementById('fnReadout').textContent=def.label;
+    requestAnimationFrame(drawPlot);
+  }
+  
+  buildSliders();
+  drawPlot();
+})();
+
+/* ════════════════════════════════════════════
+   QUADRATIC EXPLORER
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('quadCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  
+  function draw(){
+    const a=parseFloat(document.getElementById('quadA').value);
+    const b=parseFloat(document.getElementById('quadB').value);
+    const cc=parseFloat(document.getElementById('quadC').value);
+    document.getElementById('quadAv').textContent=a.toFixed(1);
+    document.getElementById('quadBv').textContent=b.toFixed(1);
+    document.getElementById('quadCv').textContent=cc.toFixed(1);
+    
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const padX=40, padY=30;
+    const scX=(W-padX*2)/10, scY=(H-padY*2)/12;
+    const ox=W/2, oy=H/2;
+    
+    // Grid
+    for(let x=-5;x<=5;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=x===0?1.5:1; ctx.stroke();
+      if(x!==0){ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(x,ox+x*scX,H-padY+12);}
+    }
+    for(let y=-6;y<=6;y++){
+      ctx.beginPath(); ctx.moveTo(padX,oy-y*scY); ctx.lineTo(W-padX,oy-y*scY);
+      ctx.strokeStyle=y===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=y===0?1.5:1; ctx.stroke();
+      if(y!==0){ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='9px IBM Plex Mono';ctx.textAlign='right';ctx.fillText(y,padX-3,oy-y*scY+3);}
+    }
+    
+    // Discriminant
+    const disc=b*b-4*a*cc;
+    let color='rgba(123,226,139,.85)';
+    if(disc<0) color='rgba(224,82,82,.85)';
+    else if(disc===0) color='rgba(212,168,67,.85)';
+    
+    // Draw parabola
+    if(Math.abs(a)>0.001){
+      ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle=color;
+      let started=false;
+      for(let px=0;px<=W-padX*2;px++){
+        const x=(px/(W-padX*2))*10-5;
+        const y=a*x*x+b*x+cc;
+        if(Math.abs(y)>8){started=false;continue;}
+        const cx2=ox+x*scX, cy2=oy-y*scY;
+        if(!started){ctx.moveTo(cx2,cy2);started=true;} else ctx.lineTo(cx2,cy2);
+      }
+      ctx.stroke();
+    }
+    
+    // Roots
+    if(disc>=0 && Math.abs(a)>0.001){
+      const r1=(-b+Math.sqrt(disc))/(2*a);
+      const r2=(-b-Math.sqrt(disc))/(2*a);
+      [r1,r2].forEach(r=>{
+        if(Math.abs(r)<=5){
+          ctx.beginPath(); ctx.arc(ox+r*scX,oy,6,0,Math.PI*2);
+          ctx.fillStyle='rgba(123,226,139,.9)'; ctx.fill();
+          ctx.fillStyle='rgba(123,226,139,.8)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='center';
+          ctx.fillText(`x=${r.toFixed(2)}`,ox+r*scX,oy-12);
+        }
+      });
+    }
+    
+    // Vertex
+    const vx=-b/(2*a), vy=cc-b*b/(4*a);
+    if(Math.abs(vx)<=5 && Math.abs(vy)<=6){
+      ctx.beginPath(); ctx.arc(ox+vx*scX,oy-vy*scY,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(212,168,67,.9)'; ctx.fill();
+    }
+    
+    // Readout
+    let rootText='';
+    if(Math.abs(a)<0.001) rootText='Linear (a≈0)';
+    else if(disc>0) rootText=`Two real roots: x = ${((-b+Math.sqrt(disc))/(2*a)).toFixed(2)}, ${((-b-Math.sqrt(disc))/(2*a)).toFixed(2)}`;
+    else if(disc===0) rootText=`Double root: x = ${(-b/(2*a)).toFixed(2)}`;
+    else rootText=`Complex roots: x = ${(-b/(2*a)).toFixed(2)} ± ${(Math.sqrt(-disc)/(2*a)).toFixed(2)}i`;
+    document.getElementById('quadReadout').innerHTML=`Δ = ${disc.toFixed(2)} · ${rootText}`;
+  }
+  
+  ['quadA','quadB','quadC'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   POLYNOMIAL DEGREE VISUALIZER
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('polyCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  let deg=1;
+  
+  const polyDefs={
+    1:{coeffs:[1,-1],info:'<strong style="color:var(--cyan)">Linear (degree 1)</strong><br>One root, one zero. A straight line. f(x) = x − 1',ends:'→∞ as x→∞, →-∞ as x→-∞'},
+    2:{coeffs:[1,0,-4],info:'<strong style="color:var(--gold)">Quadratic (degree 2)</strong><br>Up to 2 real roots. Parabola shape. Always opens up (a>0) or down (a<0).',ends:'Both ends go same direction (up if a>0)'},
+    3:{coeffs:[1,0,-5,2],info:'<strong style="color:var(--green)">Cubic (degree 3)</strong><br>Up to 3 real roots. Always has at least 1 real root. S-shaped curve.',ends:'Ends go opposite directions (like linear)'},
+    4:{coeffs:[1,-2,-3,4,1],info:'<strong style="color:var(--purple)">Quartic (degree 4)</strong><br>Up to 4 real roots. Can have 0, 2, or 4 real roots. Both ends same direction.',ends:'Both ends up (a>0) — "W" or "M" shapes possible'},
+    5:{coeffs:[1,-3,-2,8,2,-5],info:'<strong style="color:var(--orange)">Quintic (degree 5)</strong><br>Up to 5 real roots. No general formula (Galois, 1832)! Must use numerical methods.',ends:'Ends go opposite directions'},
+    6:{coeffs:[1,-4,0,8,-4,0,1],info:'<strong style="color:var(--red)">Degree 6</strong><br>Up to 6 real roots. Even degree, so both ends go same direction. Complex oscillations.',ends:'Both ends up (a>0)'},
+  };
+  
+  window.setPoly=function(d,btn){
+    document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    deg=d; drawPoly();
+    document.getElementById('polyInfo').innerHTML=polyDefs[d].info+'<br><br><span style="font-size:.8rem;color:var(--dim)">End behavior: '+polyDefs[d].ends+'</span>';
+  };
+  
+  function evalPoly(x,coeffs){
+    let r=0;
+    coeffs.forEach((c,i)=>r+=c*Math.pow(x,coeffs.length-1-i));
+    return r;
+  }
+  
+  function drawPoly(){
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const padX=40, padY=25;
+    const scX=(W-padX*2)/8, scY=(H-padY*2)/16;
+    const ox=W/2, oy=H/2;
+    
+    for(let x=-4;x<=4;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=x===0?1.5:1; ctx.stroke();
+      if(x!==0){ctx.fillStyle='rgba(255,255,255,.25)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(x,ox+x*scX,H-padY+11);}
+    }
+    for(let y=-8;y<=8;y++){
+      ctx.beginPath(); ctx.moveTo(padX,oy-y*scY); ctx.lineTo(W-padX,oy-y*scY);
+      ctx.strokeStyle=y===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=y===0?1.5:1; ctx.stroke();
+    }
+    
+    const colors={1:'rgba(91,200,219,.9)',2:'rgba(212,168,67,.9)',3:'rgba(123,226,139,.9)',4:'rgba(176,111,222,.9)',5:'rgba(232,135,74,.9)',6:'rgba(224,82,82,.9)'};
+    const coeffs=polyDefs[deg].coeffs;
+    
+    ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle=colors[deg];
+    let started=false;
+    for(let px=0;px<=W-padX*2;px++){
+      const x=(px/(W-padX*2))*8-4;
+      const y=evalPoly(x,coeffs)*0.08;
+      if(Math.abs(y)>9){started=false;continue;}
+      const cx2=ox+x*scX, cy2=oy-y*scY;
+      if(!started){ctx.moveTo(cx2,cy2);started=true;} else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    
+    // Degree label
+    ctx.fillStyle=colors[deg]; ctx.font='bold 12px IBM Plex Mono'; ctx.textAlign='right';
+    ctx.fillText(`Degree ${deg}`,W-padX,padY+12);
+  }
+  
+  document.getElementById('polyInfo').innerHTML=polyDefs[1].info+'<br><br><span style="font-size:.8rem;color:var(--dim)">End behavior: '+polyDefs[1].ends+'</span>';
+  drawPoly();
+})();
+
+/* ════════════════════════════════════════════
+   DERIVATIVE ANIMATION
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('derivCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  
+  function fn(x){return x*x*x*0.3-x*1.5;}
+  function dfn(x){return x*x*0.9-1.5;}
+  
+  function draw(){
+    const x0=parseFloat(document.getElementById('derivX0').value);
+    const dx=parseFloat(document.getElementById('derivDx').value);
+    document.getElementById('derivX0v').textContent=x0.toFixed(2);
+    document.getElementById('derivDxv').textContent=dx.toFixed(2);
+    
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const padX=40, padY=25;
+    const scX=(W-padX*2)/8, scY=(H-padY*2)/8;
+    const ox=W/2, oy=H/2+20;
+    
+    // Grid
+    for(let x=-4;x<=4;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=x===0?1.5:1; ctx.stroke();
+    }
+    for(let y=-4;y<=4;y++){
+      ctx.beginPath(); ctx.moveTo(padX,oy-y*scY); ctx.lineTo(W-padX,oy-y*scY);
+      ctx.strokeStyle=y===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=y===0?1.5:1; ctx.stroke();
+    }
+    
+    // Curve
+    ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle='rgba(212,168,67,.85)';
+    let started=false;
+    for(let px=0;px<=W-padX*2;px++){
+      const x=(px/(W-padX*2))*8-4;
+      const y=fn(x);
+      if(Math.abs(y)>5){started=false;continue;}
+      const cx2=ox+x*scX, cy2=oy-y*scY;
+      if(!started){ctx.moveTo(cx2,cy2);started=true;} else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    
+    // Secant line
+    const y0=fn(x0), y1=fn(x0+dx);
+    const slope=(y1-y0)/dx;
+    const sLength=4;
+    ctx.beginPath();
+    ctx.moveTo(ox+(x0-sLength)*scX, oy-(y0-sLength*slope)*scY);
+    ctx.lineTo(ox+(x0+sLength)*scX, oy-(y0+sLength*slope)*scY);
+    ctx.strokeStyle=dx<0.2?'rgba(224,82,82,.9)':'rgba(91,200,219,.7)';
+    ctx.lineWidth=dx<0.2?2.5:2; ctx.setLineDash(dx<0.2?[]:[5,4]); ctx.stroke(); ctx.setLineDash([]);
+    
+    // Point x0
+    ctx.beginPath(); ctx.arc(ox+x0*scX,oy-y0*scY,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(212,168,67,.9)'; ctx.fill();
+    
+    // Point x0+dx
+    if(dx>0.1){
+      ctx.beginPath(); ctx.arc(ox+(x0+dx)*scX,oy-y1*scY,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(91,200,219,.9)'; ctx.fill();
+    }
+    
+    // True tangent
+    const trueSl=dfn(x0);
+    ctx.beginPath();
+    ctx.moveTo(ox+(x0-sLength)*scX, oy-(y0-sLength*trueSl)*scY);
+    ctx.lineTo(ox+(x0+sLength)*scX, oy-(y0+sLength*trueSl)*scY);
+    ctx.strokeStyle='rgba(123,226,139,.5)'; ctx.lineWidth=1; ctx.setLineDash([2,4]); ctx.stroke(); ctx.setLineDash([]);
+    
+    // Label
+    ctx.fillStyle=dx<0.2?'rgba(224,82,82,.9)':'rgba(91,200,219,.8)';
+    ctx.font='11px IBM Plex Mono'; ctx.textAlign='left';
+    ctx.fillText(`Secant slope: ${slope.toFixed(3)}`,10,20);
+    ctx.fillStyle='rgba(123,226,139,.8)';
+    ctx.fillText(`True f′(${x0.toFixed(1)}): ${trueSl.toFixed(3)}`,10,35);
+    
+    document.getElementById('derivReadout').textContent=dx<0.15?
+      `Δx → 0: secant slope ≈ true derivative ${trueSl.toFixed(3)} ✓`:
+      `Secant: ${slope.toFixed(3)} · True derivative: ${trueSl.toFixed(3)} · Shrink Δx to converge`;
+  }
+  
+  ['derivX0','derivDx'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   TRIPLE DERIVATIVE CANVAS (f, f', f'')
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('tripleDerivCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  const W=c.width, H=c.height;
+  let t=0;
+  
+  const fn=(x)=> Math.sin(x)*x*0.5+Math.cos(x*0.7)*0.8;
+  const dfn=(x)=> (fn(x+0.001)-fn(x-0.001))/0.002;
+  const ddfn=(x)=> (dfn(x+0.001)-dfn(x-0.001))/0.002;
+  
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const padX=40, padY=20;
+    const scX=(W-padX*2)/10, scY=(H-padY*2)/8;
+    const ox=W/2, oy=H/2+10;
+    
+    for(let x=-5;x<=5;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.04)'; ctx.lineWidth=x===0?1:1; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.moveTo(padX,oy); ctx.lineTo(W-padX,oy);
+    ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1; ctx.stroke();
+    
+    [[fn,'rgba(212,168,67,.9)',2.5],[dfn,'rgba(91,200,219,.8)',2],[ddfn,'rgba(224,82,82,.7)',1.5]].forEach(([f,col,lw])=>{
+      ctx.beginPath(); ctx.lineWidth=lw; ctx.strokeStyle=col;
+      let started=false;
+      for(let px=0;px<=W-padX*2;px++){
+        const x=(px/(W-padX*2))*10-5;
+        const y=f(x);
+        if(!isFinite(y)||Math.abs(y)>4.5){started=false;continue;}
+        const cx2=ox+x*scX, cy2=oy-y*scY;
+        if(!started){ctx.moveTo(cx2,cy2);started=true;} else ctx.lineTo(cx2,cy2);
+      }
+      ctx.stroke();
+    });
+    
+    // Moving point
+    const xT=Math.sin(t*0.02)*4;
+    const yF=fn(xT), yDf=dfn(xT), yDDf=ddfn(xT);
+    [[yF,'rgba(212,168,67,.9)'],[yDf,'rgba(91,200,219,.9)'],[yDDf,'rgba(224,82,82,.9)']].forEach(([y,col])=>{
+      if(Math.abs(y)<=4.5){
+        ctx.beginPath(); ctx.arc(ox+xT*scX,oy-y*scY,4,0,Math.PI*2);
+        ctx.fillStyle=col; ctx.fill();
+      }
+    });
+    
+    t++; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════
+   RIEMANN SUM
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('riemannCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  let rType='left';
+  const fn=(x)=>Math.sin(x)*1.5+x*0.2+2;
+  const a=0, b=Math.PI*2;
+  
+  window.setRiemann=function(type,btn){
+    document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    rType=type; drawRiemann();
+  };
+  
+  function drawRiemann(){
+    const n=parseInt(document.getElementById('riemannN').value);
+    document.getElementById('riemannNv').textContent=n;
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const padX=40, padY=20;
+    const scX=(W-padX*2)/(b-a);
+    const maxY=4, scY=(H-padY*2)/maxY;
+    const ox=padX, oy=H-padY;
+    
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1;
+    for(let x=0;x<=7;x++){ctx.beginPath();ctx.moveTo(ox+x*scX,padY);ctx.lineTo(ox+x*scX,H-padY);ctx.stroke();}
+    for(let y=0;y<=4;y++){ctx.beginPath();ctx.moveTo(padX,oy-y*scY);ctx.lineTo(W-padX,oy-y*scY);ctx.stroke();}
+    ctx.beginPath();ctx.moveTo(padX,oy);ctx.lineTo(W-padX,oy);ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=1.5;ctx.stroke();
+    
+    // Rectangles
+    const dx=(b-a)/n;
+    let riemannSum=0;
+    for(let i=0;i<n;i++){
+      const xi=a+i*dx;
+      let hx;
+      if(rType==='left') hx=xi;
+      else if(rType==='right') hx=xi+dx;
+      else if(rType==='mid') hx=xi+dx/2;
+      else hx=xi; // trap
+      const hy=fn(hx);
+      const barX=ox+xi*scX, barW=dx*scX, barH=hy*scY;
+      if(rType==='trap'){
+        const y1=fn(xi)*scY, y2=fn(xi+dx)*scY;
+        ctx.beginPath();
+        ctx.moveTo(barX,oy); ctx.lineTo(barX,oy-y1);
+        ctx.lineTo(barX+barW,oy-y2); ctx.lineTo(barX+barW,oy);
+        ctx.closePath();
+      } else {
+        ctx.beginPath(); ctx.rect(barX,oy-barH,barW,barH);
+      }
+      const alpha=Math.max(.15,.4-n/500);
+      ctx.fillStyle=`rgba(91,200,219,${alpha})`; ctx.fill();
+      ctx.strokeStyle='rgba(91,200,219,.5)'; ctx.lineWidth=.5; ctx.stroke();
+      riemannSum+=hy*dx;
+    }
+    
+    // True curve
+    ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle='rgba(212,168,67,.9)';
+    for(let px=0;px<=W-padX*2;px++){
+      const x=a+(px/(W-padX*2))*(b-a);
+      const y=fn(x);
+      const cx2=ox+x*scX, cy2=oy-y*scY;
+      if(px===0) ctx.moveTo(cx2,cy2); else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    
+    // True integral (numerical)
+    let trueVal=0;
+    for(let i=0;i<10000;i++) trueVal+=fn(a+(i+.5)*(b-a)/10000)*(b-a)/10000;
+    
+    document.getElementById('riemannReadout').textContent=
+      `Sum (${n} ${rType} rects): ${riemannSum.toFixed(4)} · True value: ${trueVal.toFixed(4)} · Error: ${Math.abs(riemannSum-trueVal).toFixed(4)}`;
+  }
+  
+  document.getElementById('riemannN').addEventListener('input',drawRiemann);
+  drawRiemann();
+})();
+
+/* ════════════════════════════════════════════
+   COIN FLIP
+════════════════════════════════════════════ */
+(function(){
+  let heads=0, total=0;
+  const history=[];
+  
+  window.coinFlip=function(n){
+    for(let i=0;i<n;i++){
+      const h=Math.random()<.5;
+      if(h) heads++;
+      total++;
+      history.push(h?1:0);
+      if(history.length>500) history.shift();
+    }
+    drawCoin();
+  };
+  window.coinReset=function(){ heads=0; total=0; history.length=0; drawCoin(); };
+  
+  function drawCoin(){
+    const c=document.getElementById('coinCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    
+    if(history.length===0){
+      ctx.fillStyle='rgba(255,255,255,.2)'; ctx.font='14px IBM Plex Mono'; ctx.textAlign='center';
+      ctx.fillText('Click Flip to start',W/2,H/2); return;
+    }
+    
+    // Running proportion chart
+    const padX=50, padY=20;
+    const chartW=W-padX*2, chartH=H-padY*2-40;
+    
+    ctx.beginPath(); ctx.moveTo(padX,padY); ctx.lineTo(padX,padY+chartH);
+    ctx.moveTo(padX,padY+chartH); ctx.lineTo(W-padX,padY+chartH);
+    ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.5; ctx.stroke();
+    
+    // 0.5 line
+    ctx.beginPath(); ctx.moveTo(padX,padY+chartH/2); ctx.lineTo(W-padX,padY+chartH/2);
+    ctx.strokeStyle='rgba(212,168,67,.4)'; ctx.lineWidth=1; ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(212,168,67,.6)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='right';
+    ctx.fillText('0.5',padX-4,padY+chartH/2+3);
+    
+    // Running proportion line
+    ctx.beginPath();
+    let runH=0;
+    history.forEach((v,i)=>{
+      runH+=v;
+      const x=padX+(i/Math.max(history.length-1,1))*chartW;
+      const y=padY+chartH-(runH/(i+1))*chartH;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle='rgba(91,200,219,.9)'; ctx.lineWidth=2; ctx.stroke();
+    
+    // Current dot
+    const cx2=W-padX, pFinal=heads/total;
+    ctx.beginPath(); ctx.arc(cx2,padY+chartH-pFinal*chartH,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(212,168,67,.9)'; ctx.fill();
+    
+    // Labels
+    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='left';
+    ctx.fillText('1.0',padX-28,padY+3);
+    ctx.fillText('0.0',padX-28,padY+chartH+3);
+    
+    document.getElementById('coinReadout').textContent=
+      `Flips: ${total} · Heads: ${heads} · Proportion: ${(pFinal).toFixed(4)} · Expected: 0.5000`;
+  }
+  
+  drawCoin();
+})();
+
+/* ════════════════════════════════════════════
+   NORMAL DISTRIBUTION
+════════════════════════════════════════════ */
+(function(){
+  function drawNormal(){
+    const c=document.getElementById('normalCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    const mu=parseFloat(document.getElementById('normMu').value);
+    const sig=parseFloat(document.getElementById('normSig').value);
+    document.getElementById('normMuV').textContent=mu.toFixed(1);
+    document.getElementById('normSigV').textContent=sig.toFixed(2);
+    ctx.clearRect(0,0,W,H);
+    
+    const padX=60, padY=20;
+    const xRange=6, yRange=0.5;
+    const scX=(W-padX*2)/(xRange*2);
+    const scY=(H-padY*2)/yRange;
+    const ox=W/2, oy=H-padY;
+    
+    // Grid
+    for(let x=-xRange;x<=xRange;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.2)':'rgba(255,255,255,.05)'; ctx.lineWidth=x===0?1.5:1; ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.3)'; ctx.font='9px IBM Plex Mono'; ctx.textAlign='center';
+      ctx.fillText(x,ox+x*scX,H-padY+12);
+    }
+    ctx.beginPath(); ctx.moveTo(padX,oy); ctx.lineTo(W-padX,oy); ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.5; ctx.stroke();
+    
+    // Shade σ regions
+    const regions=[{from:-1,to:1,col:'rgba(91,200,219,.15)',label:'68.3%'},{from:-2,to:2,col:'rgba(91,200,219,.08)',label:'95.4%'},{from:-3,to:3,col:'rgba(91,200,219,.04)',label:'99.7%'}];
+    regions.forEach(({from,to,col})=>{
+      ctx.beginPath();
+      const steps=100;
+      ctx.moveTo(ox+(mu+from*sig)*scX,oy);
+      for(let i=0;i<=steps;i++){
+        const x=mu+from*sig+(i/steps)*(to-from)*sig;
+        const y=(1/(sig*Math.sqrt(2*Math.PI)))*Math.exp(-0.5*((x-mu)/sig)**2);
+        if(i===0) ctx.lineTo(ox+x*scX,oy-y*scY); else ctx.lineTo(ox+x*scX,oy-y*scY);
+      }
+      ctx.lineTo(ox+(mu+to*sig)*scX,oy); ctx.closePath();
+      ctx.fillStyle=col; ctx.fill();
+    });
+    
+    // Curve
+    ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle='rgba(212,168,67,.9)';
+    for(let px=0;px<=W-padX*2;px++){
+      const x=(px/(W-padX*2))*xRange*2-xRange;
+      const y=(1/(sig*Math.sqrt(2*Math.PI)))*Math.exp(-0.5*((x-mu)/sig)**2);
+      const cx2=ox+x*scX, cy2=oy-y*scY;
+      if(px===0) ctx.moveTo(cx2,cy2); else ctx.lineTo(cx2,cy2);
+    }
+    ctx.stroke();
+    
+    // σ labels
+    ctx.fillStyle='rgba(91,200,219,.8)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText('μ',ox+mu*scX,padY+12);
+    ctx.fillText('μ+σ',ox+(mu+sig)*scX,padY+12);
+    ctx.fillText('μ−σ',ox+(mu-sig)*scX,padY+12);
+    
+    const peak=(1/(sig*Math.sqrt(2*Math.PI)));
+    document.getElementById('normReadout').textContent=`μ=${mu.toFixed(1)}, σ=${sig.toFixed(2)} · Peak height: ${peak.toFixed(3)} · 68-95-99.7 rule applies`;
+  }
+  
+  ['normMu','normSig'].forEach(id=>document.getElementById(id).addEventListener('input',drawNormal));
+  drawNormal();
+})();
+
+/* ════════════════════════════════════════════
+   ARGAND PLANE
+════════════════════════════════════════════ */
+(function(){
+  function drawArgand(){
+    const c=document.getElementById('argandCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    const a=parseFloat(document.getElementById('compA').value);
+    const b=parseFloat(document.getElementById('compB').value);
+    document.getElementById('compAv').textContent=a.toFixed(1);
+    document.getElementById('compBv').textContent=b.toFixed(1);
+    ctx.clearRect(0,0,W,H);
+    
+    const padX=50, padY=30;
+    const range=5;
+    const scX=(W-padX*2)/(range*2);
+    const scY=(H-padY*2)/(range*2);
+    const ox=W/2, oy=H/2;
+    
+    // Grid
+    for(let x=-range;x<=range;x++){
+      ctx.beginPath(); ctx.moveTo(ox+x*scX,padY); ctx.lineTo(ox+x*scX,H-padY);
+      ctx.strokeStyle=x===0?'rgba(255,255,255,.3)':'rgba(255,255,255,.07)'; ctx.lineWidth=x===0?2:1; ctx.stroke();
+      if(x!==0){ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='9px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(x,ox+x*scX,H-padY+12);}
+    }
+    for(let y=-range;y<=range;y++){
+      ctx.beginPath(); ctx.moveTo(padX,oy-y*scY); ctx.lineTo(W-padX,oy-y*scY);
+      ctx.strokeStyle=y===0?'rgba(255,255,255,.3)':'rgba(255,255,255,.07)'; ctx.lineWidth=y===0?2:1; ctx.stroke();
+      if(y!==0){ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='9px IBM Plex Mono';ctx.textAlign='right';ctx.fillText(y+'i',padX-4,oy-y*scY+3);}
+    }
+    
+    // Unit circle
+    ctx.beginPath(); ctx.arc(ox,oy,scX,0,Math.PI*2);
+    ctx.strokeStyle='rgba(91,200,219,.15)'; ctx.lineWidth=1; ctx.stroke();
+    
+    // Axes labels
+    ctx.fillStyle='rgba(91,200,219,.7)'; ctx.font='11px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText('Re',W-padX+15,oy+4);
+    ctx.fillText('Im',ox,padY-8);
+    
+    // The point
+    const px=ox+a*scX, py=oy-b*scY;
+    
+    // Dashed lines to axes
+    ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,oy); ctx.strokeStyle='rgba(176,111,222,.4)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(ox,py); ctx.strokeStyle='rgba(176,111,222,.4)'; ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Vector
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(px,py);
+    ctx.strokeStyle='rgba(176,111,222,.9)'; ctx.lineWidth=2.5; ctx.stroke();
+    // Arrow head
+    const angle=Math.atan2(b,-a)+Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(px+12*Math.cos(angle-0.3),py-12*Math.sin(angle-0.3));
+    ctx.lineTo(px,py);
+    ctx.lineTo(px+12*Math.cos(angle+0.3),py-12*Math.sin(angle+0.3));
+    ctx.strokeStyle='rgba(176,111,222,.9)'; ctx.lineWidth=2; ctx.stroke();
+    
+    // Point
+    ctx.beginPath(); ctx.arc(px,py,7,0,Math.PI*2);
+    ctx.fillStyle='rgba(176,111,222,.9)'; ctx.fill();
+    
+    // Angle arc
+    const ang=Math.atan2(b,a);
+    ctx.beginPath(); ctx.arc(ox,oy,30,0,-ang,ang<0);
+    ctx.strokeStyle='rgba(212,168,67,.5)'; ctx.lineWidth=1.5; ctx.stroke();
+    
+    const r=Math.sqrt(a*a+b*b);
+    const theta=(ang*180/Math.PI).toFixed(1);
+    
+    // Label
+    ctx.fillStyle='rgba(176,111,222,.9)'; ctx.font='12px IBM Plex Mono'; ctx.textAlign='left';
+    const sign=b>=0?'+':'-';
+    ctx.fillText(`z = ${a.toFixed(1)} ${sign} ${Math.abs(b).toFixed(1)}i`,px+10,py-10);
+    ctx.fillStyle='rgba(212,168,67,.7)'; ctx.font='10px IBM Plex Mono';
+    ctx.fillText(`|z| = ${r.toFixed(2)}, θ = ${theta}°`,px+10,py+5);
+    
+    document.getElementById('argandReadout').textContent=
+      `z = ${a.toFixed(1)}+${b.toFixed(1)}i · Modulus |z| = ${r.toFixed(3)} · Argument θ = ${theta}° · z = ${r.toFixed(2)}e^(${(ang).toFixed(3)}i)`;
+  }
+  
+  ['compA','compB'].forEach(id=>document.getElementById(id).addEventListener('input',drawArgand));
+  drawArgand();
+})();
+
+/* ════════════════════════════════════════════
+   ROOTS OF UNITY
+════════════════════════════════════════════ */
+(function(){
+  let t=0;
+  function drawRoots(){
+    const c=document.getElementById('rootsCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    const n=parseInt(document.getElementById('rootsN').value);
+    document.getElementById('rootsNv').textContent=n;
+    ctx.clearRect(0,0,W,H);
+    
+    const cx=W/2, cy=H/2, R=Math.min(W,H)/2-40;
+    
+    // Grid circles
+    [0.25,0.5,0.75,1].forEach(r=>{
+      ctx.beginPath(); ctx.arc(cx,cy,R*r,0,Math.PI*2);
+      ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1; ctx.stroke();
+    });
+    // Axes
+    ctx.beginPath(); ctx.moveTo(cx-R-10,cy); ctx.lineTo(cx+R+10,cy);
+    ctx.moveTo(cx,cy-R-10); ctx.lineTo(cx,cy+R+10);
+    ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1.5; ctx.stroke();
+    
+    // Unit circle
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+    ctx.strokeStyle='rgba(176,111,222,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+    
+    // Roots of unity
+    const roots=[];
+    for(let k=0;k<n;k++){
+      const angle=2*Math.PI*k/n-Math.PI/2;
+      roots.push({x:cx+R*Math.cos(angle),y:cy+R*Math.sin(angle),angle:2*Math.PI*k/n,k});
+    }
+    
+    // Polygon
+    ctx.beginPath(); ctx.moveTo(roots[0].x,roots[0].y);
+    roots.forEach(r=>ctx.lineTo(r.x,r.y)); ctx.closePath();
+    ctx.strokeStyle='rgba(176,111,222,.3)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='rgba(176,111,222,.05)'; ctx.fill();
+    
+    // Points
+    roots.forEach(({x,y,angle,k})=>{
+      // Line from origin
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y);
+      ctx.strokeStyle='rgba(176,111,222,.3)'; ctx.lineWidth=1; ctx.stroke();
+      
+      // Point
+      ctx.beginPath(); ctx.arc(x,y,7,0,Math.PI*2);
+      const hue=k/n*360;
+      ctx.fillStyle=`hsla(${hue+200},70%,65%,.9)`; ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1; ctx.stroke();
+      
+      // Label
+      ctx.fillStyle='rgba(255,255,255,.7)'; ctx.font='9px IBM Plex Mono'; ctx.textAlign='center';
+      const lx=cx+(R+18)*Math.cos(angle-Math.PI/2);
+      const ly=cy+(R+18)*Math.sin(angle-Math.PI/2);
+      ctx.fillText(`k=${k}`,lx,ly+3);
+    });
+    
+    // Rotating highlight
+    const highlightAngle=t*0.01;
+    ctx.beginPath(); ctx.arc(cx+R*Math.cos(highlightAngle),cy+R*Math.sin(highlightAngle),10,0,Math.PI*2);
+    ctx.fillStyle='rgba(212,168,67,.3)'; ctx.fill();
+    
+    document.getElementById('rootsReadout').textContent=
+      `z^${n} = 1 has ${n} solutions: z_k = e^(2πik/${n}) = cos(2πk/${n}) + i·sin(2πk/${n})`;
+    
+    t++; requestAnimationFrame(drawRoots);
+  }
+  
+  document.getElementById('rootsN').addEventListener('input',drawRoots);
+  drawRoots();
+})();
+
+/* ════════════════════════════════════════════
+   MODULAR CLOCK
+════════════════════════════════════════════ */
+(function(){
+  function drawClock(){
+    const c=document.getElementById('clockCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    const a=parseInt(document.getElementById('modA').value);
+    const m=parseInt(document.getElementById('modM').value);
+    document.getElementById('modAv').textContent=a;
+    document.getElementById('modMv').textContent=m;
+    ctx.clearRect(0,0,W,H);
+    
+    const cx=W*0.38, cy=H/2, R=Math.min(cx,cy)-30;
+    
+    // Clock circle
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='rgba(13,17,32,.8)'; ctx.fill();
+    
+    // Tick marks and numbers
+    for(let i=0;i<m;i++){
+      const angle=i/m*2*Math.PI-Math.PI/2;
+      const ix=cx+R*Math.cos(angle), iy=cy+R*Math.sin(angle);
+      const ox2=cx+(R-12)*Math.cos(angle), oy2=cy+(R-12)*Math.sin(angle);
+      ctx.beginPath(); ctx.moveTo(ox2,oy2); ctx.lineTo(ix,iy);
+      ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+      const lx=cx+(R-24)*Math.cos(angle), ly=cy+(R-24)*Math.sin(angle);
+      ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='center';
+      ctx.fillText(i,lx,ly+3);
+    }
+    
+    // Center
+    ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2);
+    ctx.fillStyle='rgba(212,168,67,.8)'; ctx.fill();
+    
+    // Journey animation (a steps around the clock)
+    const rem=a%m;
+    const steps=Math.min(a,m*3);
+    for(let step=0;step<=steps;step++){
+      const pos=step%m;
+      const nextPos=(step+1)%m;
+      const angle1=pos/m*2*Math.PI-Math.PI/2;
+      const angle2=nextPos/m*2*Math.PI-Math.PI/2;
+      const x1=cx+(R-16)*Math.cos(angle1), y1=cy+(R-16)*Math.sin(angle1);
+      const x2=cx+(R-16)*Math.cos(angle2), y2=cy+(R-16)*Math.sin(angle2);
+      const alpha=step<steps?0.2:0.9;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+      ctx.strokeStyle=`rgba(91,200,219,${alpha})`; ctx.lineWidth=alpha>0.5?3:1.5; ctx.stroke();
+    }
+    
+    // Final position highlight
+    const finalAngle=rem/m*2*Math.PI-Math.PI/2;
+    ctx.beginPath(); ctx.arc(cx+R*Math.cos(finalAngle),cy+R*Math.sin(finalAngle),10,0,Math.PI*2);
+    ctx.fillStyle='rgba(224,82,82,.9)'; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=2; ctx.stroke();
+    
+    // Info panel
+    const infoX=W*0.68;
+    ctx.fillStyle='rgba(212,168,67,.9)'; ctx.font='bold 22px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText(`${a} mod ${m}`,infoX,H/2-20);
+    ctx.fillStyle='rgba(91,200,219,.9)'; ctx.font='bold 32px IBM Plex Mono';
+    ctx.fillText(`= ${rem}`,infoX,H/2+20);
+    ctx.fillStyle='rgba(255,255,255,.4)'; ctx.font='11px IBM Plex Mono';
+    ctx.fillText(`${a} = ${Math.floor(a/m)} × ${m} + ${rem}`,infoX,H/2+50);
+    
+    document.getElementById('modReadout').textContent=`${a} ≡ ${rem} (mod ${m}) · Goes around the clock ${Math.floor(a/m)} time(s), stops at ${rem}`;
+  }
+  
+  ['modA','modM'].forEach(id=>document.getElementById(id).addEventListener('input',drawClock));
+  drawClock();
+})();
+
+/* ════════════════════════════════════════════
+   SIEVE OF ERATOSTHENES
+════════════════════════════════════════════ */
+(function(){
+  const maxN=120;
+  let sieve=Array(maxN+1).fill(true);
+  let primes=[], composites=[], currentPrime=null;
+  sieve[0]=sieve[1]=false;
+  let nextIdx=2;
+  
+  window.sieveReset=function(){
+    sieve=Array(maxN+1).fill(true); sieve[0]=sieve[1]=false;
+    primes=[]; composites=[]; currentPrime=null; nextIdx=2;
+    drawSieve(); document.getElementById('sieveReadout').textContent='Press Next Prime to start the sieve';
+  };
+  
+  window.sieveStep=function(){
+    if(nextIdx>maxN){ document.getElementById('sieveReadout').textContent='Sieve complete! All primes up to '+maxN+' found.'; drawSieve(); return; }
+    while(nextIdx<=maxN && !sieve[nextIdx]) nextIdx++;
+    if(nextIdx>maxN) return;
+    currentPrime=nextIdx;
+    primes.push(nextIdx);
+    for(let i=nextIdx*nextIdx;i<=maxN;i+=nextIdx){
+      sieve[i]=false; if(!composites.includes(i)) composites.push(i);
+    }
+    nextIdx++;
+    drawSieve();
+    document.getElementById('sieveReadout').textContent=`Found prime ${currentPrime} · Crossed out multiples · Primes so far: ${primes.join(', ')}`;
+  };
+  
+  function drawSieve(){
+    const c=document.getElementById('sieveCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const cols=Math.ceil(maxN/4), rows=4;
+    const cellW=(W-20)/cols, cellH=(H-20)/rows;
+    
+    for(let n=2;n<=maxN;n++){
+      const col=(n-2)%cols, row=Math.floor((n-2)/cols);
+      const x=10+col*cellW, y=10+row*cellH;
+      let bg='rgba(255,255,255,.04)';
+      let textCol='rgba(255,255,255,.35)';
+      if(composites.includes(n)){ bg='rgba(224,82,82,.08)'; textCol='rgba(224,82,82,.3)'; }
+      if(primes.includes(n)){ bg='rgba(123,226,139,.15)'; textCol='rgba(123,226,139,.9)'; }
+      if(n===currentPrime){ bg='rgba(212,168,67,.25)'; textCol='rgba(212,168,67,1)'; }
+      ctx.fillStyle=bg; ctx.fillRect(x+.5,y+.5,cellW-1,cellH-1);
+      ctx.fillStyle=textCol; ctx.font=`${Math.min(11,cellW*.55)}px IBM Plex Mono`; ctx.textAlign='center';
+      ctx.fillText(n,x+cellW/2,y+cellH/2+4);
+    }
+  }
+  
+  drawSieve();
+  document.getElementById('sieveReadout').textContent='Press Next Prime to start the sieve';
+})();
+
+/* ════════════════════════════════════════════
+   MOD TABLE CANVAS
+════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('modTableCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  const m=7, W=c.width, H=c.height;
+  const cellW=(W-60)/(m+1), cellH=(H-20)/(m+1);
+  const offX=60, offY=20;
+  
+  ctx.clearRect(0,0,W,H);
+  
+  // Header row and col
+  for(let i=0;i<=m;i++){
+    const x=offX+i*cellW, y=offY;
+    if(i===0){ ctx.fillStyle='rgba(255,255,255,.15)'; ctx.fillRect(x,y,cellW,cellH); }
+    ctx.fillStyle='rgba(212,168,67,.8)'; ctx.font='bold 11px IBM Plex Mono'; ctx.textAlign='center';
+    if(i>0) ctx.fillText(i,x+cellW/2,y+cellH/2+4);
+  }
+  for(let j=1;j<=m;j++){
+    const y=offY+j*cellH;
+    ctx.fillStyle='rgba(212,168,67,.8)'; ctx.font='bold 11px IBM Plex Mono'; ctx.textAlign='center';
+    ctx.fillText(j,offX+cellW/2-cellW,y+cellH/2+4);
+  }
+  
+  // Grid label
+  ctx.fillStyle='rgba(212,168,67,.5)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='center';
+  ctx.fillText('×',offX-cellW/2,offY+cellH/2+4);
+  
+  // Cells
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=m;j++){
+      const val=(i*j)%m;
+      const x=offX+(i-1)*cellW, y=offY+j*cellH;
+      const hue=(val/m)*240;
+      ctx.fillStyle=`hsla(${hue},60%,30%,.4)`;
+      ctx.fillRect(x+1,y+1,cellW-2,cellH-2);
+      ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.lineWidth=.5;
+      ctx.strokeRect(x+1,y+1,cellW-2,cellH-2);
+      ctx.fillStyle=val===0?'rgba(224,82,82,.9)':val===1?'rgba(212,168,67,.9)':'rgba(255,255,255,.7)';
+      ctx.font='bold 11px IBM Plex Mono'; ctx.textAlign='center';
+      ctx.fillText(val,x+cellW/2,y+cellH/2+4);
+    }
+  }
+})();
+
+/* ════════════════════════════════════════════
+   SERIES CANVAS
+════════════════════════════════════════════ */
+(function(){
+  let seriesType='geometric';
+  const N=60;
+  
+  const seriesDefs={
+    geometric:{terms:n=>Math.pow(0.5,n),truVal:2,label:'∑ (½)ⁿ = 2',color:'rgba(91,200,219,.9)'},
+    harmonic:{terms:n=>1/(n+1),truVal:Infinity,label:'∑ 1/n → ∞ (diverges!)',color:'rgba(224,82,82,.9)'},
+    basel:{terms:n=>1/((n+1)*(n+1)),truVal:Math.PI*Math.PI/6,label:'∑ 1/n² = π²/6',color:'rgba(123,226,139,.9)'},
+    leibniz:{terms:n=>Math.pow(-1,n)/(2*n+1)*4,truVal:Math.PI,label:'4·∑ (-1)ⁿ/(2n+1) = π',color:'rgba(176,111,222,.9)'},
+    euler:{terms:n=>Math.pow(1,n)/factorial(n),truVal:Math.E,label:'∑ 1/n! = e',color:'rgba(212,168,67,.9)'},
+  };
+  
+  function factorial(n){ if(n<=1) return 1; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+  
+  window.setSeries=function(type,btn){
+    document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    seriesType=type; drawSeries();
+  };
+  
+  function drawSeries(){
+    const c=document.getElementById('seriesCanvas'); if(!c) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    ctx.clearRect(0,0,W,H);
+    const padX=50, padY=20;
+    const def=seriesDefs[seriesType];
+    
+    // Compute partials
+    const partials=[]; let sum=0;
+    for(let n=0;n<N;n++){
+      sum+=def.terms(n);
+      if(isNaN(sum)||!isFinite(sum)) break;
+      partials.push({n,sum});
+    }
+    
+    const maxS=Math.min(isFinite(def.truVal)?def.truVal*1.3:partials[partials.length-1].sum*1.2, 20);
+    const scX=(W-padX*2)/N, scY=(H-padY*2)/maxS;
+    const ox=padX, oy=H-padY;
+    
+    // Grid
+    for(let y=0;y<=maxS;y+=maxS/5){
+      ctx.beginPath(); ctx.moveTo(padX,oy-y*scY); ctx.lineTo(W-padX,oy-y*scY);
+      ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.3)'; ctx.font='9px IBM Plex Mono'; ctx.textAlign='right';
+      ctx.fillText(y.toFixed(1),padX-4,oy-y*scY+3);
+    }
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(W-padX,oy); ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1.5; ctx.stroke();
+    
+    // True value line
+    if(isFinite(def.truVal)&&def.truVal<maxS){
+      ctx.beginPath(); ctx.moveTo(padX,oy-def.truVal*scY); ctx.lineTo(W-padX,oy-def.truVal*scY);
+      ctx.strokeStyle='rgba(212,168,67,.4)'; ctx.lineWidth=1; ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='rgba(212,168,67,.7)'; ctx.font='10px IBM Plex Mono'; ctx.textAlign='right';
+      ctx.fillText(def.truVal.toFixed(4),W-padX,oy-def.truVal*scY-4);
+    }
+    
+    // Partial sums
+    ctx.beginPath(); ctx.lineWidth=2.5; ctx.strokeStyle=def.color;
+    partials.forEach(({n,sum},i)=>{
+      const x=ox+n*scX, y2=oy-Math.min(sum,maxS)*scY;
+      if(i===0) ctx.moveTo(x,y2); else ctx.lineTo(x,y2);
+    });
+    ctx.stroke();
+    
+    // Dots for each term
+    partials.slice(0,20).forEach(({n,sum})=>{
+      const x=ox+n*scX, y2=oy-Math.min(sum,maxS)*scY;
+      ctx.beginPath(); ctx.arc(x,y2,3,0,Math.PI*2);
+      ctx.fillStyle=def.color.replace('.9',',.95)'); ctx.fill();
+    });
+    
+    const last=partials[partials.length-1];
+    document.getElementById('seriesReadout').textContent=
+      `${def.label} · After ${partials.length} terms: ${last?last.sum.toFixed(6):'—'} ${isFinite(def.truVal)?`· True: ${def.truVal.toFixed(6)} · Error: ${last?Math.abs(last.sum-def.truVal).toFixed(6):'—'}`:''}`;
+  }
+  
+  drawSeries();
+})();
+</script>
+</body>
+</html>

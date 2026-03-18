@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 01 — Classical Mechanics: The Rules of the Game</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section class="scene" id="cold-open">
+  <div class="scene-label">Introduction</div>
+  <div class="timestamp">0:00 – 1:30</div>
+  <div class="baseball"></div>
+  <div class="trail"></div>
+  <div class="freeze-label">▌▌ FRAME FROZEN</div>
+  <canvas class="baseball-canvas" id="starfield"></canvas>
+  <div class="cold-text">
+    <span class="ep-number">Episode 01 · Classical Mechanics</span>
+    <h1 class="ep-title">The Rules<br>of the Game</h1>
+    <p class="ep-subtitle">60 – 65 minutes</p>
+    <blockquote class="narrator-quote">
+      That ball — right there — already contains everything we need to understand how planets orbit stars,
+      how rockets reach the Moon. Classical mechanics begins with a deceptively simple
+      question: how does position change with time, and what causes that change?
+    </blockquote>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="scene" id="apple-moon" style="min-height:60vh; padding: 4rem 2rem;">
+  <div class="scene-label">Visual · Introduction</div>
+  <div class="apple-moon-stage">
+    <span class="apple">🍎</span>
+    <span class="morph-arrow">→</span>
+    <div class="orbit-container">
+      <div class="orbit-ring"><div class="planet"></div></div>
+      <div class="orbit-ring orbit-ring-outer"><div class="planet" style="background:var(--cyan); box-shadow: 0 0 12px var(--cyan); width:8px;height:8px;top:-4px;left:calc(50% - 4px);"></div></div>
+      <div class="star"></div>
+    </div>
+  </div>
+  <p class="apple-moon-caption">But how did we go from the simple fall of an apple to the Moon's orbit? · 1687</p>
+</section>
+
+<div class="divider"></div>
+
+<section id="section-motion" class="scene" style="flex-direction: column; justify-content: flex-start; align-items: stretch;">
+  <div class="scene-label">Section 1</div>
+  <div class="timestamp">1:30 – 18:00</div>
+
+  <div class="section-header" style="margin-top:4rem;">
+    <span class="section-number">Section One</span>
+    <h2 class="section-title">What Is Motion, Really?</h2>
+  </div>
+
+  <p class="intro-para">
+    At its core, motion is simply the change in position of an object over time. First, we track where an object is: \(x(t)\). Then we ask how quickly that position changes ( the speed ):
+    \(v(t) = \frac{dx}{dt}\). Finally, we ask what changes <em>that</em> change: acceleration \(a(t) = \frac{dv}{dt} = \frac{d^2x}{dt^2}\).
+    The key revolutionary step in Newtonian mechanics is connecting acceleration to causes through force.
+  </p>
+
+  <div class="graph-visual">
+    <!-- Position-time graph -->
+    <div>
+      <div class="graph-box">
+        <div class="graph-title">Position vs. Time · x(t)</div>
+        <canvas class="chart" id="posChart" width="340" height="200"></canvas>
+      </div>
+      <p class="zoom-caption" style="margin-top:0.6rem;">Graph builds in real time as object moves</p>
+    </div>
+
+    <!-- Equations -->
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+      <div class="eq-card">
+        <span class="eq-label">Velocity — rate of change of position<span class="info-bubble" onclick='showInfo(this,{tag:"Kinematics",title:"What is velocity?",text:"Velocity tells you how fast position changes and in which direction. It is a <em>vector</em> — speed with direction. A car going 60 km/h north and one going 60 km/h east have equal speeds but different velocities.",example:"GPS gives velocity: speed (60 km/h) + direction (north). Turning a corner at constant speed still changes velocity — that\’s why you feel the centripetal acceleration pushing you sideways.",formula:"v = dx/dt (limit of Delta-x / Delta-t as Delta-t -> 0)"})'>i</span></span>
+        <div class="eq">\[ v = \frac{dx}{dt} \]</div>
+        <p class="eq-meaning">The instantaneous slope of the position curve. Zoom in on any smooth curve and it looks like a straight line — that slope is velocity.</p>
+      </div>
+
+      <div class="eq-card" style="border-color: rgba(224,82,82,0.3);">
+        <span class="eq-label">Acceleration — rate of change of velocity<span class="info-bubble" onclick='showInfo(this,{tag:"Kinematics",title:"What is acceleration?",text:"Acceleration is any change in velocity — speeding up, slowing down, or changing direction (even at constant speed). The Moon moves at ~constant speed yet accelerates continuously because its direction keeps changing.",example:"When an elevator starts upward you feel heavier — that is upward acceleration pressing you into the floor. At constant speed the feeling vanishes. When it decelerates to stop, you feel lighter.",formula:"a = dv/dt = d2x/dt2"})'>i</span></span>
+        <div class="eq" style="color:var(--red);">\[ a = \frac{dv}{dt} = \frac{d^2x}{dt^2} \]</div>
+        <p class="eq-meaning">The second derivative of position.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZOOM VISUAL -->
+  <div class="zoom-visual">
+    <div>
+      <div class="graph-box">
+        <div class="graph-title">Curve — global view</div>
+        <canvas class="chart" id="curveGlobal" width="320" height="180"></canvas>
+      </div>
+      <p class="zoom-caption">Smooth, curved x(t)</p>
+    </div>
+
+    <div class="zoom-arrow-center">⟶<br><span style="font-size:0.55rem;letter-spacing:0.2em;color:var(--dim)">ZOOM</span></div>
+
+    <div>
+      <div class="graph-box">
+        <div class="graph-title">Same curve — zoomed in</div>
+        <canvas class="chart" id="curveZoom" width="320" height="180"></canvas>
+      </div>
+      <p class="zoom-caption">Locally linear — slope = velocity</p>
+    </div>
+  </div>
+
+  <!-- deep dive: kinematic equations -->
+  <div class="deep-dive" style="margin:3rem auto; background: linear-gradient(135deg, #0a0f1e, #0d1120); border: 1px solid rgba(91,200,219,.2); border-radius: 4px; padding: 2rem; max-width: 800px; width: 100%;">
+    <div class="deep-dive-title" style="font-family: 'IBM Plex Mono', monospace; font-size: .58rem; letter-spacing: .3em; color: var(--cyan); text-transform: uppercase; margin-bottom: 1.2rem; display: flex; align-items: center; gap: .8rem;">The Kinematic Equations — Constant Acceleration</div>
+    <p class="prose" style="font-size: .9rem; line-height: 1.8; color: #a8b0c0; margin-bottom: 1rem;">When acceleration is constant (like near Earth's surface), four equations link position, velocity, acceleration and time. These were derived by Galileo through inclined-plane experiments long before Newton:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem;">
+      <div class="eq-card" style="padding:1.2rem;">
+        <div class="eq-latex" style="font-size:1rem;">$$v = v_0 + at$$</div>
+        <p class="eq-meaning" style="font-size:.78rem; margin-top: 0.5rem;">Velocity after time t</p>
+      </div>
+      <div class="eq-card" style="padding:1.2rem;">
+        <div class="eq-latex" style="font-size:1rem;">$$x = x_0 + v_0 t + \tfrac{1}{2}at^2$$</div>
+        <p class="eq-meaning" style="font-size:.78rem; margin-top: 0.5rem;">Position after time t</p>
+      </div>
+      <div class="eq-card" style="padding:1.2rem;">
+        <div class="eq-latex" style="font-size:1rem;">$$v^2 = v_0^2 + 2a(x - x_0)$$</div>
+        <p class="eq-meaning" style="font-size:.78rem; margin-top: 0.5rem;">Velocity—displacement relation</p>
+      </div>
+      <div class="eq-card" style="padding:1.2rem;">
+        <div class="eq-latex" style="font-size:1rem;">$$x = x_0 + \tfrac{1}{2}(v + v_0)t$$</div>
+        <p class="eq-meaning" style="font-size:.78rem; margin-top: 0.5rem;">Average velocity formula</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="schema-grid">
+    <div class="schema-card">
+      <h4>SCHEMA A · STATE</h4>
+      <p>To predict future motion, specify initial position \(x_0\) and velocity \(v_0\). This pair is the mechanical "state" in 1D.</p>
+    </div>
+    <div class="schema-card">
+      <h4>SCHEMA B · EVOLUTION</h4>
+      <p>Given force law \(F(x,v,t)\), compute \(a=F/m\), then update velocity and position step by step in time.</p>
+    </div>
+    <div class="schema-card">
+      <h4>SCHEMA C · CONSERVATION</h4>
+      <p>If forces are conservative, total energy \(E = K + U\) remains constant; this gives a second lens besides \(F=ma\).</p>
+    </div>
+  </div>
+
+  <section class="interactive-lab">
+    <article class="lab-panel">
+      <h3 class="lab-title">Interactive Lab A · Projectile range explorer</h3>
+      <canvas class="chart" id="projectileChart" width="500" height="260"></canvas>
+      <div class="controls">
+        <label for="speed">Launch speed \(v_0\)</label>
+        <input id="speed" type="range" min="8" max="40" step="1" value="22">
+        <span id="speedValue">22 m/s</span>
+      </div>
+      <div class="controls">
+        <label for="angle">Angle \(\theta\)</label>
+        <input id="angle" type="range" min="10" max="80" step="1" value="42">
+        <span id="angleValue">42°</span>
+      </div>
+      <p class="lab-readout" id="projectileReadout"></p>
+      <div class="lab-schema">Given \(v_0\), \(\theta\), and \(g\):
+\(x(t)=v_0\cos\theta\,t\),
+\(y(t)=v_0\sin\theta\,t-\frac{1}{2}gt^2\),
+\(R=\frac{v_0^2\sin 2\theta}{g}\).</div>
+    </article>
+
+    <article class="lab-panel">
+      <h3 class="lab-title">Interactive Lab B · Circular orbit force map</h3>
+      <canvas class="chart" id="orbitChart" width="500" height="260"></canvas>
+      <div class="controls">
+        <label for="orbitMass">Central mass \(M\)</label>
+        <input id="orbitMass" type="range" min="2" max="20" step="1" value="8">
+        <span id="orbitMassValue">8 × 10²⁴ kg</span>
+      </div>
+      <div class="controls">
+        <label for="orbitRadius">Radius \(r\)</label>
+        <input id="orbitRadius" type="range" min="1" max="12" step="0.5" value="6">
+        <span id="orbitRadiusValue">6 × 10⁶ m</span>
+      </div>
+      <p class="lab-readout" id="orbitReadout"></p>
+      <div class="lab-schema">Balance condition for circular orbit:
+\(\frac{GMm}{r^2}=\frac{mv^2}{r}\Rightarrow v=\sqrt{\frac{GM}{r}}\),
+\(T=\frac{2\pi r}{v}\).</div>
+    </article>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════ SECTION 2 — THREE LAWS ══════════════════ -->
+  <section class="scene" id="sec2">
+    <canvas id="puck-canvas"></canvas>
+    <div class="tag">Section 2 · Newton's Three Laws</div>
+    <div class="ts">10:00 – 22:00</div>
+
+    <div class="sec-head">
+      <span class="sec-num">Section Two</span>
+      <h2 class="sec-title">Newton's Three Laws</h2><span class="info-bubble" onclick='showInfo(this,{tag:"Newton\"s Laws",title:"The three laws that govern all motion",text:"These three laws, published in the Principia (1687), unified terrestrial and celestial mechanics. Newton himself said he stood on the shoulders of giants (Galileo, Kepler, Descartes). The laws work perfectly at everyday speeds and scales — from a rolling marble to a Mars rover.",example:"All three laws at work in a car crash: Law 1 — your body keeps moving forward (inertia). Law 2 — the airbag applies force to decelerate you ($F=ma$). Law 3 — the car pushes on you and you push back on the car with equal force.",formula:"$F=ma$ encodes all three: $a=0$ means $F=0$ (Law 1); $F=ma$ (Law 2); $F_{12} = -F_{21}$ (Law 3)"})'>i</span>
+    </div>
+
+    <div class="laws-grid">
+      <!-- LAW I -->
+      <div class="law-card">
+        <span class="law-num">Law I · Inertia</span>
+        <div class="law-title">Objects resist change</div>
+        <p class="law-body">An object at rest stays at rest. An object in motion continues at <em>constant velocity in a straight line</em> — unless acted upon by a force.</p>
+        <div style="margin-top:1rem;text-align:center">
+          <span style="font-size:1.8rem;display:inline-block;animation:slide-puck 3s linear infinite">🏒</span>
+        </div>
+      </div>
+
+      <!-- LAW II -->
+      <div class="law-card" style="border-color:rgba(192,57,43,.25)">
+        <span class="law-num" style="color:var(--red-p2)">Law II · Force</span>
+        <div class="law-title">The engine of classical physics</div>
+        <p class="law-body">Force equals mass times acceleration. But Newton wrote the deeper form using momentum — this version survives into special relativity.</p>
+        <div class="law-eq" style="margin-bottom:.6rem">$F = ma$</div>
+        <div class="law-eq" style="background:rgba(192,57,43,.12);color:#e06050">$F = \frac{dp}{dt}$</div>
+      </div>
+
+      <!-- LAW III -->
+      <div class="law-card" style="border-color:rgba(36,113,163,.3)">
+        <span class="law-num" style="color:#5ba3d4">Law III · Reaction</span>
+        <div class="law-title">Equal & opposite</div>
+        <span class="info-bubble" onclick='showInfo(this,{tag:"Newton\"s 3rd Law",title:"You always push back equally",text:"Newton\"s 3rd law is often misunderstood. The action-reaction forces act on DIFFERENT objects — they can\"t cancel each other. Earth pulls you down with your weight; you pull Earth up with the same force. Earth barely accelerates because it has $6 \times 10^{24}$ kg of inertia.",example:"A gun: firing propels a bullet forward (action) and kicks the gun backward (reaction). Equal forces, but the bullet is much lighter so it gets much more acceleration ($a = F/m$). A rocket: expelling gas backward propels the rocket forward — works perfectly in vacuum.",formula:"$F_{A/B} = -F_{B/A}$ (forces equal in magnitude, opposite in direction, on different objects)"})'>i</span>
+        <p class="law-body">For every action there is an equal and opposite reaction. Same force, wildly different accelerations.</p>
+        <div class="rocket-stage">
+          <span class="exhaust">🔥</span>
+          <span class="rocket-body">🚀</span>
+        </div>
+        <div class="law-eq" style="margin-top:1rem;background:rgba(36,113,163,.12);color:#5ba3d4">$F_{A/B} = -F_{B/A}$</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3 — CONSERVATION LAWS -->
+  <section class="scene" id="conservation" style="flex-direction:column;min-height:auto;padding:5rem 2rem;">
+    <div class="scene-label">Section 3</div>
+
+    <div class="section-header">
+      <span class="section-number">Section Three</span>
+      <h2 class="section-title">Conservation Laws</h2>
+    </div>
+
+    <p class="prose" style="text-align:center;margin-bottom:2rem;">
+      Noether's theorem reveals that conservation laws are not coincidences — they are symmetry. The universe's homogeneity in space means momentum is conserved;
+      its homogeneity in time means energy is conserved.
+    </p>
+
+    <div class="eq-row">
+      <div class="eq-card"><span class="eq-ts">Work — force over displacement</span><span class="eq">$W = \int F \cdot dx$</span></div>
+      <div class="eq-card"><span class="eq-ts">Kinetic energy</span><span class="eq">$E_c = \frac{1}{2}mv^2$</span></div>
+      <div class="eq-card"><span class="eq-ts">Gravitational potential energy</span><span class="eq">$E_p = mgh$</span></div>
+      <div class="eq-card teal"><span class="eq-ts">Conservation of mechanical energy</span><span class="eq">$E_m = E_c + E_p = \text{const}$</span></div>
+    </div>
+
+    <div class="energy-layout" style="margin:2rem auto">
+      <!-- Rollercoaster canvas -->
+      <div>
+        <div class="rollercoaster-box">
+          <div class="rc-title">Rollercoaster — Ec / Ep exchange</div>
+          <canvas id="rcCanvas" width="400" height="220"></canvas>
+        </div>
+      </div>
+      <!-- Bar chart -->
+      <div>
+        <div class="bar-box">
+          <div class="rc-title" style="color:var(--gold)">Energy distribution at each point</div>
+          <canvas id="barChart" width="340" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:960px;width:100%;margin-top:2rem;">
+      <div class="eq-card">
+        <span class="eq-label">Conservation of Momentum<span class="info-bubble" onclick='showInfo(this,{tag:"Conservation Laws",title:"Why rockets work in empty space",text:"When no external forces act, total momentum is constant. This seems obvious but has a profound consequence: to change your own momentum, you must throw something in the opposite direction — even in a vacuum with nothing to push against.",example:"Standing on ice (nearly frictionless): throw a heavy ball forward — you slide backward. The ball gains forward momentum; you gain exactly equal backward momentum. Total stays zero. This is exactly how a rocket engine works.",formula:"p_total = m1*v1 + m2*v2 = constant (no external force)"})' >i</span></span>
+        <div class="eq-latex">$$\vec{p} = m\vec{v}, \quad \frac{d\vec{p}}{dt} = \vec{F}_{\text{ext}}$$</div>
+        <p class="eq-meaning">In an isolated system ($\vec{F}_{\text{ext}} = 0$), total momentum is constant. This is why rockets work: ejecting mass backward creates forward momentum.</p>
+      </div>
+      <div class="eq-card">
+        <span class="eq-label">Conservation of Energy<span class="info-bubble" onclick='showInfo(this,{tag:"Conservation Laws",title:"Energy never disappears — it transforms",text:"Kinetic energy (motion) and potential energy (stored position) constantly trade off. What seems like \"lost\" energy has actually converted to heat via friction, sound via vibration, or light via radiation. The total is always conserved.",example:"A roller coaster: all kinetic energy at the bottom converts to potential energy at the top (minus friction losses). Engineers calculate minimum height of the first hill from conservation of energy — the coaster gets all that energy back on the way down.",formula:"KE + PE = constant => (1/2)*m*v^2 + m*g*h = const"})' >i</span></span>
+        <div class="eq-latex">$$E_m = \frac{1}{2}mv^2 + mgh = \text{const}$$</div>
+        <p class="eq-meaning">Kinetic energy $T = \frac{1}{2}mv^2$ plus potential energy $V$ is constant when only conservative forces act. This underlies roller coasters, planetary orbits, and pendulum clocks.</p>
+      </div>
+      <div class="eq-card">
+        <span class="eq-label">Conservation of Angular Momentum<span class="info-bubble" onclick='showInfo(this,{tag:"Conservation Laws",title:"Why spinning skaters speed up when they tuck in",text:"Angular momentum L = I*omega (moment of inertia times angular speed) is conserved when no torque acts. Pulling arms in reduces I, so omega must increase to keep L constant. This is the same reason planets speed up near perihelion — Kepler's second law is just angular momentum conservation.",example:"A figure skater spinning with arms out: pull arms to body — rotation speed doubles or triples instantly. No muscles needed — just geometry. Try it on a spinning office chair!",formula:"L = I * omega = m * r^2 * omega = constant"})' >i</span></span>
+        <div class="eq-latex">$$\vec{L} = \vec{r} \times \vec{p}, \quad \frac{d\vec{L}}{dt} = \vec{M}$$</div>
+        <p class="eq-meaning">When no external torque acts, angular momentum is conserved. This is why figure skaters spin faster by pulling in their arms — reducing $r$ increases $\omega$ to keep $L$ constant.</p>
+      </div>
+    </div>
+
+    <!-- Interactive energy conservation slider -->
+    <div class="experiment-box" style="margin-top:3rem;">
+      <span class="exp-title">— Energy Conservation — Pendulum</span>
+      <p style="font-size:.88rem;color:#a0a0a8;margin-bottom:1.5rem;line-height:1.7;">
+        A pendulum of length $\ell$ released from angle $\theta_0$ exchanges kinetic and potential energy continuously.
+        The maximum speed at the bottom: $v_{\max} = \sqrt{2g\ell(1-\cos\theta_0)}$
+      </p>
+      <div class="slider-row">
+        <label>Release angle \(\theta_0\)</label>
+        <input type="range" id="pendAngle" min="5" max="90" value="30" step="1">
+        <span class="slider-val" id="pendAngleVal">30°</span>
+      </div>
+      <div class="slider-row">
+        <label>Length \(\ell\)</label>
+        <input type="range" id="pendLen" min="0.5" max="5" value="1" step=".1">
+        <span class="slider-val" id="pendLenVal">1.0 m</span>
+      </div>
+      <canvas id="pendulumCanvas" width="720" height="280" style="display:block;width:100%;background:#05080e;border-radius:2px;border:1px solid rgba(255,255,255,.05);margin-top:1rem;"></canvas>
+      <div class="exp-output">
+        <div class="exp-result"><span class="exp-result-label">v_max</span><span class="exp-result-val" id="vmax">2.29 m/s</span></div>
+        <div class="exp-result"><span class="exp-result-label">Period T</span><span class="exp-result-val" id="pendT">2.01 s</span></div>
+        <div class="exp-result"><span class="exp-result-label">Max height h</span><span class="exp-result-val" id="pendH">0.134 m</span></div>
+      </div>
+    </div>
+    <!-- Noether -->
+    <div class="noether-block">
+      <span class="eq-ts" style="color:#4ecdc4">Noether's Theorem</span>
+      <div class="eq" style="font-size:1.3rem;margin:.8rem 0">$\frac{\partial L}{\partial t} = 0 \implies \frac{dE}{dt} = 0$</div>
+      <p style="color:#a0988a;font-size:.95rem;line-height:1.8">Energy conservation is not an axiom. It follows from <em>time-translation symmetry</em> — the laws of physics don't change with time.</p>
+      <span class="noether-name">Emmy Noether, 1915 — "Remember her name."</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════ SECTION 4 — LAGRANGIAN ══════════════════ -->
+  <section class="scene" id="sec4" style="flex-direction:column;align-items:stretch;justify-content:flex-start">
+    <div class="tag">Section 4 · The Lagrangian</div>
+    <div class="ts">33:00 – 44:00</div>
+
+    <div class="sec-head" style="margin-top:1rem">
+      <span class="sec-num">Section Four</span>
+      <h2 class="sec-title">A Deeper Formulation</h2>
+      <span class="sec-law">The Lagrangian & Principle of Stationary Action</span>
+    </div>
+
+    <p style="max-width:800px; margin: 1rem auto 2rem; text-align:center; color: var(--gold-p2); opacity:0.8; font-style:italic; line-height:1.6">
+      While Newton focused on forces, a more elegant path exists. By considering the entire history of a system, we find that nature always takes the path that minimizes "Action." This is the realm of the Lagrangian—a formulation that reveals the deep symmetries of our universe.
+    </p>
+
+    <div class="pendulum-layout" style="margin:0 auto">
+      <!-- Double pendulum -->
+      <div style="text-align:center">
+        <div class="rollercoaster-box" style="display:inline-block">
+          <div class="rc-title">Double Pendulum · Chaotic Motion</div>
+          <canvas id="pendulum" width="360" height="320"></canvas>
+        </div>
+      </div>
+
+      <!-- Equations stack -->
+      <div class="euler-lagrange">
+        <div class="el-step">
+          <span class="el-n">36:00</span>
+          <div>
+            <div class="el-eq">$L = T - V$</div>
+            <div class="el-label">Lagrangian = KE minus PE</div>
+          </div>
+        </div>
+        <div class="el-step">
+          <span class="el-n">37:00</span>
+          <div>
+            <div class="el-eq">$\delta S = \int L \, dt = 0$</div>
+            <div class="el-label">Principle of stationary action</div>
+          </div>
+        </div>
+        <div class="el-step">
+          <span class="el-n">38:00</span>
+          <div>
+            <div class="el-eq" style="font-size:.85rem">$\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}}\right) - \frac{\partial L}{\partial q} = 0$</div>
+            <div class="el-label">Euler-Lagrange equations</div>
+          </div>
+        </div>
+        <div class="el-step">
+          <span class="el-n">40:00</span>
+          <div>
+            <div class="el-eq">$\ddot{\theta} = -\frac{g}{l}\sin\theta$</div>
+            <div class="el-label">Pendulum equation of motion</div>
+          </div>
+        </div>
+        <div class="el-step">
+          <span class="el-n">41:00</span>
+          <div>
+            <div class="el-eq">$T = 2\pi\sqrt{\frac{l}{g}}$</div>
+            <div class="el-label">Period — independent of mass!</div>
+          </div>
+        </div>
+        <div style="margin-top:1.2rem;padding:.8rem;background:rgba(200,149,42,.07);border-radius:2px">
+          <p style="font-family:'Crimson Pro',serif;font-style:italic;font-size:.88rem;color:#9a9080;line-height:1.7">
+            Galileo discovered the period rule ~1600 by timing his own heartbeat against a swinging chandelier in Pisa Cathedral.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════ SECTION 5 — HAMILTONIAN ══════════════════ -->
+  <section class="scene" id="sec5" style="flex-direction:column;align-items:stretch;justify-content:flex-start">
+    <div class="tag">Section 5 · Hamiltonian Mechanics & Phase Space</div>
+    <div class="ts">44:00 – 53:00</div>
+
+    <div class="sec-head" style="margin-top:1rem">
+      <span class="sec-num">Section Five</span>
+      <h2 class="sec-title">Phase Space</h2>
+      <span class="sec-law">Hamiltonian Mechanics</span>
+    </div>
+
+    <div class="phase-layout" style="margin:0 auto">
+      <div>
+        <div class="rollercoaster-box" style="border-color:rgba(78,205,196,.25)">
+          <div class="rc-title">Phase portrait — harmonic oscillator (q, p)</div>
+          <canvas id="phaseCanvas" width="360" height="320"></canvas>
+        </div>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.15em;color:var(--dim);text-align:center;margin-top:.6rem;text-transform:uppercase">Liouville's theorem: phase-space area is conserved</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+        <div class="eq-card" style="min-width:unset">
+          <span class="eq-ts">48:00</span>
+          <span class="eq">$H = T + V = E$</span>
+          <span class="eq-sub">Hamiltonian = total energy</span>
+        </div>
+        <div class="eq-card" style="min-width:unset">
+          <span class="eq-ts">49:00</span>
+          <span class="eq" style="font-size:1rem">$\dot{q} = \frac{\partial H}{\partial p}$</span>
+          <div style="margin:.4rem 0"></div>
+          <span class="eq" style="font-size:1rem;color:#e06050">$\dot{p} = -\frac{\partial H}{\partial q}$</span>
+          <span class="eq-sub">Hamilton's equations — first-order</span>
+        </div>
+        <div class="eq-card teal" style="min-width:unset">
+          <span class="eq-ts">51:00</span>
+          <span class="eq">$\frac{dV_{\text{phase}}}{dt} = 0$</span>
+          <span class="eq-sub">Liouville's theorem · ancestor of the quantum uncertainty principle</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════ SECTION 6 — CHAOS ══════════════════ -->
+  <section class="scene" id="sec6" style="flex-direction:column;align-items:stretch;justify-content:flex-start">
+    <div class="tag">Section 6 · Code & Chaos</div>
+    <div class="ts">53:00 – 58:00</div>
+
+    <div class="sec-head" style="margin-top:1rem">
+      <span class="sec-num">Section Six</span>
+      <h2 class="sec-title">Deterministic Chaos</h2>
+      <span class="sec-law">Sensitive dependence on initial conditions</span>
+    </div>
+
+    <p style="max-width:800px; margin: 1rem auto 2rem; text-align:center; color: var(--gold-p2); opacity:0.8; font-style:italic; line-height:1.6">
+      If nature is deterministic, then why is the future so hard to predict? From the rigid laws of motion, a new behavior emerges—one where the tiniest difference in the present can lead to a completely different future.
+    </p>
+
+    <div class="chaos-layout" style="margin:0 auto">
+      <div>
+        <div class="rollercoaster-box" style="border-color:rgba(192,57,43,.2)">
+          <div class="rc-title" style="color:#e06050">Two double pendulums · Δθ = 0.001°</div>
+          <canvas id="chaosCanvas" width="400" height="320"></canvas>
+        </div>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.15em;color:var(--dim);text-align:center;margin-top:.6rem;text-transform:uppercase">Deterministic · not random · completely unpredictable</p>
+      </div>
+
+      <div class="code-block">
+        <span class="code-comment"># Double pendulum — Newtonian sim</span>
+        <br><br>
+        <span class="code-key">def</span> <span class="code-fn">derivatives</span>(state, t):
+        <br>&nbsp;&nbsp;theta1, omega1, theta2, omega2 = state
+        <br>&nbsp;&nbsp;dtheta = theta2 - theta1
+        <br><br>
+        &nbsp;&nbsp;<span class="code-comment"># Coupled ODEs</span>
+        <br>&nbsp;&nbsp;dtheta1 = omega1
+        <br>&nbsp;&nbsp;dtheta2 = omega2
+        <br>&nbsp;&nbsp;domega1 = (m2*g*sin(theta2)*cos(dtheta)
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- m2*sin(dtheta)*(l1*omega1**2*cos(dtheta)
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ l2*omega2**2) - (m1+m2)*g*sin(theta1))
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/ (l1*(m1 + m2*sin(dtheta)**2))
+        <br><br>
+        &nbsp;&nbsp;<span class="code-key">return</span> [dtheta1, dtheta2, domega1, domega2]
+        <br><br>
+        <span class="code-comment"># Two nearly-identical starting states</span>
+        <br>
+        state_A = [np.pi/<span class="code-num">2</span>, <span class="code-num">0</span>, np.pi/<span class="code-num">2</span>, <span class="code-num">0</span>]
+        <br>
+        state_B = [np.pi/<span class="code-num">2</span> + <span class="code-num">1e-5</span>, <span class="code-num">0</span>, np.pi/<span class="code-num">2</span>, <span class="code-num">0</span>]
+        <br><br>
+        <span class="code-comment"># Diverge completely within seconds</span>
+        <br>
+        sol = <span class="code-fn">odeint</span>(derivatives, state_A, t)
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════ CLOSING ══════════════════ -->
+  <section class="scene" id="closing">
+    <canvas id="closingStars"></canvas>
+    <div class="tag">Closing</div>
+    <div class="ts">58:00 – 60:00</div>
+
+    <div class="closing-content">
+      <h2 class="closing-title">Classical mechanics<br>is not wrong.<br>It is <em>exact</em> — within its domain.</h2>
+
+      <div class="domain-tags">
+        <span class="domain-tag">Basketball</span>
+        <span class="domain-tag">Buildings</span>
+        <span class="domain-tag">Voyager probe</span>
+        <span class="domain-tag">Rocket launches</span>
+      </div>
+
+      <p style="color:#9a9080;font-size:1rem;line-height:1.9;margin-bottom:2rem">
+        Its limits only appear at very high speeds, very small scales, or very strong gravity.
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:.8rem">
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:110px">Ep. 06</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2-p2)">High speeds → Special Relativity</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:110px">Ep. 07</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2-p2)">Small scales → Quantum Mechanics</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--dim);min-width:110px">Ep. 09</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold2-p2)">Strong gravity → General Relativity</span>
+        </div>
+      </div>
+
+      <p class="next-ep" style="margin-top:2rem; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--gold2-p2);">Next: gravity becomes geometry, and Kepler's ellipses reveal the inverse-square law hiding in the data.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- REFERENCE TABLE -->
+  <section class="scene" id="reference" style="flex-direction:column;min-height:auto;padding:5rem 2rem;background:var(--bg2);">
+    <div class="scene-label">Reference</div>
+
+    <div class="section-header">
+      <span class="section-number">Reference</span>
+      <h2 class="section-title">On-Screen Formula Cards</h2>
+    </div>
+
+    <!-- FORMULA TABLE -->
+    <div class="table-wrap" style="width:100%; max-width:900px; margin:0 auto 4rem auto;">
+      <table>
+        <thead><tr><th>Timestamp</th><th>Formula</th><th>Label</th></tr></thead>
+        <tbody>
+          <tr><td>5:30</td><td>$v = \frac{dx}{dt}$</td><td>Instantaneous velocity</td></tr>
+          <tr><td>6:00</td><td>$a = \frac{d^2x}{dt^2}$</td><td>Acceleration</td></tr>
+          <tr><td>12:00</td><td>$F = ma$</td><td>Newton's Second Law</td></tr>
+          <tr><td>12:30</td><td>$F = \frac{dp}{dt}$</td><td>Generalized form</td></tr>
+          <tr><td>24:00</td><td>$W = \int F \cdot dx$</td><td>Work</td></tr>
+          <tr><td>26:00</td><td>$KE = \frac{1}{2}mv^2$</td><td>Kinetic Energy</td></tr>
+          <tr><td>28:00</td><td>$E = T + V = \text{const}$</td><td>Conservation of Energy</td></tr>
+          <tr><td>31:00</td><td>$\frac{\partial L}{\partial t} = 0 \implies \frac{dE}{dt} = 0$</td><td>Noether's Theorem</td></tr>
+          <tr><td>36:00</td><td>$L = T - V$</td><td>Lagrangian</td></tr>
+          <tr><td>38:00</td><td>$\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}}\right) - \frac{\partial L}{\partial q} = 0$</td><td>Euler-Lagrange</td></tr>
+          <tr><td>48:00</td><td>$H = T + V$</td><td>Hamiltonian</td></tr>
+          <tr><td>49:00</td><td>$\dot{q} = \frac{\partial H}{\partial p} ; \dot{p} = -\frac{\partial H}{\partial q}$</td><td>Hamilton's Equations</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SCIENTISTS -->
+    <div class="section-header">
+      <h2 class="section-title">Key Scientists</h2>
+    </div>
+    <div class="sci-grid" style="margin-bottom:4rem;">
+      <div class="sci-card"><div class="sci-name">Isaac Newton</div><div class="sci-dates">1643–1727</div><div class="sci-contribution">Laws of motion, calculus, universal gravitation</div></div>
+      <div class="sci-card"><div class="sci-name">Gottfried Leibniz</div><div class="sci-dates">1646–1716</div><div class="sci-contribution">Independent inventor of calculus — the notation we use today</div></div>
+      <div class="sci-card"><div class="sci-name">Galileo Galilei</div><div class="sci-dates">1564–1642</div><div class="sci-contribution">Experimental method, pendulum timing, projectile motion</div></div>
+      <div class="sci-card"><div class="sci-name">Joseph-Louis Lagrange</div><div class="sci-dates">1736–1813</div><div class="sci-contribution">Variational mechanics, generalized coordinates</div></div>
+      <div class="sci-card"><div class="sci-name">William Rowan Hamilton</div><div class="sci-dates">1805–1865</div><div class="sci-contribution">Hamiltonian formalism, phase space</div></div>
+      <div class="sci-card"><div class="sci-name">Emmy Noether</div><div class="sci-dates">1882–1935</div><div class="sci-contribution">Symmetry → Conservation laws theorem</div></div>
+      <div class="sci-card"><div class="sci-name">Henri Poincaré</div><div class="sci-dates">1854–1912</div><div class="sci-contribution">Chaos theory, phase-space topology</div></div>
+    </div>
+
+    <!-- KEY VALUES -->
+    <div class="section-header">
+      <h2 class="section-title">Physical Constants & Units</h2>
+    </div>
+
+    <div class="ref-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Quantity</th><th>Symbol</th><th>Value</th><th>SI Unit</th><th>Significance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Gravitational acceleration (Earth)</td><td>g</td><td>9.80665</td><td>m/s²</td><td>Standard value at sea level, 45° latitude</td></tr>
+          <tr><td>Gravitational acceleration (Moon)</td><td>g_M</td><td>1.622</td><td>m/s²</td><td>— 1/6 of Earth's — Apollo astronauts' giant leaps</td></tr>
+          <tr><td>Gravitational constant</td><td>G</td><td>6.674 × 10⁻¹¹</td><td>m³/(kg·s²)</td><td>Measured by Cavendish in 1798</td></tr>
+          <tr><td>Earth's mass</td><td>M_E</td><td>5.972 × 10²⁴</td><td>kg</td><td>Derived from $g = GM_E/R_E^2$</td></tr>
+          <tr><td>Speed of sound (air, 20°C)</td><td>c_s</td><td>343</td><td>m/s</td><td>Mach 1 reference; varies with temperature</td></tr>
+          <tr><td>Escape velocity (Earth)</td><td>v_e</td><td>11.19</td><td>km/s</td><td>$v_e = \sqrt{2GM/R}$ — minimum to leave Earth's gravity</td></tr>
+          <tr><td>Earth's orbital speed</td><td>v_orb</td><td>29.78</td><td>km/s</td><td>Earth's speed around the Sun</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider" style="margin: 4rem 0;"></div>
+
+    <div style="width:100%; max-width:1000px; margin: 0 auto;">
+      <!-- 3D Rotation -->
+      <section id="rotation-3d" style="flex-direction:column;min-height:auto;padding:2rem 0;">
+        <div style="text-align:center;margin-bottom:2rem">
+          <span class="sec-num">3D Visualization</span>
+          <h2 class="sec-title">Rigid Body Rotation</h2><span class="info-bubble" onclick='showInfo(this,{tag:"Rotational Mechanics",title:"Rotation has its own version of every linear law",text:"Every linear mechanical concept has a rotational analog: mass $\\to$ moment of inertia ($I$), force $\\to$ torque ($\\tau$), velocity $\\to$ angular velocity ($\\omega$), momentum $\\to$ angular momentum ($L$). The equations look identical: $\\tau = I\\alpha$ mirrors $F = ma$.",example:"A spinning top vs a spinning figure skater: both conserve angular momentum. The top precesses because gravity applies a torque. The skater speeds up by pulling arms in (decreasing $I$ means increasing $\\omega$ to keep $L$ constant). Same physics, different scenarios.",formula:"\\tau = I\\alpha, \\quad L = I\\omega, \\quad KE_{\\text{rot}} = \\frac{1}{2}I\\omega^2"})'>i</span>
+        </div>
+        <p style="font-size:.92rem;color:#908878;max-width:680px;text-align:center;line-height:1.8;margin:0 auto 2rem auto;">
+          Rotational analogs of Newton's laws use moment of inertia $I = \int r^2\,dm$ instead of mass:
+          $$\tau = I\alpha, \qquad L = I\omega, \qquad KE_{\text{rot}} = \tfrac{1}{2}I\omega^2$$
+        </p>
+        <div class="three-container" id="rotationContainer" style="margin: 0 auto;"></div>
+        <p class="three-label">3D rotating objects - different mass distributions, different moments of inertia</p>
+        <div class="deep-dive" style="margin-top:2rem;">
+          <span class="deep-dive-title">Parallel Axis Theorem</span>
+          <p>If $I_{\text{cm}}$ is the moment of inertia about an axis through the center of mass, then about any parallel axis displaced by distance $d$:</p>
+          <div style="text-align:center;margin:.8rem 0;">$$I = I_{\text{cm}} + Md^2$$</div>
+          <p>This lets us compute $I$ about any axis if we know $I_{\text{cm}}$. For a uniform rod: $I_{\text{cm}} = ML^2/12$ about the center; $I_{\text{end}} = ML^2/3$ about one end. The Perpendicular Axis Theorem adds: for a flat lamina, $I_z = I_x + I_y$.</p>
+        </div>
+      </section>
+
+      <div class="divider" style="margin: 4rem 0;"></div>
+
+      <!-- Gyroscope Experiment -->
+      <section id="gyro-exp" style="flex-direction:column;min-height:auto;padding:2rem 0;">
+        <div style="text-align:center;margin-bottom:2rem">
+          <span class="sec-num">Experiment</span>
+          <h2 class="sec-title">Gyroscopic Precession & Angular Momentum</h2>
+        </div>
+        <div class="exp-box" style="background:rgba(10,8,5,.6); margin: 0 auto;">
+          <span class="exp-title">Gyroscope Precession Calculator</span>
+          <p style="font-size:.85rem;color:#908878;line-height:1.7;margin-bottom:1rem;">
+            A spinning gyroscope doesn't fall - it precesses! The torque $\tau = r \times F$ changes the direction
+            of $\mathbf{L}$, causing precession at rate: $\Omega_{\rm prec} = \tau/L = Mgr/(I\omega)$
+          </p>
+          <div class="slider-row"><label>Spin rate omega</label><input type="range" id="spinSlider" min="10" max="500" value="100" step="5"><span class="slider-val" id="spinVal">100 rad/s</span></div>
+          <div class="slider-row"><label>Disk mass M (kg)</label><input type="range" id="diskMassSlider" min=".1" max="2" value=".5" step=".05"><span class="slider-val" id="diskMassVal">0.50 kg</span></div>
+          <div class="slider-row"><label>Disk radius R (cm)</label><input type="range" id="diskRadSlider" min="5" max="30" value="15" step="1"><span class="slider-val" id="diskRadVal">15 cm</span></div>
+          <div class="slider-row"><label>Pivot offset r (cm)</label><input type="range" id="pivotSlider" min="5" max="30" value="10" step="1"><span class="slider-val" id="pivotVal">10 cm</span></div>
+          <div class="exp-output">
+            <div class="exp-result"><span class="exp-result-label">Moment of Inertia I</span><span class="exp-result-val" id="momentI">-- kg*m^2</span></div>
+            <div class="exp-result"><span class="exp-result-label">Angular Momentum L</span><span class="exp-result-val" id="angMom">-- kg*m^2/s</span></div>
+            <div class="exp-result"><span class="exp-result-label">Precession Rate</span><span class="exp-result-val" id="precRate">-- rad/s</span></div>
+            <div class="exp-result"><span class="exp-result-label">Prec. Period</span><span class="exp-result-val" id="precPeriod">-- s</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <div class="bottom-stripe">
+    <div class="stripe-item"><span class="stripe-item-value">1687</span><span class="stripe-item-label">Principia published</span></div>
+    <div class="stripe-item"><span class="stripe-item-value">3</span><span class="stripe-item-label">Laws of Motion</span></div>
+    <div class="stripe-item"><span class="stripe-item-value">60'</span><span class="stripe-item-label">Runtime</span></div>
+    <div class="stripe-item"><span class="stripe-item-value">Ep. 01</span><span class="stripe-item-label">Classical Mechanics</span></div>
+    <div class="stripe-item"><span class="stripe-item-value">—</span><span class="stripe-item-label">Unified Episode</span></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const c = document.getElementById('starfield');
+  const ctx = c.getContext('2d');
+  function resize(){ c.width = c.offsetWidth; c.height = c.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const stars = Array.from({length: 120}, () => ({
+    x: Math.random(), y: Math.random(), r: Math.random() * 1.4 + 0.3, a: Math.random(), da: (Math.random() - 0.5) * 0.008
+  }));
+
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s => {
+      s.a = Math.max(0.1, Math.min(1, s.a + s.da));
+      if(s.a <= 0.1 || s.a >= 1) s.da *= -1;
+      ctx.beginPath(); ctx.arc(s.x * c.width, s.y * c.height, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(240,236,224,${s.a * 0.7})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── POSITION-TIME GRAPH (animated) ── */
+(function(){
+  const canvas = document.getElementById('posChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t = 0;
+
+  function drawAxes(){
+    ctx.strokeStyle = 'rgba(90,180,220,0.2)';
+    ctx.lineWidth = 1;
+    // x-axis
+    ctx.beginPath(); ctx.moveTo(30, H-30); ctx.lineTo(W-10, H-30); ctx.stroke();
+    // y-axis
+    ctx.beginPath(); ctx.moveTo(30, 10); ctx.lineTo(30, H-30); ctx.stroke();
+    // labels
+    ctx.fillStyle = '#6a6050';
+    ctx.font = '10px IBM Plex Mono';
+    ctx.fillText('t', W-15, H-20);
+    ctx.fillText('x', 35, 18);
+  }
+
+  function xPos(i, total){ return 32 + (i / total) * (W - 50); }
+  function yPos(i, total){ 
+    const ti = (i / total) * 2 * Math.PI;
+    return (H-35) - (Math.sin(ti * 0.7) * 0.5 + 0.5 + 0.15 * Math.sin(ti * 2.1)) * (H - 60);
+  }
+
+  let frame = 0;
+  const totalFrames = 200;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    drawAxes();
+
+    // draw curve up to current frame
+    ctx.beginPath();
+    ctx.moveTo(xPos(0, totalFrames), yPos(0, totalFrames));
+    const end = Math.min(frame, totalFrames);
+    for(let i=1; i<=end; i++){
+      ctx.lineTo(xPos(i, totalFrames), yPos(i, totalFrames));
+    }
+    ctx.strokeStyle = 'rgba(91,200,219,0.9)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // moving dot
+    if(frame <= totalFrames){
+      const dotX = xPos(frame, totalFrames);
+      const dotY = yPos(frame, totalFrames);
+      ctx.beginPath();
+      ctx.arc(dotX, dotY, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#d4a843';
+      ctx.fill();
+    }
+
+    frame = (frame + 1) % (totalFrames + 40); // pause at end
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── GLOBAL CURVE ── */
+(function(){
+  const canvas = document.getElementById('curveGlobal');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  function fn(x){ return (Math.sin(x * 2.1) * 0.4 + 0.5 + 0.2 * x) * (H - 40); }
+
+  ctx.strokeStyle = 'rgba(90,180,220,0.25)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(20, H-15); ctx.lineTo(W-10, H-15); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(20, 5); ctx.lineTo(20, H-15); ctx.stroke();
+
+  ctx.beginPath();
+  for(let i=0; i<W-30; i++){
+    const x = i / (W-30);
+    const y = (H-20) - fn(x);
+    i===0 ? ctx.moveTo(20+i, y) : ctx.lineTo(20+i, y);
+  }
+  ctx.strokeStyle = 'rgba(91,200,219,0.9)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+})();
+
+/* ── ZOOMED CURVE ── */
+(function(){
+  const canvas = document.getElementById('curveZoom');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // zoom into the middle section — show it's locally linear
+  const zoomX0 = 0.45, zoomX1 = 0.55; // 10% of x domain
+  function fn(x){ return (Math.sin(x * 2.1) * 0.4 + 0.5 + 0.2 * x); }
+
+  ctx.strokeStyle = 'rgba(90,180,220,0.25)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(20, H-15); ctx.lineTo(W-10, H-15); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(20, 5); ctx.lineTo(20, H-15); ctx.stroke();
+
+  // curve in zoom window
+  ctx.beginPath();
+  const steps = 100;
+  for(let i=0; i<=steps; i++){
+    const x = zoomX0 + (i/steps)*(zoomX1-zoomX0);
+    const y0 = fn(zoomX0), y1 = fn(zoomX1);
+    const yN = fn(x);
+    const px = 20 + (i/steps) * (W-30);
+    const py = (H-20) - ((yN - y0)/(y1-y0)) * (H-40);
+    i===0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = 'rgba(91,200,219,0.9)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // tangent line
+  const midX = 0.5;
+  const slope = (fn(midX+0.001) - fn(midX-0.001)) / 0.002;
+  const y0fn = fn(zoomX0), y1fn = fn(zoomX1);
+  const midPx = 20 + 0.5*(W-30);
+  const midPy = (H-20) - ((fn(midX)-y0fn)/(y1fn-y0fn))*(H-40);
+
+  // draw tangent
+  const tangentLen = 120;
+  const normSlope = slope / (y1fn - y0fn) * (H-40) / (W-30) * (-1);
+  const angle = Math.atan(normSlope);
+  ctx.beginPath();
+  ctx.moveTo(midPx - Math.cos(angle)*tangentLen/2, midPy - Math.sin(angle)*tangentLen/2);
+  ctx.lineTo(midPx + Math.cos(angle)*tangentLen/2, midPy + Math.sin(angle)*tangentLen/2);
+  ctx.strokeStyle = 'rgba(212,168,67,0.8)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4,3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // label
+  ctx.fillStyle = 'rgba(212,168,67,0.7)';
+  ctx.font = '10px IBM Plex Mono';
+  ctx.fillText('slope = v', midPx + 10, midPy - 12);
+
+  // dot
+  ctx.beginPath();
+  ctx.arc(midPx, midPy, 5, 0, Math.PI*2);
+  ctx.fillStyle = '#d4a843';
+  ctx.fill();
+})();
+
+(function(){
+  const canvas = document.getElementById('projectileChart');
+  const ctx = canvas.getContext('2d');
+  const speed = document.getElementById('speed');
+  const angle = document.getElementById('angle');
+  const speedValue = document.getElementById('speedValue');
+  const angleValue = document.getElementById('angleValue');
+  const readout = document.getElementById('projectileReadout');
+
+  const W = canvas.width;
+  const H = canvas.height;
+  const g = 9.81;
+
+  function drawAxes(){
+    ctx.strokeStyle = 'rgba(90,180,220,0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(35, H-28); ctx.lineTo(W-12, H-28); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(35, 14); ctx.lineTo(35, H-28); ctx.stroke();
+    ctx.fillStyle = '#8a8070';
+    ctx.font = '10px IBM Plex Mono';
+    ctx.fillText('x', W-14, H-14);
+    ctx.fillText('y', 24, 20);
+  }
+
+  function render(){
+    const v0 = parseFloat(speed.value);
+    const theta = parseFloat(angle.value) * Math.PI / 180;
+    speedValue.textContent = `${v0.toFixed(0)} m/s`;
+    angleValue.textContent = `${(theta*180/Math.PI).toFixed(0)}°`;
+
+    const tFlight = (2 * v0 * Math.sin(theta)) / g;
+    const range = (v0 * v0 * Math.sin(2 * theta)) / g;
+    const hMax = (v0 * v0 * Math.sin(theta) ** 2) / (2 * g);
+
+    ctx.clearRect(0,0,W,H);
+    drawAxes();
+
+    const xScale = (W - 52) / Math.max(30, range * 1.08);
+    const yScale = (H - 46) / Math.max(12, hMax * 1.4);
+
+    ctx.beginPath();
+    const steps = 150;
+    for(let i=0; i<=steps; i++){
+      const t = (i / steps) * tFlight;
+      const x = v0 * Math.cos(theta) * t;
+      const y = v0 * Math.sin(theta) * t - 0.5 * g * t * t;
+      const px = 35 + x * xScale;
+      const py = (H - 28) - y * yScale;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle = 'rgba(240,201,110,0.95)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(35 + range * xScale, H-28, 4, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(123,226,139,0.95)';
+    ctx.fill();
+
+    readout.innerHTML = `Flight time \(t_f\): <strong>${tFlight.toFixed(2)} s</strong> · Range \(R\): <strong>${range.toFixed(2)} m</strong> · Peak \(h_{max}\): <strong>${hMax.toFixed(2)} m</strong>`;
+  }
+
+  speed.addEventListener('input', render);
+  angle.addEventListener('input', render);
+  render();
+})();
+
+(function(){
+  const canvas = document.getElementById('orbitChart');
+  const ctx = canvas.getContext('2d');
+  const mass = document.getElementById('orbitMass');
+  const radius = document.getElementById('orbitRadius');
+  const massValue = document.getElementById('orbitMassValue');
+  const radiusValue = document.getElementById('orbitRadiusValue');
+  const readout = document.getElementById('orbitReadout');
+  const W = canvas.width;
+  const H = canvas.height;
+  const G = 6.674e-11;
+
+  function render(){
+    const M = parseFloat(mass.value) * 1e24;
+    const r = parseFloat(radius.value) * 1e6;
+    massValue.textContent = `${parseFloat(mass.value).toFixed(0)} × 10²⁴ kg`;
+    radiusValue.textContent = `${parseFloat(radius.value).toFixed(1)} × 10⁶ m`;
+
+    const v = Math.sqrt((G * M) / r);
+    const T = (2 * Math.PI * r) / v;
+    const a = (v * v) / r;
+
+    ctx.clearRect(0,0,W,H);
+
+    const cx = W * 0.5;
+    const cy = H * 0.5;
+    const orbitR = 35 + parseFloat(radius.value) * 11;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, orbitR, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(91,200,219,0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 16, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(240,201,110,0.95)';
+    ctx.fill();
+
+    const time = Date.now() * 0.0012;
+    const px = cx + orbitR * Math.cos(time);
+    const py = cy + orbitR * Math.sin(time);
+
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(cx, cy);
+    ctx.strokeStyle = 'rgba(224,82,82,0.6)';
+    ctx.setLineDash([5,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    ctx.arc(px, py, 6, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(91,200,219,0.98)';
+    ctx.fill();
+
+    readout.innerHTML = `Orbital speed \(v\): <strong>${v.toFixed(1)} m/s</strong> · Period \(T\): <strong>${(T/3600).toFixed(2)} h</strong> · Centripetal \(a_c\): <strong>${a.toExponential(2)} m/s²</strong>`;
+    requestAnimationFrame(render);
+  }
+
+  mass.addEventListener('input', () => {});
+  radius.addEventListener('input', () => {});
+  render();
+})();
+
+/* ── ENERGY CONSERVATION PENDULUM ── */
+(function(){
+  const canvas = document.getElementById('pendulumCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const g = 9.81;
+  let angleAnim = 30 * Math.PI / 180, omegaAnim = 0;
+  let theta0 = 30 * Math.PI / 180, ell = 1.0;
+
+  function updateParams(){
+    theta0 = parseFloat(document.getElementById('pendAngle').value) * Math.PI / 180;
+    ell = parseFloat(document.getElementById('pendLen').value);
+    document.getElementById('pendAngleVal').textContent = parseFloat(document.getElementById('pendAngle').value).toFixed(0) + '°';
+    document.getElementById('pendLenVal').textContent = ell.toFixed(1) + ' m';
+    const vmax = Math.sqrt(2 * g * ell * (1 - Math.cos(theta0)));
+    const T = 2 * Math.PI * Math.sqrt(ell / g);
+    const h = ell * (1 - Math.cos(theta0));
+    document.getElementById('vmax').textContent = vmax.toFixed(2) + ' m/s';
+    document.getElementById('pendT').textContent = T.toFixed(2) + ' s';
+    document.getElementById('pendH').textContent = h.toFixed(3) + ' m';
+    angleAnim = theta0; omegaAnim = 0;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cx = W / 2, cy = 50, scale = Math.min((H - 80) / Math.max(ell, 1), (W - 100) / 2 / Math.max(ell, .5));
+    const L = Math.min(ell * scale * 0.9, H - 100);
+    const bx = cx + Math.sin(angleAnim) * L;
+    const by = cy + Math.cos(angleAnim) * L;
+
+    // energy bars
+    const Etot = g * ell * (1 - Math.cos(theta0));
+    const Ek = .5 * Math.pow(omegaAnim * ell, 2);
+    const Ep = g * ell * (1 - Math.cos(angleAnim));
+    const barW = 120, barH = 10, barX = 20, barY = H - 60;
+    ctx.fillStyle = 'rgba(255,255,255,.05)'; ctx.fillRect(barX, barY, barW, barH); ctx.fillRect(barX, barY + 18, barW, barH);
+    ctx.fillStyle = 'rgba(91,200,219,.7)'; ctx.fillRect(barX, barY, barW * (Etot > 0 ? Ek / Etot : 0), barH);
+    ctx.fillStyle = 'rgba(212,168,67,.7)'; ctx.fillRect(barX, barY + 18, barW * (Etot > 0 ? Ep / Etot : 0), barH);
+    ctx.fillStyle = 'rgba(91,200,219,.8)'; ctx.font = '9px IBM Plex Mono'; ctx.fillText('KE', barX, barY - 3);
+    ctx.fillStyle = 'rgba(212,168,67,.8)'; ctx.fillText('PE', barX, barY + 15);
+
+    // string
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by);
+    ctx.strokeStyle = 'rgba(240,236,224,.5)'; ctx.lineWidth = 1.5; ctx.stroke();
+    // pivot
+    ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fillStyle = '#6a6050'; ctx.fill();
+    // bob
+    const bobR = 14;
+    ctx.beginPath(); ctx.arc(bx, by, bobR, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${200 + angleAnim / theta0 * 40}, 70%, 55%)`; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.stroke();
+
+    // velocity arrow
+    const vx = -Math.cos(angleAnim) * omegaAnim * L * .3;
+    const vy = Math.sin(angleAnim) * omegaAnim * L * .3;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + vx, by + vy);
+    ctx.strokeStyle = 'rgba(224,82,82,.8)'; ctx.lineWidth = 2; ctx.stroke();
+
+    // angle arc
+    ctx.beginPath(); ctx.arc(cx, cy, 40, Math.PI / 2, Math.PI / 2 + angleAnim, angleAnim < 0);
+    ctx.strokeStyle = 'rgba(212,168,67,.4)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = 'rgba(212,168,67,.6)'; ctx.font = '9px IBM Plex Mono';
+    ctx.fillText('θ=' + Math.abs(angleAnim * 180 / Math.PI).toFixed(1) + '°', cx + 15, cy + 25);
+  }
+
+  function step(){
+    const dt = 1 / 60;
+    function ddtheta(a){ return -(g / ell) * Math.sin(a); }
+    const k1a = omegaAnim, k1w = ddtheta(angleAnim);
+    const k2a = omegaAnim + k1w * dt / 2, k2w = ddtheta(angleAnim + k1a * dt / 2);
+    const k3a = omegaAnim + k2w * dt / 2, k3w = ddtheta(angleAnim + k2a * dt / 2);
+    const k4a = omegaAnim + k3w * dt, k4w = ddtheta(angleAnim + k3a * dt);
+    angleAnim += (k1a + 2 * k2a + 2 * k3a + k4a) * dt / 6;
+    omegaAnim += (k1w + 2 * k2w + 2 * k3w + k4w) * dt / 6;
+    draw();
+    requestAnimationFrame(step);
+  }
+
+  ['pendAngle', 'pendLen'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateParams);
+  });
+  updateParams();
+  step();
+})();
+
+/* ── INFO BUBBLE SYSTEM ── */
+(function(){
+  const panel = document.getElementById('globalInfoPanel');
+  let activeBtn = null;
+  
+  window.showInfo = function(btn, data) {
+    if (activeBtn === btn && panel.classList.contains('visible')) {
+      closeInfoPanel(); return;
+    }
+    if (activeBtn) activeBtn.classList.remove('active');
+    activeBtn = btn;
+    btn.classList.add('active');
+    
+    document.getElementById('infoPanelTag').textContent = data.tag || 'Explanation';
+    document.getElementById('infoPanelTitle').textContent = data.title || '';
+    document.getElementById('infoPanelText').innerHTML = data.text || '';
+    
+    const exBox = document.getElementById('infoPanelExampleBox');
+    const exText = document.getElementById('infoPanelExample');
+    if (data.example) {
+      exBox.style.display = 'block';
+      exText.textContent = data.example;
+    } else {
+      exBox.style.display = 'none';
+    }
+    
+    const fBox = document.getElementById('infoPanelFormula');
+    if (data.formula) {
+      fBox.style.display = 'block';
+      fBox.textContent = data.formula;
+    } else {
+      fBox.style.display = 'none';
+    }
+    
+    // Position near button
+    const rect = btn.getBoundingClientRect();
+    const pw = 340, ph = 280;
+    let left = rect.right + 12;
+    let top = rect.top - 20;
+    if (left + pw > window.innerWidth - 10) left = rect.left - pw - 12;
+    if (top + ph > window.innerHeight - 10) top = window.innerHeight - ph - 10;
+    if (top < 10) top = 10;
+    panel.style.left = left + 'px';
+    panel.style.top = top + 'px';
+    panel.classList.add('visible');
+  };
+  
+  window.closeInfoPanel = function() {
+    panel.classList.remove('visible');
+    if (activeBtn) { activeBtn.classList.remove('active'); activeBtn = null; }
+  };
+  
+  document.addEventListener('click', function(e) {
+    if (!panel.contains(e.target) && !e.target.classList.contains('info-bubble')) {
+      closeInfoPanel();
+    }
+  });
+})();
+
+/* ── ROLLERCOASTER CANVAS ── */
+(function(){
+  const c = document.getElementById('rcCanvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+
+  function trackY(x){ return H*0.5 + Math.sin(x*Math.PI*2/W)*H*0.28 + Math.sin(x*Math.PI*4/W)*H*0.1; }
+
+  const cartColors = ['#e05252', '#4a90d9', '#7be28b', '#f0c96e'];
+  const cartLabels = ['A', 'B', 'C', 'D'];
+  let t = 0;
+
+  function drawFrame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    ctx.beginPath();
+    ctx.moveTo(0,trackY(0));
+    for(let x=0;x<=W;x++) ctx.lineTo(x,trackY(x));
+    ctx.strokeStyle='rgba(78,205,196,.5)';ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0,H);
+    for(let x=0;x<=W;x++) ctx.lineTo(x,trackY(x));
+    ctx.lineTo(W,H);ctx.closePath();
+    ctx.fillStyle='rgba(26,122,114,.12)';ctx.fill();
+
+    [0, 0.25, 0.5, 0.75].forEach((pOffset, i) => {
+      const pos = (pOffset + t * 0.005) % 1;
+      const cx = pos * W;
+      const cy = trackY(cx);
+      
+      ctx.beginPath();ctx.arc(cx,cy-10,8,0,Math.PI*2);
+      ctx.fillStyle = cartColors[i]; ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 9px IBM Plex Mono';
+      ctx.textAlign = 'center'; ctx.fillText(cartLabels[i], cx, cy-7);
+
+      const maxH=30; const totalE=H*0.4;
+      const pe = cy / H * totalE; const ke = totalE - pe;
+      const keH=Math.max(0,ke/totalE)*maxH; const peH=Math.max(0,pe/totalE)*maxH;
+      const bx = cx+12;
+      if(bx < W-20){
+        ctx.fillStyle='rgba(91,200,219,.7)'; ctx.fillRect(bx,cy-keH,6,keH);
+        ctx.fillStyle='rgba(200,149,42,.7)'; ctx.fillRect(bx+7,cy-peH,6,peH);
+      }
+    });
+
+    t++;
+    requestAnimationFrame(drawFrame);
+  }
+  drawFrame();
+})();
+
+/* ── BAR CHART ── */
+(function(){
+  const c = document.getElementById('barChart');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W=c.width, H=c.height;
+  const cartColors = ['#e05252', '#4a90d9', '#7be28b', '#f0c96e'];
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const positions=[0, 0.25, 0.5, 0.75].map(p=>(p+t*0.005)%1);
+    const barW=50; const gap=20; const baseY=H-30;
+    positions.forEach((pos,i)=>{
+      const trackYNorm = 0.5 + Math.sin(pos*Math.PI*2)*0.28 + Math.sin(pos*Math.PI*4)*0.1;
+      const peRatio = trackYNorm/0.9; const keRatio = 1-peRatio;
+      const maxBarH = H*0.65; const x = i*(barW+gap)+30;
+      
+      // Background for each cart section
+      ctx.fillStyle = 'rgba(255,255,255,0.03)';
+      ctx.fillRect(x-5, 20, barW+10, baseY-20+5);
+
+      ctx.fillStyle='rgba(200,149,42,.75)'; const peH=peRatio*maxBarH; ctx.fillRect(x,baseY-peH,barW/2-2,peH);
+      ctx.fillStyle='rgba(91,200,219,.75)'; const keH=keRatio*maxBarH; ctx.fillRect(x+barW/2,baseY-keH,barW/2-2,keH);
+      
+      ctx.strokeStyle='rgba(200,149,42,.4)';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(x,baseY-maxBarH);ctx.lineTo(x+barW,baseY-maxBarH);ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Cart color indicator
+      ctx.fillStyle = cartColors[i];
+      ctx.beginPath(); ctx.arc(x+barW/2, baseY+25, 5, 0, Math.PI*2); ctx.fill();
+
+      ctx.fillStyle=cartColors[i];ctx.font='bold 11px IBM Plex Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(['A','B','C','D'][i],x+barW/2,baseY+14);
+    });
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── DOUBLE PENDULUM ── */
+(function(){
+  const c = document.getElementById('pendulum');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W=c.width, H=c.height;
+  const cx=W/2, cy=60;
+  const l1=100, l2=90, m1=10, m2=8, g=9.8;
+  let state={th1:Math.PI*0.8, w1:0, th2:Math.PI*0.6, w2:0.5};
+  const trail=[];
+  function deriv(s){
+    const{th1,w1,th2,w2}=s; const d=th1-th2;
+    const den1=l1*(2*m1+m2-m2*Math.cos(2*d));
+    const den2=l2*(2*m1+m2-m2*Math.cos(2*d));
+    const a1=(-g*(2*m1+m2)*Math.sin(th1)-m2*g*Math.sin(th1-2*th2)-2*Math.sin(d)*m2*(w2*w2*l2+w1*w1*l1*Math.cos(d)))/den1;
+    const a2=(2*Math.sin(d)*(w1*w1*l1*(m1+m2)+g*(m1+m2)*Math.cos(th1)+w2*w2*l2*m2*Math.cos(d)))/den2;
+    return{th1:w1,w1:a1,th2:w2,w2:a2};
+  }
+  function rk4(s,dt){
+    const k1=deriv(s);
+    const s2={th1:s.th1+k1.th1*dt/2,w1:s.w1+k1.w1*dt/2,th2:s.th2+k1.th2*dt/2,w2:s.w2+k1.w2*dt/2};
+    const k2=deriv(s2);
+    const s3={th1:s.th1+k2.th1*dt/2,w1:s.w1+k2.w1*dt/2,th2:s.th2+k2.th2*dt/2,w2:s.w2+k2.w2*dt/2};
+    const k3=deriv(s3);
+    const s4={th1:s.th1+k3.th1*dt,w1:s.w1+k3.w1*dt,th2:s.th2+k3.th2*dt,w2:s.w2+k3.w2*dt};
+    const k4=deriv(s4);
+    return{
+      th1:s.th1+(k1.th1+2*k2.th1+2*k3.th1+k4.th1)*dt/6,
+      w1:s.w1+(k1.w1+2*k2.w1+2*k3.w1+k4.w1)*dt/6,
+      th2:s.th2+(k1.th2+2*k2.th2+2*k3.th2+k4.th2)*dt/6,
+      w2:s.w2+(k1.w2+2*k2.w2+2*k3.w2+k4.w2)*dt/6
+    };
+  }
+  function draw(){
+    state=rk4(state,0.015);
+    const x1=cx+l1*Math.sin(state.th1); const y1=cy+l1*Math.cos(state.th1);
+    const x2=x1+l2*Math.sin(state.th2); const y2=y1+l2*Math.cos(state.th2);
+    trail.push({x:x2,y:y2}); if(trail.length>200) trail.shift();
+    ctx.fillStyle='rgba(13,17,32,0.25)'; ctx.fillRect(0,0,W,H);
+    if(trail.length>1){
+      ctx.beginPath();ctx.moveTo(trail[0].x,trail[0].y);
+      trail.forEach((p,i)=>{if(i>0)ctx.lineTo(p.x,p.y)});
+      ctx.strokeStyle='rgba(212,168,67,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+    }
+    ctx.strokeStyle='#8a8070';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x1,y1);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    [cx,cy,x1,y1,x2,y2].forEach((v,i)=>{
+      if(i%2===0){
+        ctx.beginPath();ctx.arc(v,[cx,cy,x1,y1,x2,y2][i+1],i===0?6:5,0,Math.PI*2);
+        ctx.fillStyle=i===0?'#9a9080':i===2?'#d4a843':'#4a90d9';ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── PHASE SPACE ── */
+(function(){
+  const c = document.getElementById('phaseCanvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W=c.width, H=c.height;
+  const cx=W/2, cy=H/2;
+  const blobs=Array.from({length:25},()=>({
+    q0:(Math.random()-.5)*30+cx+80, p0:(Math.random()-.5)*20+cy-20,
+    phase:Math.random()*Math.PI*2, a: 90+Math.random()*10, b: 85+Math.random()*10
+  }));
+  const colors=['rgba(91,200,219,.6)','rgba(212,168,67,.5)','rgba(123,226,139,.4)','rgba(224,82,82,.35)','rgba(74,144,217,.3)'];
+  let t=0;
+  function drawBlob(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(20,cy);ctx.lineTo(W-20,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,20);ctx.lineTo(cx,H-20);ctx.stroke();
+    [60,90,115,135,152].forEach((rx,i)=>{
+      const ry=rx*0.95; ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);
+      ctx.strokeStyle=colors[i];ctx.lineWidth=1.5;ctx.stroke();
+    });
+    blobs.forEach(b=>{
+      const angle=t*0.018+b.phase; const bx=cx+b.a*Math.cos(angle); const by=cy+b.b*Math.sin(angle)*.95;
+      ctx.beginPath();ctx.arc(bx,by,3,0,Math.PI*2); ctx.fillStyle='rgba(91,200,219,.8)';ctx.fill();
+    });
+    t++; requestAnimationFrame(drawBlob);
+  }
+  drawBlob();
+})();
+
+/* ── CHAOS CANVAS ── */
+(function(){
+  const c = document.getElementById('chaosCanvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W=c.width, H=c.height;
+  const cx=W/2, cy=80;
+  const l1=90, l2=80, m1=10, m2=8, g=9.8;
+  function makeState(th1,w1,th2,w2){return{th1,w1,th2,w2}}
+  function deriv(s){
+    const{th1,w1,th2,w2}=s; const d=th1-th2;
+    const den1=l1*(2*m1+m2-m2*Math.cos(2*d));
+    const den2=l2*(2*m1+m2-m2*Math.cos(2*d));
+    const a1=(-g*(2*m1+m2)*Math.sin(th1)-m2*g*Math.sin(th1-2*th2)-2*Math.sin(d)*m2*(w2*w2*l2+w1*w1*l1*Math.cos(d)))/den1;
+    const a2=(2*Math.sin(d)*(w1*w1*l1*(m1+m2)+g*(m1+m2)*Math.cos(th1)+w2*w2*l2*m2*Math.cos(d)))/den2;
+    return{th1:w1,w1:a1,th2:w2,w2:a2};
+  }
+  function rk4(s,dt){
+    const k1=deriv(s);
+    const s2={th1:s.th1+k1.th1*dt/2,w1:s.w1+k1.w1*dt/2,th2:s.th2+k1.th2*dt/2,w2:s.w2+k1.w2*dt/2};
+    const k2=deriv(s2);
+    const s3={th1:s.th1+k2.th1*dt/2,w1:s.w1+k2.w1*dt/2,th2:s.th2+k2.th2*dt/2,w2:s.w2+k2.w2*dt/2};
+    const k3=deriv(s3);
+    const s4={th1:s.th1+k3.th1*dt,w1:s.w1+k3.w1*dt,th2:s.th2+k3.th2*dt,w2:s.w2+k3.w2*dt};
+    const k4=deriv(s4);
+    return{
+      th1:s.th1+(k1.th1+2*k2.th1+2*k3.th1+k4.th1)*dt/6,
+      w1:s.w1+(k1.w1+2*k2.w1+2*k3.w1+k4.w1)*dt/6,
+      th2:s.th2+(k1.th2+2*k2.th2+2*k3.th2+k4.th2)*dt/6,
+      w2:s.w2+(k1.w2+2*k2.w2+2*k3.w2+k4.w2)*dt/6
+    };
+  }
+  let sA=makeState(Math.PI*.75,0,Math.PI*.6,.3);
+  let sB=makeState(Math.PI*.75+0.00002,0,Math.PI*.6,.3);
+  const trailA=[],trailB=[];
+  function draw(){
+    for(let i=0;i<2;i++){sA=rk4(sA,.015);sB=rk4(sB,.015);}
+    const x1a=cx+l1*Math.sin(sA.th1), y1a=cy+l1*Math.cos(sA.th1);
+    const x2a=x1a+l2*Math.sin(sA.th2), y2a=y1a+l2*Math.cos(sA.th2);
+    const x1b=cx+l1*Math.sin(sB.th1), y1b=cy+l1*Math.cos(sB.th1);
+    const x2b=x1b+l2*Math.sin(sB.th2), y2b=y1b+l2*Math.cos(sB.th2);
+    trailA.push({x:x2a,y:y2a}); if(trailA.length>150)trailA.shift();
+    trailB.push({x:x2b,y:y2b}); if(trailB.length>150)trailB.shift();
+    ctx.fillStyle='rgba(11,13,21,0.2)';ctx.fillRect(0,0,W,H);
+    [[trailA,'rgba(91,200,219,0.6)'],[trailB,'rgba(224,82,82,0.6)']].forEach(([tr,col])=>{
+      if(tr.length<2)return; ctx.beginPath();ctx.moveTo(tr[0].x,tr[0].y);
+      tr.forEach((p,i)=>{if(i>0)ctx.lineTo(p.x,p.y)});
+      ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke();
+    });
+    ctx.strokeStyle='#4a7080';ctx.lineWidth=1.5; ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x1a,y1a);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1a,y1a);ctx.lineTo(x2a,y2a);ctx.stroke();
+    ctx.beginPath();ctx.arc(x2a,y2a,5,0,Math.PI*2);ctx.fillStyle='#91c8db';ctx.fill();
+    ctx.strokeStyle='#704040';ctx.lineWidth=1.5; ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x1b,y1b);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1b,y1b);ctx.lineTo(x2b,y2b);ctx.stroke();
+    ctx.beginPath();ctx.arc(x2b,y2b,5,0,Math.PI*2);ctx.fillStyle='#e05252';ctx.fill();
+    ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#9a9080';ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── CLOSING STARFIELD ── */
+(function(){
+  const c=document.getElementById('closingStars');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  const stars=Array.from({length:180},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.5+.3,a:Math.random(),da:(Math.random()-.5)*.006}));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.a=Math.max(.05,Math.min(1,s.a+s.da)); if(s.a<=.05||s.a>=1)s.da*=-1;
+      ctx.beginPath();ctx.arc(s.x*c.width,s.y*c.height,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(240,236,224,${s.a*.6})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── ROTATION 3D ── */
+(function(){
+  const container=document.getElementById("rotationContainer");
+  if(!container)return;
+  const W=container.clientWidth||700, H=360;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(55,W/H,.1,100);
+  camera.position.set(0,4,12);
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setSize(W,H); renderer.setPixelRatio(window.devicePixelRatio||1);
+  container.appendChild(renderer.domElement);
+  scene.add(new THREE.AmbientLight(0x443322,.8));
+  scene.add(new THREE.DirectionalLight(0xfff0cc,.8));
+  const objs=[];
+  const s1=new THREE.Mesh(new THREE.SphereGeometry(1,32,32),new THREE.MeshLambertMaterial({color:0xd4a843}));
+  s1.position.set(-4,0,0); scene.add(s1); objs.push({mesh:s1,w:1.0});
+  const c1=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,2,32,1,true),new THREE.MeshLambertMaterial({color:0x4a90d9,side:THREE.DoubleSide}));
+  c1.position.set(0,0,0); scene.add(c1); objs.push({mesh:c1,w:.5});
+  const d1=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,.15,32),new THREE.MeshLambertMaterial({color:0xe05252}));
+  d1.position.set(4,0,0); scene.add(d1); objs.push({mesh:d1,w:.7});
+  let isDragging=false,prevX=0,prevY=0;
+  container.addEventListener("mousedown",e=>{isDragging=true;prevX=e.clientX;prevY=e.clientY;});
+  window.addEventListener("mouseup",()=>isDragging=false);
+  window.addEventListener("mousemove",e=>{
+    if(!isDragging)return;
+    scene.rotation.y+=(e.clientX-prevX)*.012; scene.rotation.x+=(e.clientY-prevY)*.007;
+    prevX=e.clientX;prevY=e.clientY;
+  });
+  function animate(){
+    requestAnimationFrame(animate); objs.forEach(o=>o.mesh.rotation.y+=o.w*.025);
+    renderer.render(scene,camera);
+  }
+  animate();
+  window.addEventListener("resize",()=>{const w=container.clientWidth;camera.aspect=w/H;camera.updateProjectionMatrix();renderer.setSize(w,H);});
+})();
+
+/* ── GYROSCOPE ── */
+(function(){
+  const g=9.81;
+  function update(){
+    const omega=parseFloat(document.getElementById("spinSlider").value);
+    const M=parseFloat(document.getElementById("diskMassSlider").value);
+    const R=parseFloat(document.getElementById("diskRadSlider").value)/100;
+    const r=parseFloat(document.getElementById("pivotSlider").value)/100;
+    document.getElementById("spinVal").textContent=omega+" rad/s";
+    document.getElementById("diskMassVal").textContent=M.toFixed(2)+" kg";
+    document.getElementById("diskRadVal").textContent=parseFloat(document.getElementById("diskRadSlider").value)+" cm";
+    document.getElementById("pivotVal").textContent=parseFloat(document.getElementById("pivotSlider").value)+" cm";
+    const I=.5*M*R*R; const L=I*omega; const tau=M*g*r; const Omega_prec=tau/L; const T_prec=2*Math.PI/Omega_prec;
+    document.getElementById("momentI").textContent=I.toFixed(4)+" kg*m^2";
+    document.getElementById("angMom").textContent=L.toFixed(3)+" kg*m^2/s";
+    document.getElementById("precRate").textContent=Omega_prec.toFixed(3)+" rad/s";
+    document.getElementById("precPeriod").textContent=T_prec.toFixed(2)+" s";
+  }
+  ["spinSlider","diskMassSlider","diskRadSlider","pivotSlider"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.addEventListener("input",update);
+  });
+  update();
+})();
+</script>
+
+<div class="info-panel" id="globalInfoPanel">
+  <div class="info-panel-header">
+    <span class="info-panel-tag" id="infoPanelTag">Explanation</span>
+    <button class="info-panel-close" onclick="closeInfoPanel()">x</button>
+  </div>
+  <div class="info-panel-body">
+    <div class="info-panel-title" id="infoPanelTitle"></div>
+    <div class="info-panel-text" id="infoPanelText"></div>
+    <div class="info-panel-example" id="infoPanelExampleBox" style="display:none">
+      <span class="info-panel-example-label">Everyday Analogy</span>
+      <div class="info-panel-example-text" id="infoPanelExample"></div>
+    </div>
+    <div class="info-panel-formula" id="infoPanelFormula" style="display:none"></div>
+  </div>
+</div>
+
+</body>
+</html>
