@@ -222,9 +222,9 @@ export const projects = [
         theme: 'btn-back-pink',
         name: 'Sung Jin Woo',
         description: 'A highly detailed 3D model of Sung Jin Woo from Solo Leveling, created with Blender.',
-        previewImage: '/models/3d_modelisation/project_4/preview_image.png',
+        previewImage: import.meta.env.BASE_URL + 'models/3d_modelisation/project_4/preview_image.png',
         models3d: [
-            { name: 'Sung Jin Woo Model', url: '/models/3d_modelisation/project_4/SungJinWoo.glb' },
+            { name: 'Sung Jin Woo Model', url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_4/SungJinWoo.glb' },
         ],
         documentation: `
             <h3 class="text-2xl font-bold mt-6 mb-4">Model Creation</h3>
@@ -247,7 +247,7 @@ export const projects = [
             { name: 'Romain', role: '3D Artist' },
         ],
         gallery: [
-            { url: '/models/3d_modelisation/project_4/preview_image.png', alt: 'Sung Jin Woo Preview' },
+            { url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_4/preview_image.png', alt: 'Sung Jin Woo Preview' },
         ],
     },
     {
@@ -289,7 +289,7 @@ export const projects = [
             </ul>
         `,
         models3d: [
-            { name: 'Building Model', url: '/models/building.glb' },
+            { name: 'Building Model', url: import.meta.env.BASE_URL + 'models/building.glb' },
         ],
     },
     {
@@ -300,9 +300,9 @@ export const projects = [
         theme: 'btn-back-yellow',
         name: 'Cloud Dragon',
         description: 'A highly detailed 3D model of a cloudy dragon without retopology using Blender',
-        previewImage: '/models/3d_modelisation/project_6/preview_image.png',
+        previewImage: import.meta.env.BASE_URL + 'models/3d_modelisation/project_6/preview_image.png',
         models3d: [
-            { name: 'Cloud Dragon', url: '/models/3d_modelisation/project_6/CloudDragon.glb' },
+            { name: 'Cloud Dragon', url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_6/CloudDragon.glb' },
         ],
         documentation: `
             <h3 class="text-2xl font-bold mt-6 mb-4">Model Creation</h3>
@@ -322,7 +322,7 @@ export const projects = [
             { name: 'Romain', role: '3D Artist' },
         ],
         gallery: [
-            { url: '/models/3d_modelisation/project_6/preview_image.png', alt: 'Cloud Dragon preview' },
+            { url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_6/preview_image.png', alt: 'Cloud Dragon preview' },
         ],
     },
     {
@@ -333,9 +333,9 @@ export const projects = [
         theme: 'btn-back-green',
         name: 'Leaf Dragon',
         description: 'A highly detailed 3D model of a leaf dragon without retopology using Blender',
-        previewImage: '/models/3d_modelisation/project_7/preview_image.png',
+        previewImage: import.meta.env.BASE_URL + 'models/3d_modelisation/project_7/preview_image.png',
         models3d: [
-            { name: 'Leaf Dragon', url: '/models/3d_modelisation/project_7/LeafDragon.glb' },
+            { name: 'Leaf Dragon', url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_7/LeafDragon.glb' },
         ],
         documentation: `
             <h3 class="text-2xl font-bold mt-6 mb-4">Model Creation</h3>
@@ -355,7 +355,7 @@ export const projects = [
             { name: 'Romain', role: '3D Artist' },
         ],
         gallery: [
-            { url: '/models/3d_modelisation/project_7/preview_image.png', alt: 'Leaf Dragon preview' },
+            { url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_7/preview_image.png', alt: 'Leaf Dragon preview' },
         ],
     },
     {
@@ -366,9 +366,9 @@ export const projects = [
         theme: 'btn-back-black',
         name: 'Wasp Dragon',
         description: 'A highly detailed 3D model of a wasp dragon without retopology using Blender',
-        previewImage: '/models/3d_modelisation/project_8/preview_image.png',
+        previewImage: import.meta.env.BASE_URL + 'models/3d_modelisation/project_8/preview_image.png',
         models3d: [
-            { name: 'Wasp Dragon', url: '/models/3d_modelisation/project_8/WaspDragon.glb' },
+            { name: 'Wasp Dragon', url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_8/WaspDragon.glb' },
         ],
         documentation: `
             <h3 class="text-2xl font-bold mt-6 mb-4">Model Creation</h3>
@@ -388,7 +388,7 @@ export const projects = [
             { name: 'Romain', role: '3D Artist' },
         ],
         gallery: [
-            { url: '/models/3d_modelisation/project_8/preview_image.png', alt: 'Wasp Dragon preview' },
+            { url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_8/preview_image.png', alt: 'Wasp Dragon preview' },
         ],
     },
     {
@@ -399,9 +399,9 @@ export const projects = [
         theme: 'btn-back-blue',
         name: 'Fish Dragon',
         description: 'A highly detailed 3D model of a fish dragon without retopology using Blender',
-        previewImage: '/models/3d_modelisation/project_9/preview_image.png',
+        previewImage: import.meta.env.BASE_URL + 'models/3d_modelisation/project_9/preview_image.png',
         models3d: [
-            { name: 'Fish Dragon', url: '/models/3d_modelisation/project_9/FishDragon.glb' },
+            { name: 'Fish Dragon', url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_9/FishDragon.glb' },
         ],
         documentation: `
             <h3 class="text-2xl font-bold mt-6 mb-4">Model Creation</h3>
@@ -421,7 +421,7 @@ export const projects = [
             { name: 'Romain', role: '3D Artist' },
         ],
         gallery: [
-            { url: '/models/3d_modelisation/project_9/preview_image.png', alt: 'Fish Dragon preview' },
+            { url: import.meta.env.BASE_URL + 'models/3d_modelisation/project_9/preview_image.png', alt: 'Fish Dragon preview' },
         ],
     },
 ];

@@ -6,9 +6,9 @@ const ProjectViewer = () => {
   const navigate = useNavigate();
 
   const projectMap = {
-    1: '/projects/science/project_1/physics_ep01.html',
-    3: '/projects/science/project_3/math_ep01.html',
-    5: '/projects/science/project_5/nsi_ep01.html',
+    1: import.meta.env.BASE_URL + 'projects/science/project_1/physics_ep01.html',
+    3: import.meta.env.BASE_URL + 'projects/science/project_3/math_ep01.html',
+    5: import.meta.env.BASE_URL + 'projects/science/project_5/nsi_ep01.html',
   };
 
   const projectPath = projectMap[projectId];
