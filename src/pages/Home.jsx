@@ -14,6 +14,7 @@ const Home = () => {
   const [currentStage, setCurrentStage] = useState(1);
   const [isRotating, setIsRotating] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [hasUsedArrows, setHasUsedArrows] = useState(false);
 
   useEffect(() => {
     if (isPlayingMusic) {
@@ -91,6 +92,7 @@ const Home = () => {
               isRotating={isRotating}
               setIsRotating={setIsRotating}
               setCurrentStage={setCurrentStage}
+              setHasUsedArrows={setHasUsedArrows}
               position={islandPosition}
               rotation={[0.1, 4.7077, 0]}
               scale={islandScale}
@@ -103,6 +105,19 @@ const Home = () => {
             />
           </Suspense>
         </Canvas>
+
+
+      {!hasUsedArrows && (
+        <div className='absolute bottom-16 left-0 right-0 flex justify-center items-center z-10'>
+          <div className='arrow-container'>
+            <div className='arrow-keys'>
+              <div className='arrow-key'>←</div>
+              <div className='arrow-key'>→</div>
+            </div>
+            <p className='arrow-text'>Use the arrows to move</p>
+          </div>
+        </div>
+      )}
 
 
       <div className='absolute bottom-2 left-2'>
