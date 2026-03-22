@@ -21,12 +21,12 @@ export function Island({
   isRotating,
   setIsRotating,
   setCurrentStage,
-  currentFocusPoint,
+  setHasUsedArrows,
   ...props
 }) {
   const islandRef = useRef();
   const { gl, viewport } = useThree();
-  const { nodes, materials } = useGLTF(islandScene);
+  const { nodes } = useGLTF(islandScene);
 
   const lastX = useRef(0);
   const rotationSpeed = useRef(0);
@@ -55,6 +55,7 @@ export function Island({
     event.stopPropagation();
     event.preventDefault();
     setIsRotating(true);
+    setHasUsedArrows(true);
     lastX.current = event.touches ? event.touches[0].clientX : event.clientX;
   };
 
@@ -81,10 +82,12 @@ export function Island({
       if (!isRotating) setIsRotating(true);
       islandRef.current.rotation.y += 0.005 * Math.PI;
       rotationSpeed.current = 0.007;
+      setHasUsedArrows(true);
     } else if (event.key === "ArrowRight") {
       if (!isRotating) setIsRotating(true);
       islandRef.current.rotation.y -= 0.005 * Math.PI;
       rotationSpeed.current = -0.007;
+      setHasUsedArrows(true);
     }
   };
 
